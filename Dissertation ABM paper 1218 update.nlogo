@@ -141,7 +141,7 @@ to go
   tick
 end
 
-to check-weather
+to check-weather ; param for frequency of extreme weather comes from the survey
 
   ask orgs with [region = "Northeast" or region = "Midwest"] [
     set weatherIntensity random-float 1
@@ -188,7 +188,7 @@ to perceive-risk ; (orgs procedure)
 
     set riskPerceptionSum sum riskPerceptionExp
     if riskPerceptionSum >  perceptionThreshold and to-solution = nobody [ ; right now threshold is set as a slider, later will change it to a random var
-    look-for-solutions
+    look-for-solutions  ; for now each org is attached to only one solution, but one solution can be attached to multiple organizations
     ]
   ]
 
@@ -241,7 +241,7 @@ end
 
 to search-network
 ;  print "search network"
-  let myNbrs [other-end] of (my-links with [category != "problem"])
+  let myNbrs [other-end] of (my-links)
   set myNbrs orgs with [member? self myNbrs]
   if any? myNbrs with [to-solution != nobody] [
     let chosenNbr one-of myNbrs with [to-solution != nobody]
@@ -265,7 +265,6 @@ to innovate
 
     ask solutions-here [set to-organization myself]
     set to-solution solutions-here
-;    set to-solution one-of solutions-here ; there should only be one solution for each org
   ]
 end
 
@@ -308,7 +307,7 @@ to problems-occur  ; kick off organization's risk percpetion to sensing the prob
 
 end
 
-to problems-grow ; how do I operationalize problem; how does problem grow: it cannot grow forever. Does there need to be some decay?
+to problems-grow ; FX: how do I operationalize problem; how does problem grow: it cannot grow forever. Does there need to be some decay?
   ask orgs [
     if to-problem != nobody and extremeWeatherFreq > 1 [  ; after problem is generated, the problem grows with each extreme events (i.e. vulnearblity goes up)
         let coef weatherIntensity
