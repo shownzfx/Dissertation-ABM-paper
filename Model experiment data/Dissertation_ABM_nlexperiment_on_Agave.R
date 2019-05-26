@@ -9,7 +9,7 @@ module_file_path =  "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM p
 
 experiment <- nl_experiment(
   model_file = model_file_path,
-  repetitions = 100,
+  repetitions = 50,
   iterations = 1500,
   
   param_values = list(
