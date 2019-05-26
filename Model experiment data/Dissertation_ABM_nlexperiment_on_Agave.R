@@ -7,7 +7,7 @@ module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Dissertation_ABM_
 #experiment
 
 experiment <- nl_experiment(
-  model_file = model_file_path,
+  model_file = module_file_path,
   repetitions = 50,
   iterations = 1500,
   
