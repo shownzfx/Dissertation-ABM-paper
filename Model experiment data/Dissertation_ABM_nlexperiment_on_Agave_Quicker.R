@@ -4,10 +4,16 @@ nl_netlogo_path("/packages/7x/netlogo/6.0.2/app")  #to netlogo installation on A
 setwd("/home/fzhang59/dev/Dissertation-ABM-paper")
 module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Dissertation_ABM_0526_QuickerVersion.nlogo"
 
-#experiment
+
+#try windows
+# nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
+# setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
+# module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation_ABM_0526_QuickerVersion.nlogo"
+
+
 
 experiment <- nl_experiment(
-  model_file = module_file_path,
+  model_file = module_file_pathWindows,
   repetitions = 10,
   iterations = 720,
   

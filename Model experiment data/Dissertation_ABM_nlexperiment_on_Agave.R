@@ -8,8 +8,8 @@ module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Dissertation_ABM_
 
 experiment <- nl_experiment(
   model_file = module_file_path,
-  repetitions = 50,
-  iterations = 1500,
+  repetitions = 10,
+  iterations = 720,
   
   param_values = list(
     meanRIskThreshold = seq(0.3,0.5,0.1),
@@ -20,7 +20,7 @@ experiment <- nl_experiment(
     maxCopingReduction = c(0, 0.20,0.30, 0.40),
     adaptationCost = 6.5,
     capBoost = seq(0, 3,1),
-    simTicks = 1500
+    simTicks = 720
   ),
   run_measures = measures(
     copingNum = "count orgs with [coping-change?]",
