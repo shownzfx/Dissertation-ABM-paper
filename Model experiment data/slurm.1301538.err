@@ -1,0 +1,5 @@
+Error in checkForRemoteErrors(lapply(cl, recvResult)) : 
+  28 nodes produced errors; first error: 
+Calls: nl_run ... nl_run_parallel -> <Anonymous> -> checkForRemoteErrors
+Execution halted
+srun: error: cg14-18: task 0: Exited with exit code 1

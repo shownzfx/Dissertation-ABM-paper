@@ -1,0 +1,4 @@
+Error in nl_experiment(model_file = module_file_pathWindows, repetitions = 10,  : 
+  object 'module_file_pathWindows' not found
+Execution halted
+srun: error: cg2-12: task 0: Exited with exit code 1

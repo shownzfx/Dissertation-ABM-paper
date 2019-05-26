@@ -1,0 +1,4 @@
+Error in nl_experiment(model_file = model_file_path, repetitions = 50,  : 
+  object 'model_file_path' not found
+Execution halted
+srun: error: cg2-18: task 0: Exited with exit code 1
