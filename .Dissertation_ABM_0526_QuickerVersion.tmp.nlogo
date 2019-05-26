@@ -503,7 +503,6 @@ to windows-byDeclaration
       if declared? [
       set disasterWindows fput ticks disasterWindows
       set windows fput disasterWindows windows
-      set windows remove-duplicates windows
     ]
   ]
 end
@@ -515,7 +514,7 @@ to search-solution
     if not solution-ready? [
 
       let currentImpact expectedBadWeatherSeverity -  solEfficacy  ; note here it does not multiply the expectedEWProb
-      let targetSolEfficacy calculate-target-efficacy solEfficacy currentImpact expectedBadWeatherSeverity  (random-float  + 0.10)
+      let targetSolEfficacy calculate-target-efficacy solEfficacy currentImpact expectedBadWeatherSeverity  (random-float impactReductionRate + 0.10)
       ifelse (targetSolEfficacy < maxCopingEfficacy) and (copingLimit < 1)
     [
          ask current-solution [set efficacy targetSolEfficacy]

@@ -11,10 +11,10 @@ module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Dissertation_ABM_
 # module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation_ABM_0526_QuickerVersion.nlogo"
 
 
-
 experiment <- nl_experiment(
   model_file = module_file_path,
   repetitions = 10,
+  random_seed = 1:10,
   iterations = 720,
   
   param_values = nl_param_oat(
@@ -42,9 +42,6 @@ experiment <- nl_experiment(
   ),
   mapping = nl_default_mapping
 )
-# cbind(experiment$mapping)  #check parameter names mapping
-
-result1 <- nl_run(experiment, parallel = T)
 save.image("output_quicker.RData")
 
 

@@ -156,7 +156,6 @@ to setup-orgs
     set solution-ready? false
     set not-found? false
     set copingLimit 0
-    set MaxCoping 1
     set windows []
     set orgWindows []
     set disasterWindows []
@@ -434,7 +433,7 @@ to go
   ]
  ]
 
- if ticks > simTicks [stop]
+ if ticks >= simTicks [stop]
 
 end
 
@@ -516,15 +515,14 @@ to search-solution
     if not solution-ready? [
 
       let currentImpact expectedBadWeatherSeverity -  solEfficacy  ; note here it does not multiply the expectedEWProb
-      let targetSolEfficacy calculate-target-efficacy solEfficacy currentImpact expectedBadWeatherSeverity  (random-float impactReductionRate  + 0.10)
-      ifelse targetSolEfficacy < maxCopingEfficacy
+      let targetSolEfficacy calculate-target-efficacy solEfficacy currentImpact expectedBadWeatherSeverity  (random-float impactReductionRate + 0.10)
+      ifelse (targetSolEfficacy < maxCopingEfficacy) and (copingLimit < 1)
     [
-         if copingLimit < 1
          ask current-solution [set efficacy targetSolEfficacy]
          set solEfficacy [efficacy] of current-solution
          set copingChangeTicks fput ticks copingChangeTicks
          set coping-change? true
-         set copingLimit 1
+         set copingLimit 1 + copingLimit
    ][
          set search-adaptation? true
          search-adaptation
@@ -1203,8 +1201,8 @@ simTicks
 simTicks
 0
 3000
-700.0
-100
+720.0
+10
 1
 NIL
 HORIZONTAL
