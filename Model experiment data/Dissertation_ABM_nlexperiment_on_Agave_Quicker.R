@@ -13,7 +13,7 @@ module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Dissertation_ABM_
 
 
 experiment <- nl_experiment(
-  model_file = module_file_pathWindows,
+  model_file = module_file_path,
   repetitions = 10,
   iterations = 720,
   
