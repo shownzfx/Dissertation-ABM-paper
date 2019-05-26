@@ -24,6 +24,7 @@ orgs-own [
   leader?
   diffRegionNeighbors
   partner
+  insufBoost?
   target-patches
   extremeWeatherProb
   disasterFreq
@@ -38,7 +39,6 @@ orgs-own [
   solEfficacy
   originalEfficacy
   maxCopingEfficacy
-  copingChangeNum
   FTARegion
   passRate
   declarationRate
@@ -47,7 +47,8 @@ orgs-own [
   knownSolutions
   search-adaptation?
   missedWindows
-  insufBoost
+  insufBoost?
+  insufBoostTicks
   knownSolFromOffice
   regional-leader?
   regionalNeighbors
@@ -69,6 +70,8 @@ orgs-own [
   expectedImpact
   riskPerceptionThreshold
   windows
+  window-open?
+  window-missed?
   orgWindows
   disasterWindows
 ;  riskPerceptionfromAll  ; risk perceptiom from agency's own exp and from watching their neighbors
@@ -146,7 +149,7 @@ to setup-orgs
     set shape "circle"
     set size 0.6
     set extremeWeatherFreq 0
-    set copingChangeNum 0
+
 ;    set resilience 2 + random-float 1 ;resilience is the ax magnitude of disturbances that can be tolerated before incurring impacts, can be negative
 ;    set initialResilience resilience
     set solution-ready? false
@@ -154,9 +157,12 @@ to setup-orgs
     set windows []
     set orgWindows []
     set disasterWindows []
-    set insufBoost []
+    set insufBoostTicks []
+    set insufBoost? false
     set crossRiskThresholdTicks []
     set missedWindows []
+    set window-open? false
+    set window-missed? false
     set adaptTicks []
     set knownSolFromOffice []
     set satisfied? true
@@ -396,15 +402,17 @@ to go
   search-solution
 
   check-window
-  check-adaptation ; this is the FTAoffice procedure; at
+  FTAcheck-adaptation ; this is the FTAoffice procedure; at
 
   ; restore values of some variables
   ask orgs [
     set extremeWeather? false
     set disaster? false
     set declared? false
-    set satisfied? true
+;   set satisfied? true
     set capacity originalCapacity
+    set extremeWeatherProb extremeWeatherProb * (1 + random-float 0.00005)
+    set disasterProb disasterProb * (1 + random-float 0.00005)
     if expectedBadWeatherSeverity < expectedImpact [
       print "warning: expected weather severity smaller than expected impact"
     ]
@@ -423,7 +431,7 @@ to go
   ]
  ]
 
-  if ticks > simTicks [stop]
+ if ticks > simTicks [stop]
 
 end
 
@@ -498,10 +506,10 @@ to windows-byDeclaration
   ]
 end
 
-
 to search-solution
 ;  ask orgs with [not solution-ready? and (not adaptation-change?)][ ; add not adaptation-change to limit adaptation to only once
   ask orgs with [expectedImpact > riskPerceptionThreshold]  [ ;only orgs with no alternative solution are looking
+    set satisfied? false
     if not solution-ready? [
 
       let currentImpact expectedBadWeatherSeverity -  solEfficacy  ; note here it does not multiply the expectedEWProb
@@ -510,7 +518,6 @@ to search-solution
     [
          ask current-solution [set efficacy targetSolEfficacy]
          set solEfficacy [efficacy] of current-solution
-         set copingChangeNum copingChangeNum + 1
          set copingChangeTicks fput ticks copingChangeTicks
          set coping-change? true
    ][
@@ -546,6 +553,35 @@ to search-adaptation
 
 end
 
+
+to check-window
+  if open-windows?[
+    ask orgs with [postponed?]
+    [
+      ifelse not member? ticks windows
+      [
+        set window-open? false
+        set window-missed? false
+      ]
+
+      [
+        set window-open? true
+        set capacity capacity * (1  + random-float capBoost)
+        ifelse expectedImpact > riskPerceptionThreshold
+        [
+          ifelse capacity >= [cost] of targetSolution
+          [implement-adaptation]
+          [set insufBoostTicks fput ticks insufBoostTicks
+          set insufBoost? true]
+      ][
+          set missedWindows fput ticks missedWindows
+          set window-missed? true
+          set insufBoost? false
+        ]
+      ]
+    ]
+  ]
+end
 
 to assess-allSolutions
    let mySolEfficacy [efficacy] of current-solution
@@ -590,22 +626,9 @@ to implement-adaptation
     set postponed? false
 end
 
-to check-window
-  if open-windows?[
-    ask orgs with [postponed? and member? ticks windows][
-      set capacity capacity * (1  + random-float capBoost)
-      ifelse expectedImpact > riskPerceptionThreshold [
-        ifelse capacity >= [cost] of targetSolution
-        [implement-adaptation]
-        [set insufBoost fput ticks insufBoost]
-      ][
-        set missedWindows fput ticks missedWindows
-      ]
-    ]
-  ]
-end
 
-to check-adaptation
+
+to FTAcheck-adaptation
 
   ask FTAoffices[
     set projectInventory (turtle-set [current-solution] of FTAoffice-org-link-neighbors) with [adaptation?]
@@ -793,7 +816,7 @@ PLOT
 #Adopters
 NIL
 NIL
-0.0
+1.0
 10.0
 0.0
 10.0
@@ -810,7 +833,7 @@ MONITOR
 367
 415
 coping
-count orgs with [copingChangeNum > 0]
+count orgs with [length copingChangeTicks > 0]
 0
 1
 11
@@ -990,7 +1013,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.4
+0.45
 0.01
 1
 NIL
@@ -1077,11 +1100,11 @@ open-windows?
 MONITOR
 465
 370
-522
+527
 415
-minImp
-min [expectedImpact] of orgs
-2
+insuBoost
+count orgs with [insufBoost?]
+0
 1
 11
 
@@ -1175,11 +1198,22 @@ simTicks
 simTicks
 0
 3000
-1500.0
+1200.0
 100
 1
 NIL
 HORIZONTAL
+
+MONITOR
+385
+370
+442
+415
+#missed
+count orgs with [window-missed?]
+0
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?

@@ -1,29 +1,107 @@
 ---
 title: "R Experiments on Dissertation ABM"
 output: html_notebook
+editor_options: 
+  chunk_output_type: console
 ---
 
-```{r}
+```{r setup}
 library(dplyr)
 library(purrr)
 library(ggplot2)
+library(nlexperiment)
+
+knitr::opts_knit$set(root.dir = "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Model experiment data")
 ```
  
 
 ## Windows
 ```{r}
-library(nlexperiment)
 nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
-setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
-model_file_path="C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation ABM 0522.nlogo"
+model_file_path <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation ABM 0525.nlogo"
+```
+
+## experiment using windows
+
+```{r}
+experiment <- nl_experiment(
+  model_file = model_file_path,
+  repetitions = 2,
+  iterations = 50,
+
+  param_values = list(
+    meanRIskThreshold = 0.45,
+    scanningRange = 3,
+    numWindows = c(3, 4),
+    badImpact = 0.08,
+    impactReductionRate = c(0.20, 0.30),
+    maxCopingReduction = c(0, 30, 0.40),
+    adaptationCost = 6.5,
+    capBoost = seq(2, 4, 1),
+    simTicks = 50
+  ),
+  run_measures = measures(
+    copingNum = "count orgs with [coping-change?]",
+    adaptNum = "count orgs with [adaptation-change?]",
+     windows="[windows] of orgs"
+    # disasterWindows="[disasterWindows] of orgs",
+    # orgWindows="[orgWindows] of orgs"
+  ),
+  agents_step = list(
+    orgs = agent_set(
+      vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy"),
+      agents = "orgs"
+    )
+  ),
+  # agents_step = list(
+  #   orgs=agent_set(
+  #     vars=c("coping-change?", "adaptation-change?","disasterWindows","orgWindows","windows", "riskPerceptionThreshold", "expectedImpact", "missedWindows","solEfficacy"),
+  #     agents="orgs")
+  # ),
+  mapping = nl_default_mapping
+)
+
+
+
+# cbind(experiment$mapping)  #check parameter names mapping
+
+result1 <- nl_run(experiment)
+```
+
+```{r}
+data1Run <- nl_get_run_result(result1)
+
+ggplot(data1Run, aes(x = factor(capBoost), y = adaptNum)) +
+  geom_boxplot(fill = "grey") +
+  labs(y = "number of adapting orgs", x = "capacity boost") +
+  theme_minimal()
+
+
+ggplot(data1Run, aes(x = factor(capBoost), y = copingNum)) +
+  geom_boxplot(fill = "grey") +
+  labs(y = "number of adapting orgs", x = "capacity boost") +
+  theme_minimal()
+```
+
+
+```{r}
+data1Step <- nl_get_result(result1, type = "agents_step", sub_type = "orgs")
+data1StepAgg<-data1Step %>% group_by(step_id, param_set_id) %>% summarise(adaptNum=sum(`adaptation-change?`))
+
+ggplot(data1Step,aes(x=step_id, y=sum(`adaptation-change?`)))+
+  geom_line()
 
 ```
 
+
+
 ## AGAVE
+Need to change the wd to github data
 
 ```{r}
-
-
-
+nl_netlogo_path("/packages/7x/netlogo/6.0.2/app") # to netlogo installation
+nl_netlogo_path()
+# setwd("/home/fzhang59/dev/EW-model")
+model_file_path <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation ABM 0522.nlogo"
 ```
 
