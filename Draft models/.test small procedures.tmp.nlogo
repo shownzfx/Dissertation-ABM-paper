@@ -1,7 +1,7 @@
 extensions [csv]
 links-own [category]
 turtles-own [ ewSeverity severityExp extremeWeather? disaster?
-  severityMax     ewThreshold disasterThreshold riskPerceptionThreshold
+  severityMax     ewThreshold disasterThreshold extremeWeatherProb declarationProb
   region mylist leader? capacity disasterProb partner regional-leader?
   ftaRegion passRate]
 globals[result leaders smaller-turtles regionList ]
@@ -15,23 +15,26 @@ to read-orgs-severity
   while [not file-at-end?][
     let row csv:from-row file-read-line
     create-turtles 1 [
-;    print row
+    print row
     set capacity item 2 row
-    set capacity capacity + 1.57
     set region item 3 row
-    set disasterProb item 8 row
+    set disasterProb item 6 row
     set passRate item 7 row
-    set ftaRegion item 9 row
+    set ftaRegion item 10 row
     setxy random-xcor random-ycor
+    set extremeWeatherProb item 12 row
+    set declarationProb item 14 row
     set color white
-    set shape "circle"
-    set size 0.6
+;    set shape "circle"
+;    set size 0.6
 ;    set extremeWeather? false
 ;    set disaster? false
 ;    set severityExp (severity_max_recorded 0.2)
 ;    set severityMax max severityExp
-;    set ewThreshold item 200 severityExp
-;    set disasterThreshold item (10000 * disasterProb) severityExp
+;    set ewThreshold item (1200 * 0.2) severityExp
+;    set disasterThreshold  item (ceiling 1200 * disasterProb) severityExp
+;
+;    if ewThreshold > disasterThreshold [print "warning ewthreshold is smaller than disasterThreshold"]
     ]
   ]
 
@@ -40,33 +43,6 @@ to read-orgs-severity
   reset-ticks
 
 end
-to network
-  let target lottery-winner
-  if target != nobody [
-    ask target [
-      create-link-with one-of other turtles
-    ]
-   ]
-
-  tick
-
-  if min [count link-neighbors] of turtles = 1 [stop]
-end
-
-to-report lottery-winner
-  let pick random-float sum [capacity] of turtles
-  let winner nobody
-  ask turtles [
-    if winner = nobody
-    [ifelse capacity > pick
-      [set winner self]
-      [set pick pick - capacity]
-    ]
-  ]
-  report winner
-end
-
-
 
 
 to check-weatherSeverity
@@ -82,7 +58,6 @@ to check-weatherSeverity
   tick
 end
 
-
 to-report log-normal [mu sigma]
   let beta ln (1 + ((sigma / 2) / (mu ^ 2)))
   let x exp (random-normal (ln (mu) - (beta / 2)) sqrt beta)
@@ -92,8 +67,8 @@ end
 to-report severity_max_recorded [ewProb]
   let time 0
   let severity []
-  while [time < 10000][
-    set severity lput (log-normal 5 ewProb) severity
+  while [time < 2400][
+    set severity lput (log-normal 1 ewProb) severity
     set time time + 1
   ]
   set severity sort-by > severity
@@ -146,6 +121,13 @@ to test
   let c remove-item (length a - 1) a
   print word "c is " c
   reset-ticks
+
+
+;  create-turtles 10
+;  ask turtles [
+;    create-links-with n-of random 5 other turtles [set category "within"]
+;    create-links-with n-of random 4 other turtles [set category "between"]
+;  ]
 
   create-turtles 10 [set region "Northeast"]
   create-turtles 10 [set region "Midwest"]
@@ -222,6 +204,35 @@ to layout
 
 end
 
+
+to setup-regions
+  ca
+  ask patches [if pxcor >= -0.05 and pxcor <= 0.05 [set pcolor grey]]
+  ask patches [if pycor >= -0.05 and pycor <= 0.05 [set pcolor grey]]
+
+
+end
+
+
+to import-orgs
+  ca
+  file-open "Transit agencies ABM_noHeader.csv"
+  while [not file-at-end?]
+  [
+    print item 5  file-read-line
+   print read-from-string (word "[" file-read-line "]")
+;    let row read-from-string (word "[" file-read-line "]")
+;    print row
+;    create-turtles  1 [
+;      set capacity item 2 row
+;      set region item 3 row
+;      set disaterProb item 5 row
+;  ]
+ ]
+; print [region] of turtles
+  file-close
+end
+
 to read-orgs
   ca
   file-open "Transit agencies ABM_noHeader.csv"
@@ -230,6 +241,7 @@ to read-orgs
   while [not file-at-end?][
     let row csv:from-row file-read-line
     create-turtles 1 [
+    print row
     set capacity item 2 row
     set region item 3 row
     set disasterProb item 8 row
@@ -243,18 +255,6 @@ to read-orgs
   ]
   file-close
 
-  reset-ticks
-
-end
-
-to test-threshold
-  (foreach ["northeast" "midwest" "south" "west"][0.40 0.45 0.30 0.50]
-    [
-      [x y] ->
-      ask turtles with [region = x] [set riskPerceptionThreshold random-normal y 0.05]
-
-    ])
-
 end
 
 to testRegion
@@ -265,7 +265,7 @@ to testRegion
   print regionList
 end
 
-to network1 ; preferential-attachment
+to network ; preferential-attachment
   ca
   read-orgs
   let b max-n-of 2 (turtles with [region = "west"]) [capacity]
@@ -342,13 +342,13 @@ ticks
 30.0
 
 BUTTON
-51
-63
-128
-96
+37
+57
+114
+90
 NIL
 network
-T
+NIL
 1
 T
 OBSERVER
@@ -359,10 +359,10 @@ NIL
 1
 
 BUTTON
-44
-125
-107
-158
+38
+89
+101
+122
 NIL
 go
 NIL
@@ -376,10 +376,10 @@ NIL
 1
 
 BUTTON
-33
-10
-119
-43
+24
+125
+110
+158
 NIL
 read-orgs
 NIL
@@ -393,10 +393,10 @@ NIL
 1
 
 BUTTON
-46
-173
-129
-206
+37
+166
+120
+199
 NIL
 network2
 NIL
@@ -410,10 +410,10 @@ NIL
 1
 
 BUTTON
-39
-206
-174
-239
+30
+199
+165
+232
 NIL
 read-orgs-severity
 NIL
@@ -427,10 +427,10 @@ NIL
 1
 
 BUTTON
-24
-251
-183
-284
+15
+244
+174
+277
 NIL
 check-weatherSeverity
 T
@@ -444,10 +444,10 @@ NIL
 1
 
 BUTTON
-54
-297
-117
-330
+41
+284
+104
+317
 step
 check-weatherSeverity
 NIL
@@ -479,22 +479,27 @@ PENS
 "EW" 1.0 0 -14454117 true "" "plot count turtles with [extremeWeather?]"
 "Diaster" 1.0 0 -5298144 true "" "plot count turtles with [disaster?]"
 
-BUTTON
-53
-357
-163
-390
-NIL
-test-threshold
-NIL
+MONITOR
+191
+412
+248
+457
+#EW
+count turtles with [extremeWeather?]
+0
 1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
+11
+
+MONITOR
+261
+414
+328
+459
+#Disaster
+count turtles with [disaster?]
+0
 1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?

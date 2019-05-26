@@ -1,317 +1,208 @@
-extensions [csv]
-links-own [category]
-turtles-own [ ewSeverity severityExp extremeWeather? disaster?
-  severityMax     ewThreshold disasterThreshold riskPerceptionThreshold
-  region mylist leader? capacity disasterProb partner regional-leader?
-  ftaRegion passRate]
-globals[result leaders smaller-turtles regionList ]
+breed [orgs org]
+breed [solutions solution]
+breed [opportunities opportunity]
+
+undirected-link-breed [org-sol-links org-sol-link]
+undirected-link-breed [org-org-links org-org-link]
+
+globals [strategies]
 
 
-to read-orgs-severity
+patches-own [region]
+solutions-own [efficacy  cost to-opportunity adaptation to-organization solutionID]; only a small portion of solutions are adaptation-based
+opportunities-own [chance]
+
+
+orgs-own [
+  agencyID
+  leader
+  extremeWeatherProb
+  s-index ; strategy index for each org, two strategies to choose from [routine, adaptation]
+  problem
+  resilience  ; higher resilience means lower impact on agencies in extreme weather
+  capacity ;used to decide if orgs have sufficient capacity to implement solutions
+  extremeWeatherFreq
+  impactPerTick
+  impactExp
+  extremeWeatherSeverity
+  riskPerception
+  riskPerceptionExp ; doc risk perception for each extreme events
+  weatherExp ; document all weather exp regardless of intensity
+  riskPerceptionSum
+  adapt
+]
+links-own [category] ; orgs create links with orgs in the same region and also orgs in other regions (two types of links)
+
+
+to setup
   ca
-  file-open "Transit agencies ABM_noHeader.csv"
-  set result csv:from-row file-read-line
+  set strategies ["routine" "adaptation"]
+  set-default-shape solutions "box"
+  setup-regions
+  setup-orgs
+  setup-solutions
+  setup-leaders
+  setup-orgNetwork
 
-  while [not file-at-end?][
-    let row csv:from-row file-read-line
-    create-turtles 1 [
-;    print row
-    set capacity item 2 row
-    set capacity capacity + 1.57
-    set region item 3 row
-    set disasterProb item 8 row
-    set passRate item 7 row
-    set ftaRegion item 9 row
-    setxy random-xcor random-ycor
+
+  reset-ticks
+end
+
+
+to setup-regions
+  ask patches [if pxcor >= -0.05 and pxcor <= 0.05 [set pcolor grey]]
+  ask patches [if pycor >= -0.05 and pycor <= 0.05 [set pcolor grey]]
+
+  ask n-of 30 patches with [pxcor <=  16 and pxcor > 0.05 and pycor >= 0.05] [sprout-orgs 1 [set region "Northeast"]]
+  ask n-of 45 patches with [pxcor >= -16 and pxcor <= -0.1 and pycor >= 0.1] [sprout-orgs 1 [set region "West"]]
+  ask n-of 65 patches with [pxcor <= 16 and pxcor > 0.1 and pycor < -0.1] [sprout-orgs 1 [set region "South"]]
+  ask n-of 59 patches with [pxcor >= -16 and pxcor <= -0.1 and pycor < -0.1] [sprout-orgs 1 [set region "Midwest"]]
+
+end
+
+
+to setup-orgs
+
+  ask orgs [
+    set agencyID who
     set color white
-    set shape "circle"
     set size 0.6
-;    set extremeWeather? false
-;    set disaster? false
-;    set severityExp (severity_max_recorded 0.2)
-;    set severityMax max severityExp
-;    set ewThreshold item 200 severityExp
-;    set disasterThreshold item (10000 * disasterProb) severityExp
+    set shape "circle"
+    set capacity 0.05 + random-float  (0.95 - 0.05) ;  ranging from 0.05 to 0.95
+    set problem 0
+    set riskPerception 0 ; risk perception for each tick
+    set extremeWeatherFreq 0
+    set resilience random maxResilience
+    set extremeWeatherProb 0
+    set extremeWeatherSeverity 0
+    set impactExp[]
+    set weatherExp[]
+    set riskPerceptionExp []
+    set riskPerceptionSum 0  ; cumulative risk perception
+    set adapt 0
+    set leader false
+    set s-index 0  ; start with routine solutions
+  ]
+
+end
+
+to setup-solutions ; every turtle begins with a solution
+  ask orgs [
+    ask patch-here [
+       sprout-solutions 1
+      [
+         set solutionID who
+         set color green
+         set to-opportunity nobody
+         set efficacy  0.05 + random-float  (0.95 - 0.05)
+         set size efficacy
+         set cost random-float 0.05 + random-float  (0.95 - 0.05)
+
+         let my-org orgs-here
+         create-org-sol-links-with my-org [hide-link]
+      ]
     ]
   ]
 
-  file-close
-
-  reset-ticks
-
-end
-to network
-  let target lottery-winner
-  if target != nobody [
-    ask target [
-      create-link-with one-of other turtles
-    ]
-   ]
-
-  tick
-
-  if min [count link-neighbors] of turtles = 1 [stop]
-end
-
-to-report lottery-winner
-  let pick random-float sum [capacity] of turtles
-  let winner nobody
-  ask turtles [
-    if winner = nobody
-    [ifelse capacity > pick
-      [set winner self]
-      [set pick pick - capacity]
-    ]
-  ]
-  report winner
+  ;set-cost-and-color
 end
 
 
 
-
-to check-weatherSeverity
-  ask turtles [
-     let tempSeverity log-normal 1 0.2
-     if tempSeverity > ewThreshold  [set extremeWeather? true]
-     if tempSeverity > disasterThreshold [set disaster? true]
-     if tempSeverity > severityMax [set severityMax tempSeverity]
-     set ewSeverity tempSeverity / severityMax
-
-  ]
-
-  tick
-end
-
-
-to-report log-normal [mu sigma]
-  let beta ln (1 + ((sigma / 2) / (mu ^ 2)))
-  let x exp (random-normal (ln (mu) - (beta / 2)) sqrt beta)
-  report x
-end
-
-to-report severity_max_recorded [ewProb]
-  let time 0
-  let severity []
-  while [time < 10000][
-    set severity lput (log-normal 5 ewProb) severity
-    set time time + 1
-  ]
-  set severity sort-by > severity
-
-  report severity
-end
-
-;to-report extreme-weather-recorded [ewProb]
-;  let time 0
-;  let severity []
-;  while [time < 10000][
-;    set severity lput (log-normal 1 ewProb) severity
-;    set time time + 1
-;  ]
-;  report sort-by > severity
-;
-;end
-;
-
-
-to test3
-  ca
-  create-turtles 10 [
-    setxy random-xcor random-ycor
-  ]
-  ask turtle 0 [
-    set shape "box"
-    set size 3
-    create-links-with other turtles
-    remove-links-between self turtle 1
-    remove-links-between self turtle 2
-    print count link-neighbors
-  ]
-
+to setup-leaders  ; this procedure sets up regional leaders
+   (foreach ["Northeast" "Midwest" "South" "West"]
+    [
+      x -> let regionLeader max-n-of 2 (orgs with [region = x]) [capacity]  ; each region has one leader
+      ask regionLeader [set leader true]
+    ])
 
 end
 
-to remove-links-between [a b]
-    ask my-links with [other-end = b ][die]
-end
-
-
-to test
-  ca
-
-
-  let a [1 3 4 5]
-  let b fput 9 a
-  print word "b is " b
-  let c remove-item (length a - 1) a
-  print word "c is " c
-  reset-ticks
-
-  create-turtles 10 [set region "Northeast"]
-  create-turtles 10 [set region "Midwest"]
-    create-turtles 10 [set region "South"]
-  create-turtles 10 [set region "West"]
+to setup-orgNetwork ; orgs in the four regions generate networks with orgs in the same and in the different regions
 
   (foreach ["Northeast" "Midwest" "South" "West"]
-    [x -> ask turtles with [region = x ] [
-      create-links-with n-of 3 other turtles with [region = x][
-      set category "sameRegion"
-      ]
+    [
+      x -> ask turtles with [region = x ] [
+      create-org-org-links-with n-of random 8 other turtles with [region = x] ; designed so there are more neighbors within than outside the regions
+      [set category "sameRegion" hide-link]
 
-      create-links-with n-of 4 other turtles with [region != x][
-        set category "diffRegion"
-      ]
+      create-org-org-links-with n-of 4 other turtles with [region != x]
+      [set category "diffRegion" hide-link]
      ]
-    ])
-
+   ])
 
 end
 
-to test1
-  ca
-  let c [1 2 3 4]
-  let d [5 6 7 8]
 
-
-  create-turtles 5 [  set mylist []]
-;  ask turtles [
-;    (foreach  c d [
-;      [ x y ] ->
-;      let temp list x y
-;      set mylist fput temp mylist
-;    ])
+;to set-cost-and-color  ;solutions differ in costs (adaptation are more expensive)
+;    ifelse random-float 1 <= 0.2
+;      [
+;        set adaptation 1
+;        set cost random-normal 5 2
+;        set efficacy 0.05 + random-float  (0.95 - 0.05)
+;        set color green
+;        set size efficacy / 2
+;      ][
+;        set adaptation 0
+;        set cost random-normal 1 1
+;        set efficacy 0.05 + random-float  (0.95 - 0.05)
+;        set color magenta
+;        set size efficacy / 2
 ;  ]
-
-  ask turtles [
-    set mylist (map [ [x y] -> (list 1 x y)  ]  c d)
-  ]
-
-
-end
-
-
+;end
 
 to go
-  ask links [set color grey]
-  make-node find-partner
+  check-weather
+  perceive-risk
 
   tick
-  layout
+
 end
 
-to make-node [old-node]
-  create-turtles 1 [
-    set color red
-    if old-node != nobody [
-      create-link-with old-node [set color green]
-      move-to old-node
-      fd 8
+to check-weather ; param for frequency of extreme weather comes from the survey
+  ask orgs [set extremeWeatherProb random-float 1]
+
+  ask orgs with [region = "Northeast" or region = "Midwest"] [
+    if extremeWeatherProb  >= 0.75 [  ; the threshold 0.5 is drawn from the survey data
+      set problem extremeWeatherProb ^ ( ln (0.01 + 1))
+      take-impact
+      update-problem
+      ]
+    ]
+  ask orgs with [region = "South"][
+     if extremeWeatherProb >= 0.8 [
+      take-impact
+      update-problem
     ]
   ]
-end
-
-to-report find-partner
-  report [one-of both-ends] of one-of links
-end
-
-to layout
-  repeat 3 [
-    let factor sqrt count turtles
-    layout-spring turtles links (1 / factor) (7 / factor) (1 / factor)
-  ]
-
-end
-
-to read-orgs
-  ca
-  file-open "Transit agencies ABM_noHeader.csv"
-  set result csv:from-row file-read-line
-
-  while [not file-at-end?][
-    let row csv:from-row file-read-line
-    create-turtles 1 [
-    set capacity item 2 row
-    set region item 3 row
-    set disasterProb item 8 row
-    set passRate item 7 row
-    set ftaRegion item 9 row
-    setxy random-xcor random-ycor
-    set color white
-    set shape "circle"
-    set size 0.6
+  ask orgs with [region = "West"] [
+    if extremeWeatherProb  >= 0.9 [
+      take-impact
+      update-problem
     ]
   ]
-  file-close
 
-  reset-ticks
-
-end
-
-to test-threshold
-  (foreach ["northeast" "midwest" "south" "west"][0.40 0.45 0.30 0.50]
-    [
-      [x y] ->
-      ask turtles with [region = x] [set riskPerceptionThreshold random-normal y 0.05]
-
-    ])
+  ask orgs [set weatherExp fput extremeWeatherProb weatherExp]
 
 end
 
-to testRegion
-
-  set regionList n-values 11 [x -> x]
-  set regionList map [x -> word "FTA Region" x] n-values 11 [x -> x]
-  set regionList but-first regionList
-  print regionList
-end
-
-to network1 ; preferential-attachment
-  ca
-  read-orgs
-  let b max-n-of 2 (turtles with [region = "west"]) [capacity]
-  ask b [set pcolor green]
-  let a one-of b
-  ask a [
-    set partner one-of b
-    while [partner = self][
-      set partner one-of b
-    ]
-    create-link-with partner
-  ]
-
-  ask turtles with [region = "west" and not any? link-neighbors][
-    set partner one-of [both-ends] of one-of links
-    create-link-with partner
-  ]
-end
-
-
-to network2
-  ca
-  read-orgs
-  ask turtles [set regional-leader? false]
-  ask max-n-of 10 turtles with [region = "west"] [capacity][set regional-leader? true]
-  ask turtles with [regional-leader?] [ask patch-here [set pcolor red]]
-
-  ask turtles with [region = "west"] [
-    repeat 2 [
-    create-link-with identify-partner
-    ]
-
-  ]
+to take-impact
+  set extremeWeatherFreq extremeWeatherFreq + 1
+  set extremeWeatherSeverity random-float 1
+  ifelse resilience >= extremeWeatherSeverity
+  [set impactPerTick 0]
+  [set impactPerTick extremeWeatherSeverity - resilience]
+  set impactExp fput impactPerTick impactExp
 
 end
 
-to-report identify-partner
-   ifelse random-float 1 < 0.6
-  [set partner one-of turtles with [region = "west" and regional-leader?]]
-  [set partner one-of turtles with [region = "west"  and not regional-leader?]]
+to update-problem
+  set problem problem + extremeWeatherSeverity ^ (ln ( extremeWeatherSeverity + 1))  ; problem non-linearly g
 
-  while [self = partner][
-    set partner identify-partner
-  ]
-  report partner
 
+end
+
+to perceive-risk
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -342,13 +233,13 @@ ticks
 30.0
 
 BUTTON
-51
-63
-128
-96
+4
+10
+67
+43
 NIL
-network
-T
+setup
+NIL
 1
 T
 OBSERVER
@@ -358,12 +249,27 @@ NIL
 NIL
 1
 
-BUTTON
-44
-125
-107
-158
+SLIDER
+3
+104
+175
+137
+initial_num_solutions
+initial_num_solutions
+0
+100
+0.0
+1
+1
 NIL
+HORIZONTAL
+
+BUTTON
+75
+11
+138
+44
+step
 go
 NIL
 1
@@ -376,81 +282,13 @@ NIL
 1
 
 BUTTON
-33
+144
 10
-119
+207
 43
 NIL
-read-orgs
-NIL
-1
+go
 T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-46
-173
-129
-206
-NIL
-network2
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-39
-206
-174
-239
-NIL
-read-orgs-severity
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-24
-251
-183
-284
-NIL
-check-weatherSeverity
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-54
-297
-117
-330
-step
-check-weatherSeverity
-NIL
 1
 T
 OBSERVER
@@ -461,40 +299,164 @@ NIL
 1
 
 PLOT
-703
-73
-903
-223
-extremeWeather
-NIL
-NIL
+597
+10
+797
+160
+EW freq, riskPerception
+Time
+Freq
 0.0
-10.0
+100.0
 0.0
 10.0
 true
-true
+false
 "" ""
 PENS
-"EW" 1.0 0 -14454117 true "" "plot count turtles with [extremeWeather?]"
-"Diaster" 1.0 0 -5298144 true "" "plot count turtles with [disaster?]"
+"default" 1.0 0 -5298144 true "" "plot mean [extremeWeatherFreq] of orgs\n"
+"pen-1" 1.0 0 -15040220 true "" "plot mean [riskPerceptionSum] of orgs"
 
-BUTTON
-53
-357
-163
-390
-NIL
-test-threshold
-NIL
+MONITOR
+230
+385
+297
+430
+MeanProb
+mean [problem] of orgs
+2
 1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
+11
+
+MONITOR
+305
+385
+367
+430
+MaxProb
+max [problem] of orgs
+2
 1
+11
+
+MONITOR
+370
+385
+427
+430
+MinProb
+min [problem] of orgs
+2
+1
+11
+
+SLIDER
+5
+150
+175
+183
+maxResilience
+maxResilience
+0
+20
+0.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+5
+195
+177
+228
+weatherSeverity
+weatherSeverity
+0
+20
+20.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+5
+240
+177
+273
+memory
+memory
+0
+48
+0.0
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+435
+385
+547
+430
+riskPerceptionSum
+mean [riskPerceptionSum] of orgs
+2
+1
+11
+
+SLIDER
+5
+275
+177
+308
+perceptionThreshold
+perceptionThreshold
+0
+10
+0.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+5
+320
+177
+353
+scanningRange
+scanningRange
+0
+10
+0.0
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+225
+435
+302
+480
+AttachedSol
+count solutions with [to-organization != nobody]
+0
+1
+11
+
+MONITOR
+315
+435
+377
+480
+OrgToSol
+count orgs with [to-solution != nobody]
+0
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -855,5 +817,5 @@ true
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
 @#$#@#$#@
-0
+1
 @#$#@#$#@

@@ -1,44 +1,69 @@
 breed [orgs org]
 breed [solutions solution]
 breed [opportunities opportunity]
-breed [problems problem]
+
+undirected-link-breed [org-sol-links org-sol-link]
+undirected-link-breed [org-sameReg-links org-sameReg-link]
+undirected-link-breed [org-diffReg-links org-diffReg-link]
+
+globals [strategies]
 
 
 patches-own [region]
-solutions-own [efficiency  cost to-opportunity adaptation to-organization solutionID]; only a small portion of solutions are adaptation-based
+solutions-own [efficacy  cost to-opportunity adaptation?]; solutions include both non-adaptation and adaptation measures
+
 opportunities-own [chance]
-problems-own [difficulty to-organization problemID] ;problem difficulty bigger and more complex as extreme weather exp grows
+
+
 orgs-own [
   agencyID
-  leader
-  weatherIntensity
+  leader?
+  extremeWeatherProb
+  s-index ; strategy index for each org, two strategies to choose from [routine, adaptation]
+  problem
   resilience  ; higher resilience means lower impact on agencies in extreme weather
   capacity ;used to decide if orgs have sufficient capacity to implement solutions
   extremeWeatherFreq
   impactPerTick
   impactExp
+  freqImpact  ; per tick
+  freqImpactExp ; cumulative
+  satisfied?
+  extremeWeatherSeverity
+  extremeWeather? ; boolean whether the weather is extreme
   riskPerception
+  riskPerceptionThreshold
   riskPerceptionExp ; doc risk perception for each extreme events
-  weatherExp ; document all weather exp regardless of intensity
+  probExp ; document all weather exp regardless of intensity
   riskPerceptionSum
-  to-solution
-  to-problem
+  riskPerceptionFromOthers
   adapt
+  riskPerceptionfromAll  ; risk perceptiom from agency's own exp and from watching their neighbors
+  disasterMemoryCounter
+  current-solution
+  incremental-change?
+  adaptation-change?
+  disaster? ; whether happened disater or not
+  solution-ready?
+  postpone? ; whether orgs postpone taking actions
+  target-solution
 ]
 links-own [category] ; orgs create links with orgs in the same region and also orgs in other regions (two types of links)
 
-
 to setup
   ca
+  set-histogram-num-bars 20
+  set strategies ["routine" "adaptation"]
+  set-default-shape solutions "box"
   setup-regions
   setup-orgs
+  setup-solutions
   setup-leaders
   setup-orgNetwork
-  setup-solutions
+
 
   reset-ticks
 end
-
 
 to setup-regions
   ask patches [if pxcor >= -0.05 and pxcor <= 0.05 [set pcolor grey]]
@@ -48,6 +73,7 @@ to setup-regions
   ask n-of 45 patches with [pxcor >= -16 and pxcor <= -0.1 and pycor >= 0.1] [sprout-orgs 1 [set region "West"]]
   ask n-of 65 patches with [pxcor <= 16 and pxcor > 0.1 and pycor < -0.1] [sprout-orgs 1 [set region "South"]]
   ask n-of 59 patches with [pxcor >= -16 and pxcor <= -0.1 and pycor < -0.1] [sprout-orgs 1 [set region "Midwest"]]
+
 end
 
 to setup-orgs
@@ -57,28 +83,69 @@ to setup-orgs
     set color white
     set size 0.6
     set shape "circle"
-    set capacity random-normal 2 1; the mean for adaptation cost is 5, so that more than half cannot implement adaptation solutions
+    set capacity 0.05 + random-float (0.95 - 0.05) ;  ranging from 0.05 to 0.95
+    set problem 0
     set riskPerception 0 ; risk perception for each tick
     set extremeWeatherFreq 0
-    set resilience random maxResilience
-    set weatherIntensity 0
+    set resilience random-float maxResilience  ;resilience is the max magnitude of disturbances that can be tolerated before incurring impacts
+    set riskPerceptionThreshold 0.2 + random-normal 0 0.5
+    set satisfied? true
+    set extremeWeatherProb 0
+    set extremeWeatherSeverity 0
     set impactExp[]
-    set weatherExp[]
+    set probExp[]
+    set freqImpact [] ; list of freq and impact per tick
+    set freqImpactExp [] ; list of freq and impact over time
     set riskPerceptionExp []
     set riskPerceptionSum 0  ; cumulative risk perception
     set adapt 0
-    set to-solution nobody
-    set to-problem nobody
-    set leader false
+    set leader? false
+    set incremental-change? false
+    set adaptation-change? false
+    set s-index 0  ; start with routine solutions
+    set extremeWeather? false
+    set disaster? false
+    set disasterMemoryCounter 0
+    set riskPerceptionFromOthers 0
+    set solution-ready? false
+    set postpone? false
+    set target-solution nobody
   ]
 
 end
 
+to setup-solutions ; every turtle begins with a solution
+  ask orgs [
+    ask patch-here [
+       sprout-solutions 1
+      [
+         set color green
+         set to-opportunity nobody
+         set adaptation? false  ; the default solutions are routine ones, not adaptation-based
+         set-efficacy-cost
+         let my-org orgs-here
+         create-org-sol-links-with my-org [hide-link]
+         ask my-org [set current-solution myself]
+      ]
+    ]
+  ]
+
+end
+
+
+to set-efficacy-cost
+  set efficacy random-float 0.5
+  set adaptation? false
+  set cost 0.05 + random-float (0.95 - 0.05) ; the same with capacity ranging from 0.05 to 0.95
+  set size  efficacy * 2 ; for vis purpose only
+end
+
+
 to setup-leaders  ; this procedure sets up regional leaders
    (foreach ["Northeast" "Midwest" "South" "West"]
     [
-      x -> let regionLeader max-n-of 2 (orgs with [region = x]) [capacity]  ; each region has one leader
-      ask regionLeader [set leader true]
+      x -> let regionLeader max-n-of 2 (orgs with [region = x]) [capacity]  ; each region has two leaders
+      ask regionLeader [set leader? true]
     ])
 
 end
@@ -87,239 +154,230 @@ to setup-orgNetwork ; orgs in the four regions generate networks with orgs in th
 
   (foreach ["Northeast" "Midwest" "South" "West"]
     [
-      x -> ask turtles with [region = x ] [
-      create-links-with n-of random 12 other turtles with [region = x]
+      x -> ask orgs with [region = x ] [
+      create-org-sameReg-links-with n-of random 5 other (orgs with [region = x ]) ; designed so there are more neighbors within than outside the regions
       [set category "sameRegion" hide-link]
 
-      create-links-with n-of 8 other turtles with [region != x]
+      create-org-diffReg-links-with n-of random 3 other (orgs with [region != x ])
       [set category "diffRegion" hide-link]
      ]
    ])
 
 end
 
-to setup-solutions
-  set-default-shape solutions "box"
-  create-solutions initial_num_solutions [
-    set solutionID who
-    setxy random-xcor random-ycor
-    if [pxcor] of patch-here = 0 or [pycor] of patch-here = 0
-    [setxy random-xcor random-ycor] ; avoid placement on the division lines
-    while [any? other turtles-here][
-      setxy random-xcor random-ycor  ; make sure patch has on turtle
-    ]
-    set to-opportunity nobody
-    set to-organization nobody
-    set-cost-and-color
-  ]
 
-end
-
-to set-cost-and-color
-    ifelse random-float 1 <= 0.2
-      [
-        set adaptation 1
-        set cost random-normal 5 2
-        set efficiency random-normal 2 1
-        set color green
-        set size efficiency / 2
-      ][
-        set adaptation 0
-        set cost random-normal 1 1
-        set efficiency random-normal 0 1
-        set color magenta
-        set size efficiency / 2
-  ]
-end
+;to set-cost-and-color  ;solutions differ in costs (adaptation are more expensive)
+;    ifelse random-float 1 <= 0.2
+;      [
+;        set adaptation 1
+;        set cost random-normal 5 2
+;        set efficacy 0.05 + random-float  (0.95 - 0.05)
+;        set color green
+;        set size efficacy / 2
+;      ][
+;        set adaptation 0
+;        set cost random-normal 1 1
+;        set efficacy 0.05 + random-float  (0.95 - 0.05)
+;        set color magenta
+;        set size efficacy / 2
+;  ]
+;end
 
 to go
   check-weather
-  problems-occur  ; problems are created the first time when org experiences an EW
-  perceive-risk
-  problems-grow  ; happens after problems already created
+  update-weatherExp
+  perceive-risk-from-exp ; culmulative based on freq and impact
+;  perceive-risk-from-others ; only influenced by others' disasters; haven't figured out if I need this
+  search-solution
+
+  ask orgs [
+    set extremeWeather? false
+    set disaster? false
+  ]
+
 
   tick
+
 end
 
 to check-weather ; param for frequency of extreme weather comes from the survey
+  ask orgs [
+    set extremeWeatherProb random-float 1
+    if extremeWeatherProb > 0.95 [ ; 5% chance for weather disaster
+      set disaster? true
+    ]
+  ]
 
   ask orgs with [region = "Northeast" or region = "Midwest"] [
-    set weatherIntensity random-float 1
-    if weatherIntensity  >= 0.75 [  ; the threshold 0.5 is drawn from the survey data
-      set extremeWeatherFreq extremeWeatherFreq + 1
-      take-impact
-      ]
-    ]
+    ifelse extremeWeatherProb  >= 0.75
+    [take-impact]  ; the threshold 0.75 is drawn from the survey data
+    [set impactPerTick 0]
+
+  ]
+
   ask orgs with [region = "South"][
-     set weatherIntensity random-float 1
-     if weatherIntensity >= 0.8 [
-      set extremeWeatherFreq extremeWeatherFreq + 1
-      take-impact
-    ]
+     ifelse extremeWeatherProb >= 0.8
+     [take-impact]
+     [set impactPerTick 0]
   ]
   ask orgs with [region = "West"] [
-    set weatherIntensity random-float 1
-    if weatherIntensity  >= 0.9 [
-      set extremeWeatherFreq extremeWeatherFreq + 1
-      take-impact
+    ifelse extremeWeatherProb  >= 0.9
+    [take-impact]
+    [set impactPerTick 0]
+  ]
+end
+
+to update-weatherExp
+  ask orgs [
+    set probExp fput extremeWeatherProb probExp
+    if length probExp > memory [
+      set probExp remove-item (length probExp - 1) probExp
+    ]
+
+    set impactExp fput impactPerTick impactExp
+    if length impactExp > memory [
+      set impactExp remove-item (length impactExp - 1 ) impactExp
     ]
   ]
-
-  ask orgs [set weatherExp fput weatherIntensity weatherExp] ; all orgs document the exp
-
 end
+
+;   (foreach list probExp impactExp [
+;      x ->
+;      if length x > memory
+;      [set x remove-item (length x - 1) x] ; if exceeds memory, then remove the oldest one
+;    ])  #this one only creates a copy of probExp impactExp
+
 
 to take-impact
-  let weatherImpact random extremeWeatherDamage
-  ifelse resilience >= weatherImpact
+  set extremeWeather? true
+  set extremeWeatherFreq extremeWeatherFreq + 1
+  set extremeWeatherSeverity random-float 5
+  let sol-efficacy sum [efficacy] of org-sol-link-neighbors
+  ifelse sol-efficacy >= extremeWeatherSeverity ; impact is jointly decided by org resilience and weather severity
   [set impactPerTick 0]
-  [set impactPerTick weatherImpact - resilience]
-
-  set impactExp fput impactPertick impactExp  ; document each impact including when impact is 0 (having same length with weatherExp)
+  [set impactPerTick extremeWeatherSeverity - sol-efficacy]
 
 end
 
-to perceive-risk ; (orgs procedure)
+;to update-problem
+;  set problem problem + extremeWeatherSeverity ^ (ln ( extremeWeatherSeverity + 1))  ; problem non-linearly g
+;end
+
+to perceive-risk-from-exp
   ask orgs [
-    set riskPerception impactPerTick * 0.257
-    set riskPerceptionExp fput riskPerception riskPerceptionExp
-    if length riskPerceptionExp > memory ; how long does the org memory last
-    [set riskPerceptionExp remove-item (length riskPerceptionExp - 1) riskPerceptionExp]; if exceeds memory, then remove the oldest event
+   ( foreach probExp impactExp [
+      [a b] ->
+      set freqImpact (list 1 a b)
 
-    set riskPerceptionSum sum riskPerceptionExp
-    if riskPerceptionSum >  perceptionThreshold and to-solution = nobody [ ; right now threshold is set as a slider, later will change it to a random var
-    look-for-solutions  ; for now each org is attached to only one solution, but one solution can be attached to multiple organizations
+     if (item 1 freqImpact > 0.75) and (region = "Northeast" or region = "Midwest")
+      [update-riskPerception]
+
+      if (item 1 freqImpact > 0.8) and (region = "South")
+      [update-riskPerception]
+
+      if (item 1 freqImpact > 0.9) and (region = "West")
+      [update-riskPerception]
+    ])
+  ]
+
+end
+
+to update-riskPerception
+   set riskperceptionSum 0
+   let riskPerceptionUpdate (item 0 freqImpact) * 0.2 + (item 2 freqImpact) * 0.26 + random-normal 0 0.01  ; add some random errors
+   set riskperceptionSum riskperceptionSum + riskPerceptionUpdate
+
+end
+
+;to perceive-risk-from-others ; the module applies for only one disaster
+;  ask orgs [
+;    let regionalNeighbors org-sameReg-link-neighbors with [disaster?]
+;    if (regionalNeighbors != nobody) and (not disaster?) [ ; when regional neighbors exp diaster, but not the agency itself
+;      set disasterMemoryCounter disasterMemory
+;      set riskPerceptionFromOthers initialPerception / disasterMemory * disasterMemoryCounter
+;      set riskPerceptionfromAll riskPerceptionSum + riskPerceptionFromOthers
+;    ]
+;  ]
+;
+;  ask orgs [
+;    if disasterMemoryCounter > 0 [
+;      set disasterMemoryCounter disasterMemoryCounter - 1
+;    ]
+;  ]
+;end
+
+to search-solution
+  ask orgs with [satisfied?] [
+    if riskPerceptionSum > riskPerceptionThreshold [
+      set satisfied? false
+      let myneighbors (turtle-set org-sameReg-link-neighbors  org-diffReg-link-neighbors)
+      let known-solutions (turtle-set [org-sol-link-neighbors] of myneighbors)
+      let my-solution current-solution
+      let better-solutions known-solutions with [efficacy > [efficacy] of my-solution  ]
+
+      ifelse any? better-solutions
+       [
+         set target-solution one-of better-solutions
+         let previous-solution current-solution
+         remove-links-between self previous-solution
+         create-org-sol-link-with target-solution
+         if random-float 1 <= 0.90
+        [set current-solution target-solution  ; there are 90% chance to implement incremental change if found one
+         set incremental-change? true]
+      ][
+        innovate  ; if not found better solution, the innovate
+      ]
     ]
   ]
 
 end
 
-to look-for-solutions  ; turtle procedures
-  let strategy one-of [1 2 3 4 5 ]
-  if strategy = 1 [search-nearby]
-  if strategy = 2 [search-regionNeighbors]
-  if strategy = 3 [search-network]
-  if strategy = 4 [innovate]
-  if strategy = 5 [learn-from-leaders]
-
+to remove-links-between [one-org one-sol]
+    ask my-links with [other-end = one-sol][die]
 end
 
-
-to search-nearby
-;  print "search nearby"
-  let nearbySolutions solutions in-radius scanningRange ; scanningRange is slider
-  if any? nearbySolutions [ ; how to calclulate if they have enough capacity to implement the solution
-    let chosenSolution one-of nearbySolutions
-    ask chosenSolution [set to-organization myself] ; identify which org the solution is attached to
-    set to-solution chosenSolution ; identify which solution the org is attaching
-  ]
-;   print "search-nearby done"
-;    if capacity > [cost] of chosenSolution and capacity * [efficiency] of chosenSolution > [difficulty] of [link-neighbors] of myself
-;             ; FX: How to model how they eval the efficiency of the solution when they might not know
-;      [
-;        ask ([link-neighbors] of myself) with [category = "problem"]
-;        [set color blue] ; solved problem
-;        if [adaptation] of chosenSolution = 1 [set adapt 1] ; if the solution is "adaptation-based", code adapt from 0 to 1
-;      ]
-
-end
-
-to search-regionNeighbors ; turtle procedure
-;  print "search regional neigbhors"
-  let sameRegionNrbs [other-end] of (my-links with [category = "sameRegion"])
-  set sameRegionNrbs orgs with [member? self sameRegionNrbs]; convert list to agentset
-
-;  let sameRegionLinks my-links with [category = "sameRegion"]
-;  let sameRegionNrbs link-neighbors with [any? my-links with [member? self sameRegionLinks]]
-  if any? sameRegionNrbs with [to-solution != nobody] [
-      let chosenSameRegionNbr one-of sameRegionNrbs with [to-solution != nobody]
-      let nbrSolution [to-solution] of chosenSameRegionNbr
-      set to-solution nbrSolution
-      ask nbrSolution [set to-organization myself]
-    ]
-end
-
-to search-network
-;  print "search network"
-  let myNbrs [other-end] of (my-links)
-  set myNbrs orgs with [member? self myNbrs]
-  if any? myNbrs with [to-solution != nobody] [
-    let chosenNbr one-of myNbrs with [to-solution != nobody]
-    let nbrSolution [to-solution] of chosenNbr
-    set to-solution nbrSolution
-    ask nbrSolution [set to-organization myself]
-  ]
-end
 
 to innovate
-;  print "innovate"
-  if random-float 1 < 0.2 [
-    let id agencyID
-    ask patch-here [
-      sprout-solutions 1 [
-      set efficiency random-normal 0 1
-      set size efficiency
-      set-cost-and-color
+  if random-float 1 < innoRate [
+   ask patch-here [
+      sprout-solutions 1
+      [
+        set adaptation? true
+        set color red
+        set cost 0.5   ; based on capacity ranging from 0.05 - 0.95, so that about 11% of time, there is adaptation
+        set efficacy 0.5 + random-float (1.5 - 0.5) ; the routine solution efficacy is set at random-float 0.5; adaptatione efficacy is higher
       ]
     ]
 
-    ask solutions-here [set to-organization myself]
-    set to-solution solutions-here
-  ]
-end
-
-
-to learn-from-leaders  ; learn from leaders regardless of whether the leader is from the same region
-  let regionLeaders orgs with [leader = true]
-  let model one-of regionLeaders with [to-solution != nobody]
-  if model != nobody [
-    let chosenSolution [to-solution] of model
-    set to-solution chosenSolution
-    ask chosenSolution [
-      set to-organization myself
+    set target-solution one-of solutions-here with [adaptation?]
+    ifelse capacity >  [cost] of target-solution [ ; so far only about 23% of time, there is enough capacity to bear the cost of adaptation
+      let previous-solution current-solution
+      remove-links-between self previous-solution
+      create-org-sol-link-with target-solution
+      set current-solution target-solution
+      set adaptation-change? true
+    ][
+      set solution-ready? true
+      set postpone? true
+      wait-for-opportunity
     ]
+
   ]
 
 end
 
-
-
-to problems-occur  ; kick off organization's risk percpetion to sensing the problem
-  ask orgs [
-;    let problem-links my-links with [category = "problem"]
-;    let problem-neighbors link-neighbors with [any? my-links with [member? self problem-links]]
-    if extremeWeatherFreq = 1 and to-problem = nobody  [
-        let id who
-        let impact impactPerTick ; create var a to be used by patch-here to assess to generate difficulty level
-        ask patch-here [
-           sprout-problems 1 [
-             set problemID who
-             set shape "triangle"
-             set color red
-             set difficulty random-float impact ; the level of difficulty depends on the impact from each event
-             set size 0.6
-             set to-organization orgs with [agencyID = id ]
-        ]
-      ]
-      set to-problem problems-here
+to wait-for-opportunity
+  ask orgs with [disaster?][
+    if solution-ready? [
+      let previous-solution current-solution
+      remove-links-between self previous-solution
+      create-org-sol-link-with target-solution
+      set adaptation-change? true
     ]
   ]
 
-end
-
-to problems-grow ; FX: how do I operationalize problem; how does problem grow: it cannot grow forever. Does there need to be some decay?
-  ask orgs [
-    if to-problem != nobody and extremeWeatherFreq > 1 [  ; after problem is generated, the problem grows with each extreme events (i.e. vulnearblity goes up)
-        let coef weatherIntensity
-        ask to-problem [
-        set difficulty difficulty + coef ^ ( ln (0.01 + 1)) ; problems grow non-linearly as experiencing more EW; problems grows unchecked until adaptation
-        ]
-      ]
-    ]
 
 end
-
-
 
 
 @#$#@#$#@
@@ -376,7 +434,7 @@ initial_num_solutions
 initial_num_solutions
 0
 100
-47.0
+0.0
 1
 1
 NIL
@@ -421,27 +479,27 @@ PLOT
 10
 797
 160
-EW freq, riskPerception
+rp,impact
 Time
 Freq
 0.0
 100.0
 0.0
-10.0
+2.0
 true
-false
+true
 "" ""
 PENS
-"default" 1.0 0 -5298144 true "" "plot mean [extremeWeatherFreq] of orgs\n"
-"pen-1" 1.0 0 -15040220 true "" "plot mean [riskPerceptionSum] of orgs"
+"riskPer" 1.0 0 -15040220 true "" "plot mean [riskPerceptionSum] of orgs"
+"impact" 1.0 0 -5298144 true "" "plot mean [impactPerTick] of orgs"
 
 MONITOR
 230
 385
-296
+302
 430
-Mean Diff
-mean [difficulty] of problems
+minRiskPer
+min [riskPerceptionSum] of orgs
 2
 1
 11
@@ -449,21 +507,10 @@ mean [difficulty] of problems
 MONITOR
 305
 385
-364
+382
 430
-Max Diff
-max [difficulty] of problems
-2
-1
-11
-
-MONITOR
-370
-385
-427
-430
-Min Diff
-min [difficulty] of problems
+maxRiskPer
+max [riskPerceptionSum] of orgs
 2
 1
 11
@@ -476,8 +523,8 @@ SLIDER
 maxResilience
 maxResilience
 0
-20
-11.0
+10
+0.0
 1
 1
 NIL
@@ -486,13 +533,13 @@ HORIZONTAL
 SLIDER
 5
 195
-175
+177
 228
-extremeWeatherDamage
-extremeWeatherDamage
+weatherSeverity
+weatherSeverity
 0
 20
-10.0
+0.0
 1
 1
 NIL
@@ -505,20 +552,20 @@ SLIDER
 273
 memory
 memory
-0
-48
-24.0
+24
+72
+26.0
 1
 1
 NIL
 HORIZONTAL
 
 MONITOR
-435
+390
 385
-547
+502
 430
-riskPerceptionSum
+MeanRiskPer
 mean [riskPerceptionSum] of orgs
 2
 1
@@ -533,7 +580,7 @@ perceptionThreshold
 perceptionThreshold
 0
 10
-5.0
+2.0
 1
 1
 NIL
@@ -548,32 +595,187 @@ scanningRange
 scanningRange
 0
 10
-5.0
+0.0
 1
 1
 NIL
 HORIZONTAL
 
 MONITOR
-225
+230
+440
+287
+485
+minImp
+min [impactPertick] of orgs
+2
+1
+11
+
+MONITOR
+300
+440
+362
+485
+meanImp
+mean [impactPerTick] of orgs
+2
+1
+11
+
+MONITOR
+375
+440
+432
+485
+maxImp
+max [impactPerTick] of orgs
+2
+1
+11
+
+PLOT
+600
+220
+800
+370
+plot 1
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 1 -16777216 true "" "histogram [riskPerceptionSum] of orgs"
+
+SLIDER
+0
+355
+172
+388
+innoRate
+innoRate
+0
+1
+0.7
+0.01
+1
+NIL
+HORIZONTAL
+
+MONITOR
+445
 435
-302
+502
 480
-AttachedSol
-count solutions with [to-organization != nobody]
+adapted
+count orgs with [adaptation-change? ]
+0
+1
+11
+
+SLIDER
+0
+390
+172
+423
+disasterMemory
+disasterMemory
+0
+100
+36.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+5
+430
+177
+463
+initialPerception
+initialPerception
+0
+1
+0.4
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+550
+440
+652
+485
+meanRiskPerALL
+mean [riskPerceptionfromAll] of orgs
+2
+1
+11
+
+MONITOR
+545
+385
+622
+430
+diasterOrgs
+count orgs with [disaster?]
 0
 1
 11
 
 MONITOR
-315
+660
+390
+772
 435
-377
-480
-OrgToSol
-count orgs with [to-solution != nobody]
+riskPerFromOthers
+mean [riskPerceptionFromOthers] of orgs
+2
+1
+11
+
+PLOT
+880
+45
+1080
+195
+change
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -13840069 true "" "plot count orgs with [adaptation-change?]"
+"pen-1" 1.0 0 -16777216 true "" "plot count orgs with [incremental-change?]"
+
+MONITOR
+230
+490
+297
+535
+InChange
+count orgs with [incremental-change?]
 0
 1
+11
+
+OUTPUT
+315
+515
+555
+569
 11
 
 @#$#@#$#@

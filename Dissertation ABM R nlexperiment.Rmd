@@ -1,0 +1,29 @@
+---
+title: "R Experiments on Dissertation ABM"
+output: html_notebook
+---
+
+```{r}
+library(dplyr)
+library(purrr)
+library(ggplot2)
+```
+ 
+
+## Windows
+```{r}
+library(nlexperiment)
+nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
+setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
+model_file_path="C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation ABM 0522.nlogo"
+
+```
+
+## AGAVE
+
+```{r}
+
+
+
+```
+
