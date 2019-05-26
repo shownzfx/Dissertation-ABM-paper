@@ -2,7 +2,7 @@
 library(nlexperiment)
 nl_netlogo_path("/packages/7x/netlogo/6.0.2/app")  #to netlogo installation on AGAVE
 setwd("/home/fzhang59/dev/Dissertation-ABM-paper")
-module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Dissertation_ABM_0526.nlogo"
+module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Dissertation_ABM_0526_QuickerVersion.nlogo"
 
 #experiment
 
@@ -11,15 +11,16 @@ experiment <- nl_experiment(
   repetitions = 10,
   iterations = 720,
   
-  param_values = list(
-    meanRIskThreshold = seq(0.3,0.5,0.1),
-    scanningRange = seq(1,6,2),
-    numWindows = seq(0,8,2),
+  param_values = nl_param_oat(
+    n=10,
+    meanRIskThreshold = c(0.2,0.4,0.5),
+    scanningRange = c(1,3,6),
+    numWindows = c(0,4,10),
     badImpact = 0.08,
-    impactReductionRate = seq(0.1,0.3,0.05),
-    maxCopingReduction = c(0, 0.20,0.30, 0.40),
+    impactReductionRate = c(0.1,0.15,0.3),
+    maxCopingReduction = c(0,0.20,0.45),
     adaptationCost = 6.5,
-    capBoost = seq(0, 3,1),
+    capBoost = c(0, 3,5),
     simTicks = 720
   ),
   run_measures = measures(
