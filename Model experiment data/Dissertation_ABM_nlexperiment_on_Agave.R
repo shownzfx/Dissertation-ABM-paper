@@ -1,9 +1,8 @@
 
 library(nlexperiment)
 nl_netlogo_path("/packages/7x/netlogo/6.0.2/app")  #to netlogo installation on AGAVE
-nl_netlogo_path()
-"C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Model experiment data"
-module_file_path =  "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation ABM 0526.nlogo"
+# setwd("/home/fzhang59/dev/Dissertation-ABM-paper/Model experiment data")
+module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Dissertation ABM 0526.nlogo"
 
 #experiment
 
@@ -39,6 +38,8 @@ experiment <- nl_experiment(
 # cbind(experiment$mapping)  #check parameter names mapping
 
 result1 <- nl_run(experiment, parallel = T)
+save.image("/home/fzhang59/dev/output.RData")
+
 
 
 
