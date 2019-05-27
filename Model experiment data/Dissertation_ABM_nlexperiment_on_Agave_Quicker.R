@@ -35,12 +35,12 @@ experiment <- nl_experiment(
     # disasterWindows="[disasterWindows] of orgs",
     # orgWindows="[orgWindows] of orgs"
   ),
-  agents_step = list(
-    orgs = agent_set(
-      vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity"),
-      agents = "orgs")
-  ),
-  mapping = nl_default_mapping
+  # agents_step = list(
+  #   orgs = agent_set(
+  #     vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity"),
+  #     agents = "orgs")
+  # ),
+  # mapping = nl_default_mapping
 )
 
 
