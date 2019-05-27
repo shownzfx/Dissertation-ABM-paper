@@ -11,7 +11,7 @@ undirected-link-breed [org-diffReg-links org-diffReg-link]
 undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 
 globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalWindowMissed
-         totalWindowOpen totalInsufBoost totalNoSolution]
+         totalWindowOpen totalInsufBoost totalNoSolution totalDisasterWindows]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost to-opportunity adaptation? solRegion]; solutions include both non-adaptation and adaptation measures
@@ -101,6 +101,7 @@ to setup
   set totalInsufBoost 0
   set totalWindowOpen 0
   set totalNoSolution 0
+  set totalDisasterWindows 0
   import-orgs
   setup-orgs
   setup-windows
@@ -486,6 +487,7 @@ to windows-byDeclaration
   ask orgs [
       if declared? [
       set disasterWindows fput ticks disasterWindows
+      set totalDisasterWindows totalDisasterWindows + 1
       set windows fput disasterWindows windows
       set windows remove-duplicates windows
     ]
@@ -1113,7 +1115,7 @@ numWindows
 numWindows
 0
 10
-5.0
+7.0
 1
 1
 NIL
@@ -1288,6 +1290,17 @@ MONITOR
 490
 ready
 count orgs with [solution-ready?]
+0
+1
+11
+
+MONITOR
+710
+410
+772
+455
+#declare
+totalDisasterWindows
 0
 1
 11
