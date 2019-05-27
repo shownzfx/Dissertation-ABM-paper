@@ -10,7 +10,8 @@ undirected-link-breed [org-sameReg-links org-sameReg-link]
 undirected-link-breed [org-diffReg-links org-diffReg-link]
 undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 
-globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList  ]
+globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalWindowMissed
+         totalWindowOpen totalInsufBoost totalNoSolution]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost to-opportunity adaptation? solRegion]; solutions include both non-adaptation and adaptation measures
@@ -24,6 +25,7 @@ orgs-own [
   leader?
   diffRegionNeighbors
   partner
+  insufBoost?
   target-patches
   extremeWeatherProb
   disasterFreq
@@ -38,7 +40,6 @@ orgs-own [
   solEfficacy
   originalEfficacy
   maxCopingEfficacy
-  copingChangeNum
   FTARegion
   passRate
   declarationRate
@@ -47,7 +48,8 @@ orgs-own [
   knownSolutions
   search-adaptation?
   missedWindows
-  insufBoost
+  insufBoost?
+  insufBoostTicks
   knownSolFromOffice
   regional-leader?
   regionalNeighbors
@@ -57,6 +59,7 @@ orgs-own [
   extremeWeatherFreq
   impactPerTick
   impactExp
+  copingLimit
 ;  freqImpactExp ; cumulative
   weatherSeverityImpactExp
   weatherImpactExp
@@ -69,6 +72,8 @@ orgs-own [
   expectedImpact
   riskPerceptionThreshold
   windows
+  window-open?
+  window-missed?
   orgWindows
   disasterWindows
 ;  riskPerceptionfromAll  ; risk perceptiom from agency's own exp and from watching their neighbors
@@ -92,6 +97,10 @@ to setup
 
   set strategies ["routine" "adaptation"]
   set-default-shape solutions "box"
+  set totalWindowMissed 0
+  set totalInsufBoost 0
+  set totalWindowOpen 0
+  set totalNoSolution 0
   import-orgs
   setup-orgs
   setup-windows
@@ -146,17 +155,21 @@ to setup-orgs
     set shape "circle"
     set size 0.6
     set extremeWeatherFreq 0
-    set copingChangeNum 0
+
 ;    set resilience 2 + random-float 1 ;resilience is the ax magnitude of disturbances that can be tolerated before incurring impacts, can be negative
 ;    set initialResilience resilience
     set solution-ready? false
     set not-found? false
+    set copingLimit 0
     set windows []
     set orgWindows []
     set disasterWindows []
-    set insufBoost []
+    set insufBoostTicks []
+    set insufBoost? false
     set crossRiskThresholdTicks []
     set missedWindows []
+    set window-open? false
+    set window-missed? false
     set adaptTicks []
     set knownSolFromOffice []
     set satisfied? true
@@ -392,19 +405,22 @@ end
 to go
   check-weather  ;unless otherwise indicated, the go procedures apply to orgs
   expect-impact
+  determine-satisfaction
   windows-byDeclaration
   search-solution
-
+  check-implementation
   check-window
-  check-adaptation ; this is the FTAoffice procedure; at
+  FTAcheck-adaptation ; this is the FTAoffice procedure; at
 
   ; restore values of some variables
   ask orgs [
     set extremeWeather? false
     set disaster? false
     set declared? false
-    set satisfied? true
+;   set satisfied? true
     set capacity originalCapacity
+    set extremeWeatherProb extremeWeatherProb * (1 + random-float 0.0001)
+    set disasterProb disasterProb * (1 + random-float 0.0001)
     if expectedBadWeatherSeverity < expectedImpact [
       print "warning: expected weather severity smaller than expected impact"
     ]
@@ -423,7 +439,7 @@ to go
   ]
  ]
 
-  if ticks > simTicks [stop]
+ ;if ticks >= simTicks [stop]
 
 end
 
@@ -466,11 +482,16 @@ to check-weather
   ]
 
 end
-
-to-report riskInfluence-from-others
-
-
+to windows-byDeclaration
+  ask orgs [
+      if declared? [
+      set disasterWindows fput ticks disasterWindows
+      set windows fput disasterWindows windows
+      set windows remove-duplicates windows
+    ]
+  ]
 end
+
 
 to expect-impact
   ask orgs [
@@ -488,31 +509,29 @@ to expect-impact
   ]
 end
 
-to windows-byDeclaration
-  ask orgs [
-      if declared? [
-      set disasterWindows fput ticks disasterWindows
-      set windows fput disasterWindows windows
-      set windows remove-duplicates windows
-    ]
-  ]
-end
 
 
-to search-solution
+to determine-satisfaction
 ;  ask orgs with [not solution-ready? and (not adaptation-change?)][ ; add not adaptation-change to limit adaptation to only once
-  ask orgs with [expectedImpact > riskPerceptionThreshold]  [ ;only orgs with no alternative solution are looking
-    if not solution-ready? [
+  ask orgs [;only orgs with no alternative solution are looking
+    ifelse expectedImpact > riskPerceptionThreshold
+    [set satisfied? false]
+    [set satisfied? true]
+  ]
 
+end
+to search-solution
+  ask orgs with [not satisfied?][
+    if not solution-ready? [
       let currentImpact expectedBadWeatherSeverity -  solEfficacy  ; note here it does not multiply the expectedEWProb
-      let targetSolEfficacy calculate-target-efficacy solEfficacy currentImpact expectedBadWeatherSeverity  (random-float impactReductionRate  + 0.10)
-      ifelse targetSolEfficacy < maxCopingEfficacy
+      let targetSolEfficacy calculate-target-efficacy solEfficacy currentImpact expectedBadWeatherSeverity  (random-float impactReductionRate + 0.10)
+      ifelse (targetSolEfficacy < maxCopingEfficacy) and (copingLimit < 1)
     [
          ask current-solution [set efficacy targetSolEfficacy]
          set solEfficacy [efficacy] of current-solution
-         set copingChangeNum copingChangeNum + 1
          set copingChangeTicks fput ticks copingChangeTicks
          set coping-change? true
+         set copingLimit 1 + copingLimit
    ][
          set search-adaptation? true
          search-adaptation
@@ -533,25 +552,74 @@ to search-adaptation
   [assess-allSolutions]
 
   if targetSolution != nobody
-  [
-    set solution-ready? true
+  [set solution-ready? true]
+
+end
+
+to check-implementation
+  ask orgs with [not satisfied? and solution-ready?][
     ifelse capacity < [cost] of targetSolution
-   [
-     set postponed? true
-     set color red
-   ][
-     implement-adaptation
+    [
+      set postponed? true
+      set color red
     ]
+    [implement-adaptation]
   ]
 
 end
 
 
+to check-window
+  if open-windows?[
+    ask orgs ;with [postponed?]
+    [
+      ifelse not member? ticks windows
+      [
+        set window-open? false
+        set window-missed? false
+      ]
+
+      [
+        set window-open? true
+        set totalWindowOpen totalWindowOpen + 1
+        ifelse postponed?
+        [boost-capacity]
+        [
+          set window-missed? true
+          set totalNoSolution totalNoSolution + 1
+          set TotalWindowMissed TotalWindowMissed + 1
+        ]
+      ]
+    ]
+  ]
+end
+
+to boost-capacity
+   set capacity capacity * (1  + random-float capBoost)
+   ifelse expectedImpact > riskPerceptionThreshold
+   [
+    ifelse capacity >= [cost] of targetSolution
+      [implement-adaptation]
+      [
+        set insufBoostTicks fput ticks insufBoostTicks
+        set insufBoost? true
+        set totalInsufBoost totalInsufBoost + 1
+     ]
+  ]
+  [
+      set missedWindows fput ticks missedWindows
+      set window-missed? true
+      set TotalWindowMissed TotalWindowMissed + 1
+      set insufBoost? false
+  ]
+
+end
+
 to assess-allSolutions
    let mySolEfficacy [efficacy] of current-solution
-   let adaptationPool solutions with [adaptation? and efficacy > mySolEfficacy * (1 + 1)]
+   let adaptationPool solutions with [adaptation? and efficacy > mySolEfficacy ]
    if any? adaptationPool
-   [set targetSolution one-of adaptationPool with-max [efficacy]]
+   [set targetSolution one-of adaptationPool ] ; randomly select one adaptation with better efficacy
 
 end
 
@@ -568,7 +636,8 @@ to assess-thruNetwork
 
 
   ifelse any? knownSolutions
-  [set targetSolution one-of knownSolutions]
+  [set targetSolution one-of knownSolutions
+   set not-found? false]
   [
     set targetSolution nobody
     set not-found? true
@@ -590,22 +659,9 @@ to implement-adaptation
     set postponed? false
 end
 
-to check-window
-  if open-windows?[
-    ask orgs with [postponed? and member? ticks windows][
-      set capacity capacity * (1  + random-float capBoost)
-      ifelse expectedImpact > riskPerceptionThreshold [
-        ifelse capacity >= [cost] of targetSolution
-        [implement-adaptation]
-        [set insufBoost fput ticks insufBoost]
-      ][
-        set missedWindows fput ticks missedWindows
-      ]
-    ]
-  ]
-end
 
-to check-adaptation
+
+to FTAcheck-adaptation
 
   ask FTAoffices[
     set projectInventory (turtle-set [current-solution] of FTAoffice-org-link-neighbors) with [adaptation?]
@@ -793,7 +849,7 @@ PLOT
 #Adopters
 NIL
 NIL
-0.0
+1.0
 10.0
 0.0
 10.0
@@ -810,7 +866,7 @@ MONITOR
 367
 415
 coping
-count orgs with [copingChangeNum > 0]
+count orgs with [length copingChangeTicks > 0]
 0
 1
 11
@@ -884,10 +940,10 @@ PENS
 "threshold" 1.0 0 -8053223 true "" "plot  [riskPerceptionThreshold] of one-of orgs with-max [originalEfficacy]"
 
 SWITCH
-590
-180
-722
-213
+585
+165
+717
+198
 random-seed?
 random-seed?
 1
@@ -975,7 +1031,7 @@ impactReductionRate
 impactReductionRate
 0
 0.2
-0.2
+0.15
 0.01
 1
 NIL
@@ -990,7 +1046,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.4
+0.41
 0.01
 1
 NIL
@@ -1005,7 +1061,7 @@ maxCopingReduction
 maxCopingReduction
 0
 0.5
-0.35
+0.31
 0.01
 1
 NIL
@@ -1057,17 +1113,17 @@ numWindows
 numWindows
 0
 10
-7.0
+5.0
 1
 1
 NIL
 HORIZONTAL
 
 SWITCH
-590
-255
-727
-288
+580
+235
+717
+268
 open-windows?
 open-windows?
 0
@@ -1077,11 +1133,11 @@ open-windows?
 MONITOR
 465
 370
-522
+527
 415
-minImp
-min [expectedImpact] of orgs
-2
+insuBoost
+totalInsufBoost
+0
 1
 11
 
@@ -1101,10 +1157,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-590
-220
-737
-253
+580
+200
+727
+233
 resilience-decay?
 resilience-decay?
 1
@@ -1112,10 +1168,10 @@ resilience-decay?
 -1000
 
 SWITCH
-585
-295
-732
-328
+575
+275
+722
+308
 trigger-network?
 trigger-network?
 0
@@ -1145,10 +1201,10 @@ count orgs with [not-found? and [adaptation?] of current-solution]
 11
 
 SWITCH
-585
-335
-747
-368
+575
+315
+737
+348
 random-riskThresh?
 random-riskThresh?
 0
@@ -1156,10 +1212,10 @@ random-riskThresh?
 -1000
 
 SWITCH
-590
-375
-702
-408
+580
+355
+692
+388
 othersInf?
 othersInf?
 1
@@ -1175,11 +1231,66 @@ simTicks
 simTicks
 0
 3000
-1500.0
-100
+840.0
+10
 1
 NIL
 HORIZONTAL
+
+MONITOR
+385
+370
+442
+415
+#missed
+TotalWindowMissed
+0
+1
+11
+
+MONITOR
+545
+395
+617
+440
+happyPost
+count orgs with [satisfied? and postponed?]
+0
+1
+11
+
+MONITOR
+630
+395
+687
+440
+#open
+totalWindowOpen
+0
+1
+11
+
+MONITOR
+545
+445
+602
+490
+#noSol
+totalNoSolution
+0
+1
+11
+
+MONITOR
+620
+445
+677
+490
+ready
+count orgs with [solution-ready?]
+0
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
