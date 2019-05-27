@@ -15,10 +15,10 @@ experiment <- nl_experiment(
   model_file = module_file_path,
   repetitions = 10,
   random_seed = 1:10,
-  iterations = 720,
+  iterations = 840,
   
   param_values = nl_param_oat(
-    n=20,
+    n=10,
     meanRIskThreshold = c(0.2,0.4,0.5),
     scanningRange = c(1,3,6),
     numWindows = c(0,4,10),
@@ -27,14 +27,21 @@ experiment <- nl_experiment(
     maxCopingReduction = c(0,0.20,0.45),
     adaptationCost = 6.5,
     capBoost = c(0, 3,5),
-    simTicks = 720
+    simTicks = 840
   ),
   run_measures = measures(
     copingNum = "count orgs with [coping-change?]",
     adaptNum = "count orgs with [adaptation-change?]"
-    # disasterWindows="[disasterWindows] of orgs",
-    # orgWindows="[orgWindows] of orgs"
   ),
+  step_measures = measures(
+    sCoping="count orgs with [coping-change?]",
+    sAdapt="count orgs with [adaptation-change?]",
+    sNotFound="count orgs with [not-found?]",
+    SInsufBoost="count orgs with [insufBoost?]",
+    sWindowOpen="count orgs with [window-open?]",
+    sWindowMissed="count orgs with [window-missed?]",
+    sHappy="count orgs with [satisfied?]"
+  ), 
   # agents_step = list(
   #   orgs = agent_set(
   #     vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity"),
@@ -44,11 +51,14 @@ experiment <- nl_experiment(
 )
 
 
-result <- nl_run(experiment,parallel = T)
-# save.image("output_quicker_RunMeasure.RData")
-runData<-nl_get_run_result(result)
-write.csv(runData,"test Run data 0526.csv")
+result <- nl_run(experiment)
 
+runData<-nl_get_run_result(result)
+stepData<-nl_get_step_result(result)
+write.csv(runData,"Run measures 0526.csv")
+write.csv(stepData,"Step measures 0526.csv")
+
+save.image("output_quicker_RunMeasure.RData")
 
 
 

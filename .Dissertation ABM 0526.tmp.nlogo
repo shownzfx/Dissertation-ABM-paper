@@ -58,7 +58,6 @@ orgs-own [
   extremeWeatherFreq
   impactPerTick
   impactExp
-  copingLimit
 ;  freqImpactExp ; cumulative
   weatherSeverityImpactExp
   weatherImpactExp
@@ -155,7 +154,6 @@ to setup-orgs
 ;    set initialResilience resilience
     set solution-ready? false
     set not-found? false
-    set copingLimit 0
     set windows []
     set orgWindows []
     set disasterWindows []
@@ -400,10 +398,9 @@ end
 to go
   check-weather  ;unless otherwise indicated, the go procedures apply to orgs
   expect-impact
-  determine-satisfaction
   windows-byDeclaration
   search-solution
-  check-implementation
+
   check-window
   FTAcheck-adaptation ; this is the FTAoffice procedure; at
 
@@ -414,8 +411,8 @@ to go
     set declared? false
 ;   set satisfied? true
     set capacity originalCapacity
-    set extremeWeatherProb extremeWeatherProb * (1 + random-float 0.0001)
-    set disasterProb disasterProb * (1 + random-float 0.0001)
+    set extremeWeatherProb extremeWeatherProb * (1 + random-float 0.00005)
+    set disasterProb disasterProb * (1 + random-float 0.00005)
     if expectedBadWeatherSeverity < expectedImpact [
       print "warning: expected weather severity smaller than expected impact"
     ]
@@ -434,7 +431,7 @@ to go
   ]
  ]
 
- if ticks >= simTicks [stop]
+ if ticks > simTicks [stop]
 
 end
 
@@ -477,16 +474,11 @@ to check-weather
   ]
 
 end
-to windows-byDeclaration
-  ask orgs [
-      if declared? [
-      set disasterWindows fput ticks disasterWindows
-      set windows fput disasterWindows windows
-      set windows remove-duplicates windows
-    ]
-  ]
-end
 
+to-report riskInfluence-from-others
+
+
+end
 
 to expect-impact
   ask orgs [
@@ -504,29 +496,30 @@ to expect-impact
   ]
 end
 
-
-
-to determine-satisfaction
-;  ask orgs with [not solution-ready? and (not adaptation-change?)][ ; add not adaptation-change to limit adaptation to only once
-  ask orgs [;only orgs with no alternative solution are looking
-    ifelse expectedImpact > riskPerceptionThreshold
-    [set satisfied? false]
-    [set satisfied? true]
+to windows-byDeclaration
+  ask orgs [
+      if declared? [
+      set disasterWindows fput ticks disasterWindows
+      set windows fput disasterWindows windows
+      set windows remove-duplicates windows
+    ]
   ]
-
 end
+
 to search-solution
-  ask orgs with [not satisfied?][
+;  ask orgs with [not solution-ready? and (not adaptation-change?)][ ; add not adaptation-change to limit adaptation to only once
+  ask orgs with [expectedImpact > riskPerceptionThreshold]  [ ;only orgs with no alternative solution are looking
+    set satisfied? false
     if not solution-ready? [
+
       let currentImpact expectedBadWeatherSeverity -  solEfficacy  ; note here it does not multiply the expectedEWProb
-      let targetSolEfficacy calculate-target-efficacy solEfficacy currentImpact expectedBadWeatherSeverity  (random-float impactReductionRate + 0.10)
-      ifelse (targetSolEfficacy < maxCopingEfficacy) and (copingLimit < 1)
+      let targetSolEfficacy calculate-target-efficacy solEfficacy currentImpact expectedBadWeatherSeverity  (random-float impactReductionRate  + 0.10)
+      ifelse targetSolEfficacy < maxCopingEfficacy
     [
          ask current-solution [set efficacy targetSolEfficacy]
          set solEfficacy [efficacy] of current-solution
          set copingChangeTicks fput ticks copingChangeTicks
          set coping-change? true
-         set copingLimit 1 + copingLimit
    ][
          set search-adaptation? true
          search-adaptation
@@ -547,17 +540,15 @@ to search-adaptation
   [assess-allSolutions]
 
   if targetSolution != nobody
-  [set solution-ready? true]
-end
-
-to check-implementation
-  ask orgs with [not satisfied? and solution-ready?][
+  [
+    set solution-ready? true
     ifelse capacity < [cost] of targetSolution
-    [
-      set postponed? true
-      set color red
+   [
+     set postponed? true
+     set color red
+   ][
+     implement-adaptation
     ]
-    [implement-adaptation]
   ]
 
 end
@@ -594,7 +585,7 @@ end
 
 to assess-allSolutions
    let mySolEfficacy [efficacy] of current-solution
-   let adaptationPool solutions with [adaptation? and efficacy > mySolEfficacy ]
+   let adaptationPool solutions with [adaptation? and efficacy > mySolEfficacy * (1 + 1)]
    if any? adaptationPool
    [set targetSolution one-of adaptationPool with-max [efficacy]]
 
@@ -614,7 +605,7 @@ to assess-thruNetwork
 
   ifelse any? knownSolutions
   [set targetSolution one-of knownSolutions
-   set not-found? false]
+]
   [
     set targetSolution nobody
     set not-found? true
@@ -1023,7 +1014,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.39
+0.45
 0.01
 1
 NIL
@@ -1208,8 +1199,8 @@ simTicks
 simTicks
 0
 3000
-840.0
-10
+1500.0
+100
 1
 NIL
 HORIZONTAL
@@ -1221,17 +1212,6 @@ MONITOR
 415
 #missed
 count orgs with [window-missed?]
-0
-1
-11
-
-MONITOR
-555
-425
-612
-470
-happy
-count orgs with [satisfied?]
 0
 1
 11
