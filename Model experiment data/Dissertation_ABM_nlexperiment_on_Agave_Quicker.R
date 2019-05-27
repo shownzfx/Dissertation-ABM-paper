@@ -42,6 +42,9 @@ experiment <- nl_experiment(
   ),
   mapping = nl_default_mapping
 )
+
+
+result <- nl_run(experiment,parallel = T)
 save.image("output_quicker.RData")
 
 
