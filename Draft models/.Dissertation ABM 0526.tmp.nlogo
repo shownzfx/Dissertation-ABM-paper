@@ -604,7 +604,8 @@ to assess-thruNetwork
 
 
   ifelse any? knownSolutions
-  [set targetSolution one-of knownSolutions]
+  [set targetSolution one-of knownSolutions
+]
   [
     set targetSolution nobody
     set not-found? true
@@ -1198,7 +1199,7 @@ simTicks
 simTicks
 0
 3000
-1200.0
+1500.0
 100
 1
 NIL

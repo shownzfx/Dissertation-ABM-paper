@@ -1,4 +1,11 @@
 ---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+---
 title: "R Experiments on Dissertation ABM"
 output: html_notebook
 editor_options: 
@@ -19,7 +26,7 @@ knitr::opts_knit$set(root.dir = "C:/Z-Work/Dissertation/Data and analysis/Disser
 ## Windows
 ```{r}
 nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
-setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
+setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Model data and analysis_Windows")
 module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation_ABM_0526_QuickerVersion.nlogo"
 ```
 
@@ -69,17 +76,17 @@ experiment <- nl_experiment(
     riskPerceptionThreshold="[riskPerceptionThreshold] of orgs",
     expectedImpact="[expectedImpact] of orgs"
   ),
-  # eval_criteria = criteria(
-  #   meanAdaptNum=mean(step$sAdapt),
-  #   stdAdaptNum=sd(step$sAdapt),
-  #   meanCopingNum=mean(sCoping),
-  #   sdCopingnum=sd(sCoping)
-  # ),
-  # agents_step = list(
-  #   orgs = agent_set(
-  #     vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity"),
-  #     agents = "orgs")
-  # ),
+  eval_criteria = criteria(
+    meanAdaptNum=mean(step$sAdapt),
+    stdAdaptNum=sd(step$sAdapt),
+    meanCopingNum=mean(sCoping),
+    sdCopingnum=sd(sCoping)
+  ),
+  agents_step = list(
+    orgs = agent_set(
+      vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity"),
+      agents = "orgs")
+  ),
   mapping = nl_default_mapping 
 )
 # cbind(experiment$mapping)  #check parameter names mapping
