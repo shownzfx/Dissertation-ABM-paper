@@ -45,7 +45,9 @@ experiment <- nl_experiment(
 
 
 result <- nl_run(experiment,parallel = T)
-save.image("output_quicker_RunMeasure.RData")
+# save.image("output_quicker_RunMeasure.RData")
+runData<-nl_get_run_result(result)
+write.csv(runData,"test Run data 0526.csv")
 
 
 
