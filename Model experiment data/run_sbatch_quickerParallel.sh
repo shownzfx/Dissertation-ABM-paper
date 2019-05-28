@@ -9,5 +9,5 @@
 #SBATCH --mail-user=fzhang59@asu.edu # send-to address
 
 module load rstudio/1.1.423
-srun Rscript Dissertation_ABM_Agave_Quicker_RunMeasuresParallel.R
+srun Rscript Dissertation_ABM_Agave_Quicker_Parallel.R
 date

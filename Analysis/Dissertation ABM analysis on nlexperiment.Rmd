@@ -1,0 +1,221 @@
+---
+title: "R Experiments on Dissertation ABM"
+output: html_notebook
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup}
+library(dplyr)
+library(purrr)
+library(ggplot2)
+library(nlexperiment)
+library(tidyr)
+
+knitr::opts_knit$set(root.dir = "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Model experiment data")
+```
+ 
+
+## Windows
+```{r}
+nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
+setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
+module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation_ABM_0526_QuickerVersion.nlogo"
+```
+
+## experiment using windows
+
+```{r}
+nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
+setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
+module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation_ABM_0527_QuickerVersion.nlogo"
+
+experiment <- nl_experiment(
+  model_file = module_file_pathWindows,
+  repetitions =3,
+  random_seed = 1:3,
+  iterations =840,
+  
+  param_values = nl_param_oat(
+    n=10,
+    meanRIskThreshold = 0.4,
+    scanningRange = c(1,3,6),
+    numWindows = c(0,4,10),
+    badImpact = 0.08,
+    impactReductionRate =0.25,
+    maxCopingReduction = 0.40,
+    adaptationCost = 6.5,
+    capBoost = c(0, 3,5),
+    simTicks = 840
+  ),
+
+  run_measures = measures(
+    copingNum = "count orgs with [coping-change?]",
+    adaptNum = "count orgs with [adaptation-change?]",
+    insufBoost ="totalInsufBoost",
+    windowMissed="totalwindowMissed",
+    windowoOpen="totalWindowOpen",
+    noSolution="totalNoSolution",
+    disasterWindows="totalDisasterWindows",
+    riskPerceptionThreshold="[riskPerceptionThreshold] of orgs"
+    ),
+  step_measures = measures(
+    sCoping="count orgs with [coping-change?]",
+    sAdapt="count orgs with [adaptation-change?]",
+    sNotFound="count orgs with [not-found?]",
+    SInsufBoost="count orgs with [insufBoost?]",
+    sWindowOpen="count orgs with [window-open?]",
+    sWindowMissed="count orgs with [window-missed?]",
+    sHappy="count orgs with [satisfied?]"
+  ),
+  eval_criteria = criteria(
+    meanAdaptNum=mean(step$sAdapt),
+    stdAdaptNum=sd(step$sAdapt),
+    meanCopingNum=mean(sCoping),
+    sdCopingnum=sd(sCoping)
+  ),
+  agents_step = list(
+    orgs = agent_set(
+      vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity"),
+      agents = "orgs")
+  ),
+  mapping = nl_default_mapping 
+)
+# cbind(experiment$mapping)  #check parameter names mapping
+
+# result1<- nl_run(experiment,parallel = T)
+result840<- nl_run(experiment,parallel = T)
+
+```
+ 
+```{r}
+cbind(experiment$mapping)  #check parameter names mapping
+nl_show_params(experiment)
+nl_get_param_range(experiment)
+save.image("test dissertation data.RData")
+
+```
+
+## ## oat sensitivity analysis
+```{r}
+data1Run <- nl_get_run_result(result);dim(data1Run)
+
+data_long<-gather(dataRun,key="paramName",value="paramValue", c("meanRIskThreshold","scanningRange","numWindows","impactReductionRate","capBoost"))
+
+ggplot(data_long,aes(x=paramValue,y=adaptNum))+
+  geom_point(alpha=0.4)+
+  stat_smooth(method="lm", color="red")+
+  facet_wrap(~paramName,scales="free_x")+
+  ggtitle("Adaptation and parameters")+
+  theme_bw()
+#adaptation is sensitive to capBoost, meanRiskThreshold,numWindows and scanning range,not sensitive to impactReductionRate,
+
+ggplot(data_long,aes(x=paramValue,y=copingNum))+
+  geom_point(alpha=0.4)+
+  stat_smooth(method="lm", color="red")+
+  facet_wrap(~paramName,scales="free_x")+
+  ggtitle("Coping and parameters")+
+  theme_bw() 
+#coping is not sensitive to capBoost,meanriskperception, numwindows, only slightly related to impactReductionRate and ScanningRange
+#Not sensitive to impactReductionRate and meanRiskThreshold
+
+```
+
+##  Show step
+```{r}
+data1Step<-nl_get_step_result(result);dim(data1Step)
+
+data1StepAgg<- data1Step %>% filter(maxCopingReduction >= 0.40) %>% group_by(step_id) %>% summarise(meanAdaptNum=mean(sAdapt), sdAdaptNum=sd(sAdapt), meanCopingNum=mean(sCoping), meanNotFound=mean(sNotFound), meanInsufBoost=mean(SInsufBoost),meanWindowOpen=mean(sWindowOpen), meanWindowMissed=mean(sWindowMissed))
+#meanCopingNum=mean(sCoping), sdCopingNum=sd(sCoping))
+
+data1StepAgg %>% filter(step_id==1)
+
+ggplot(data1StepAgg %>% filter(step_id>1))+
+  geom_line(aes(x=step_id, y=meanAdaptNum),color="green",size=1.2)+
+  # geom_line(aes(x=step_id, y=meanCopingNum),color="red",size=1.2)+
+  geom_line(aes(x=step_id, y=meanNotFound),color="violet")+
+  geom_line(aes(x=step_id,y=meanWindowOpen), color="skyblue")+
+  # geom_line(aes(x=step_id,y=meanWindowMissed), color="yellow")+
+  theme_minimal()
+
+```
+
+ 
+```{r}
+
+ggplot(data1Run, aes(x = factor(capBoost), y = adaptNum)) +
+  geom_boxplot(fill = "grey") +
+  labs(y = "number of adapting orgs", x = "capacity boost") +
+  theme_minimal()
+
+ggplot(data1Run, aes(x = factor(capBoost), y = copingNum)) +
+  geom_boxplot(fill = "grey") +
+  labs(y = "number of adapting orgs", x = "capacity boost") +
+  theme_minimal()
+```
+
+## Check adaptation conditions
+```{r}
+data1Step <- nl_get_result(result1, type = "agents_step", sub_type = "orgs");dim(data1Step)
+
+
+run1<-data1Step %>% filter(run_id==1)
+run1<-run1 %>% mutate(satisfied=ifelse(expectedImpact > riskPerceptionThreshold, 0,1))
+
+
+View(run1 %>% filter(satisfied==FALSE & `adaptation-change?`==TRUE) %>% select(`window-open?`,`window-missed?`,satisfied,`adaptation-change?`))
+
+#check whether windows are missed because of under risk perception threshold
+View(run1 %>% filter(`window-open?`==T & `window-missed?`==T) %>% select(`window-open?`,`window-missed?`,satisfied))
+
+#check things when windows are open
+View(run1 %>% filter(`window-open?`==T ) %>% select(`window-open?`,`window-missed?`,satisfied, `insufBoost?`,`adaptation-change?`))
+#three conditions: 1) beyond threshold, 2) windows-open; 3) sufficient boost
+
+
+```
+ 
+ ## graph adaptation over time
+```{r}
+
+data1StepAgg<-data1Step %>% group_by(step_id,param_set_id) %>% summarise(adaptNum=sum(`adaptation-change?`),copingNum=sum(`coping-change?`), missedNum=sum(`window-missed?`), openNum=sum(`window-open?`),`insufBoost?`=sum(`insufBoost?`))
+
+
+AverageAdapt<- data1StepAgg %>% group_by(step_id) %>% summarise(adaptNum=mean(adaptNum), copingNum=mean(copingNum))
+
+
+ggplot(AverageAdapt %>% filter(step_id!=c(1,2,3,4)))+
+  geom_line(aes(x=step_id, y=adaptNum),color="red")+
+  geom_line(aes(x=step_id, y=copingNum),color="green")+
+  theme_minimal()
+
+```
+
+
+## sensitivity analysis
+```{r}
+dataRun<-nl_get_run_result(result)
+
+ggplot(dataRun, aes(x=factor(numWindows),y=adaptNum))+
+  geom_boxplot()
+ggplot(dataRun, aes(x=factor(impactReductionRate),y=adaptNum))+
+  geom_boxplot()
+ggplot(dataRun, aes(x=factor(maxCopingReduction),y=adaptNum))+
+  geom_boxplot()
+ggplot(dataRun, aes(x=factor(capBoost),y=adaptNum))+
+  geom_boxplot()
+
+```
+
+
+
+## AGAVE
+Need to change the wd to github data
+
+```{r}
+nl_netlogo_path("/packages/7x/netlogo/6.0.2/app") # to netlogo installation
+nl_netlogo_path()
+# setwd("/home/fzhang59/dev/EW-model")
+model_file_path <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation ABM 0522.nlogo"
+```
+
