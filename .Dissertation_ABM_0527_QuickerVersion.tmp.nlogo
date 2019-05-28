@@ -606,7 +606,7 @@ to boost-capacity
    ifelse capacity >= [cost] of targetSolution
     [
       implement-adaptation
-      set totalUtilizedWindows totalUtilizedWindows + 1 ; note orgs can adapt more than once
+      set totalUtilizedWindows totalUtilizedWindows + 1 ;
     ]
 
     [

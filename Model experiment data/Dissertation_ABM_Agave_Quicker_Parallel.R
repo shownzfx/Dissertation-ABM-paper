@@ -20,13 +20,13 @@ experiment <- nl_experiment(
   param_values = nl_param_oat(
     n=10,
     meanRIskThreshold = 0.4,
-    scanningRange = 4,
-    numWindows = c(0,4,10),
+    scanningRange = c(1,3,6),
+    numWindows = c(3,6,10),
     badImpact = 0.08,
     impactReductionRate =0.25,
     maxCopingReduction = 0.40,
     adaptationCost = 6.5,
-    capBoost = c(0, 3,5),
+    capBoost = c(2.5, 3,5),
     simTicks = 1000
   ),
   
@@ -37,7 +37,7 @@ experiment <- nl_experiment(
     windowMissed="totalwindowMissed",
     windowoOpen="totalWindowOpen",
     noSolution="totalNoSolution",
-    disasterWindows="totalDisasterWindows"
+    utilizedWindows="totalUtilizedWindows"
   ),
   step_measures = measures(
     sCoping="count orgs with [coping-change?]",
