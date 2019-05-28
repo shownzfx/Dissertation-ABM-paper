@@ -13,8 +13,8 @@ module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Dissertation_ABM_
 
 experiment <- nl_experiment(
   model_file = module_file_path,
-  repetitions =3,
-  random_seed = 1:3,
+  repetitions =10,
+  random_seed = 1:10,
   iterations =840,
   
   param_values = nl_param_oat(
@@ -71,7 +71,7 @@ result <- nl_run(experiment,parallel = T)
 # write.csv(runData,"Run measures 0527.csv")
 # write.csv(stepData,"Step measures 0527.csv")
 
-save.image("output_quicker_RunStepMeasure0527_Parallel.RData")
+save.image("output_quicker_Parallel_10Runs.RData")
 
 
 
