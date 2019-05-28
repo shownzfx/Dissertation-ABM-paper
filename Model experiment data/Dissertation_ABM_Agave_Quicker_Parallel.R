@@ -37,8 +37,7 @@ experiment <- nl_experiment(
     windowMissed="totalwindowMissed",
     windowoOpen="totalWindowOpen",
     noSolution="totalNoSolution",
-    disasterWindows="totalDisasterWindows",
-    riskPerceptionThreshold="[riskPerceptionThreshold] of orgs"
+    disasterWindows="totalDisasterWindows"
   ),
   step_measures = measures(
     sCoping="count orgs with [coping-change?]",
