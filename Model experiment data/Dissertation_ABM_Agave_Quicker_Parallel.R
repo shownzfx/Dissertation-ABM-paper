@@ -34,10 +34,12 @@ experiment <- nl_experiment(
     copingNum = "count orgs with [coping-change?]",
     adaptNum = "count orgs with [adaptation-change?]",
     insufBoost ="totalInsufBoost",
+    disasterWindows="totalDisasterWindows",
     windowMissed="totalwindowMissed",
     windowoOpen="totalWindowOpen",
     noSolution="totalNoSolution",
     utilizedWindows="totalUtilizedWindows",
+    NeededWidows="totalNeededWidows",
     notNeeded="sufficientCap"
   ),
   step_measures = measures(
