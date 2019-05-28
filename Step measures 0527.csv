@@ -1,0 +1,2 @@
+"","meanRIskThreshold","scanningRange","numWindows","badImpact","impactReductionRate","maxCopingReduction","adaptationCost","capBoost","simTicks","param_set_id","sCoping","sAdapt","sNotFound","SInsufBoost","sWindowOpen","sWindowMissed","sHappy","riskPerceptionThreshold","expectedImpact","step_id","run_id"
+"1",0.4,3.4137208861066,4,0.08,0.25,0.4,6.5,3,840,1,93,1,14,0,0,0,73,

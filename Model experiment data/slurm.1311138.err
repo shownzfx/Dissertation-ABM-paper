@@ -1,0 +1,5 @@
+Error in .External2(C_writetable, x, file, nrow(x), p, rnames, sep, eol,  : 
+  unimplemented type 'list' in 'EncodeElement'
+Calls: write.csv -> eval.parent -> eval -> eval -> write.table
+Execution halted
+srun: error: cg3-11: task 0: Exited with exit code 1
