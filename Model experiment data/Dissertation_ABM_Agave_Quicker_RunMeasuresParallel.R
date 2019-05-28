@@ -46,9 +46,9 @@ experiment <- nl_experiment(
     SInsufBoost="count orgs with [insufBoost?]",
     sWindowOpen="count orgs with [window-open?]",
     sWindowMissed="count orgs with [window-missed?]",
-    sHappy="count orgs with [satisfied?]",
-    riskPerceptionThreshold="[riskPerceptionThreshold] of orgs",
-    expectedImpact="[expectedImpact] of orgs"
+    sHappy="count orgs with [satisfied?]"
+    # riskPerceptionThreshold="[riskPerceptionThreshold] of orgs",
+    # expectedImpact="[expectedImpact] of orgs"
   ),
   # eval_criteria = criteria(
   #   meanAdaptNum=mean(step$sAdapt),

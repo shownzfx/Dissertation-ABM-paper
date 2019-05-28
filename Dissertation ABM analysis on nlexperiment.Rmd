@@ -28,7 +28,7 @@ module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertatio
 ```{r}
 nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
 setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
-module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation_ABM_0526_QuickerVersion.nlogo"
+module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation_ABM_0527_QuickerVersion.nlogo"
 
 experiment <- nl_experiment(
   model_file = module_file_pathWindows,
@@ -56,6 +56,7 @@ experiment <- nl_experiment(
     windowMissed="totalwindowMissed",
     windowoOpen="totalWindowOpen",
     noSolution="totalNoSolution",
+    disasterWindows="totalDisasterWindows",
     riskPerceptionThreshold="[riskPerceptionThreshold] of orgs"
     ),
   step_measures = measures(
@@ -65,21 +66,19 @@ experiment <- nl_experiment(
     SInsufBoost="count orgs with [insufBoost?]",
     sWindowOpen="count orgs with [window-open?]",
     sWindowMissed="count orgs with [window-missed?]",
-    sHappy="count orgs with [satisfied?]",
-    riskPerceptionThreshold="[riskPerceptionThreshold] of orgs",
-    expectedImpact="[expectedImpact] of orgs"
+    sHappy="count orgs with [satisfied?]"
   ),
-  # eval_criteria = criteria(
-  #   meanAdaptNum=mean(step$sAdapt),
-  #   stdAdaptNum=sd(step$sAdapt),
-  #   meanCopingNum=mean(sCoping),
-  #   sdCopingnum=sd(sCoping)
-  # ),
-  # agents_step = list(
-  #   orgs = agent_set(
-  #     vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity"),
-  #     agents = "orgs")
-  # ),
+  eval_criteria = criteria(
+    meanAdaptNum=mean(step$sAdapt),
+    stdAdaptNum=sd(step$sAdapt),
+    meanCopingNum=mean(sCoping),
+    sdCopingnum=sd(sCoping)
+  ),
+  agents_step = list(
+    orgs = agent_set(
+      vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity"),
+      agents = "orgs")
+  ),
   mapping = nl_default_mapping 
 )
 # cbind(experiment$mapping)  #check parameter names mapping
