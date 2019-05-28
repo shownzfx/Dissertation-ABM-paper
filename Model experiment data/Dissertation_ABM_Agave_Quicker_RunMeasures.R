@@ -46,7 +46,7 @@ experiment <- nl_experiment(
     SInsufBoost="count orgs with [insufBoost?]",
     sWindowOpen="count orgs with [window-open?]",
     sWindowMissed="count orgs with [window-missed?]",
-    sHappy="count orgs with [satisfied?]"
+    sHappy="count orgs with [expectedImpact > riskPerceptionThreshold]"
     # riskPerceptionThreshold="[riskPerceptionThreshold] of orgs",
     # expectedImpact="[expectedImpact] of orgs"
   ),

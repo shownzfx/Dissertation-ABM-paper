@@ -20,7 +20,7 @@ experiment <- nl_experiment(
   param_values = nl_param_oat(
     n=10,
     meanRIskThreshold = 0.4,
-    scanningRange = c(1,3,6),
+    scanningRange = 4,
     numWindows = c(0,4,10),
     badImpact = 0.08,
     impactReductionRate =0.25,
@@ -37,6 +37,7 @@ experiment <- nl_experiment(
     windowMissed="totalwindowMissed",
     windowoOpen="totalWindowOpen",
     noSolution="totalNoSolution",
+    disasterWindows="totalDisasterWindows",
     riskPerceptionThreshold="[riskPerceptionThreshold] of orgs"
   ),
   step_measures = measures(
@@ -46,16 +47,14 @@ experiment <- nl_experiment(
     SInsufBoost="count orgs with [insufBoost?]",
     sWindowOpen="count orgs with [window-open?]",
     sWindowMissed="count orgs with [window-missed?]",
-    sHappy="count orgs with [satisfied?]"
-    # riskPerceptionThreshold="[riskPerceptionThreshold] of orgs",
-    # expectedImpact="[expectedImpact] of orgs"
+    sHappy="count orgs with [expectedImpact > riskPerceptionThreshold]"
   ),
-  # eval_criteria = criteria(
-  #   meanAdaptNum=mean(step$sAdapt),
-  #   stdAdaptNum=sd(step$sAdapt),
-  #   meanCopingNum=mean(sCoping),
-  #   sdCopingnum=sd(sCoping)
-  # ),
+  eval_criteria = criteria(
+    meanAdaptNum=mean(step$sAdapt),
+    stdAdaptNum=sd(step$sAdapt),
+    meanCopingNum=mean(step$sCoping),
+    sdCopingnum=sd(step$sCoping)
+  ),
   # agents_step = list(
   #   orgs = agent_set(
   #     vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity"),
@@ -63,7 +62,6 @@ experiment <- nl_experiment(
   # ),
   mapping = nl_default_mapping 
 )
-
 
 
 result <- nl_run(experiment,parallel = T)
