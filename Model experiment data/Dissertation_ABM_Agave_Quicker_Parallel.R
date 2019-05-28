@@ -49,12 +49,12 @@ experiment <- nl_experiment(
     sWindowMissed="count orgs with [window-missed?]",
     sHappy="count orgs with [expectedImpact > riskPerceptionThreshold]"
   ),
-  eval_criteria = criteria(
-    meanAdaptNum=mean(step$sAdapt),
-    stdAdaptNum=sd(step$sAdapt),
-    meanCopingNum=mean(step$sCoping),
-    sdCopingnum=sd(step$sCoping)
-  ),
+  # eval_criteria = criteria(
+  #   meanAdaptNum=mean(step$sAdapt),
+  #   stdAdaptNum=sd(step$sAdapt),
+  #   meanCopingNum=mean(step$sCoping),
+  #   sdCopingnum=sd(step$sCoping)
+  # ),
   # agents_step = list(
   #   orgs = agent_set(
   #     vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity"),
