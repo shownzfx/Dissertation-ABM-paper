@@ -15,7 +15,7 @@ experiment <- nl_experiment(
   model_file = module_file_path,
   repetitions =10,
   random_seed = 1:10,
-  iterations =840,
+  iterations =1000,
   
   param_values = nl_param_oat(
     n=10,
@@ -27,7 +27,7 @@ experiment <- nl_experiment(
     maxCopingReduction = 0.40,
     adaptationCost = 6.5,
     capBoost = c(0, 3,5),
-    simTicks = 840
+    simTicks = 1000
   ),
   
   run_measures = measures(
