@@ -11,7 +11,8 @@ undirected-link-breed [org-diffReg-links org-diffReg-link]
 undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 
 globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalWindowMissed
-         totalWindowOpen totalInsufBoost totalNoSolution totalDisasterWindows totalUtilizedWindows]
+         totalWindowOpen totalInsufBoost totalNoSolution totalDisasterWindows
+          totalUtilizedWindows totalNeededWidows sufficientCap]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost to-opportunity adaptation? solRegion]; solutions include both non-adaptation and adaptation measures
@@ -103,6 +104,8 @@ to setup
   set totalNoSolution 0
   set totalDisasterWindows 0
   set totalUtilizedWindows 0
+  set totalNeededWidows 0
+  set sufficientCap 0
   import-orgs
   setup-orgs
   setup-windows
@@ -524,7 +527,7 @@ to determine-satisfaction
 
 end
 to search-solution
-  ask orgs with [not satisfied?][
+  ask orgs with [not satisfied? and not adaptation-change?][
     if not solution-ready? [
       let currentImpact expectedBadWeatherSeverity -  solEfficacy  ; note here it does not multiply the expectedEWProb
       let targetSolEfficacy calculate-target-efficacy solEfficacy currentImpact expectedBadWeatherSeverity  (random-float impactReductionRate + 0.10)
@@ -560,13 +563,17 @@ to search-adaptation
 end
 
 to check-implementation
-  ask orgs with [not satisfied? and solution-ready?][
+  ask orgs with [not satisfied? and solution-ready? and not adaptation-change?][
     ifelse capacity < [cost] of targetSolution
     [
       set postponed? true
       set color red
     ]
-    [implement-adaptation]
+    [
+      implement-adaptation
+      set adaptation-change? true
+      set sufficientCap sufficientCap + 1
+    ]
   ]
 
 end
@@ -574,7 +581,7 @@ end
 
 to check-window
   if open-windows?[
-    ask orgs ;with [postponed?]
+    ask orgs with [not adaptation-change?]
     [
       ifelse not member? ticks windows
       [
@@ -606,7 +613,13 @@ to boost-capacity
    ifelse capacity >= [cost] of targetSolution
     [
       implement-adaptation
-      set totalUtilizedWindows totalUtilizedWindows + 1 ;
+      if not adaptation-change?
+      [
+        set adaptation-change? true
+        set totalNeededWidows totalNeededWidows  + 1
+      ]
+      set totalUtilizedWindows totalUtilizedWindows + 1 ; note orgs can adapt more than once
+
     ]
 
     [
@@ -614,8 +627,6 @@ to boost-capacity
       set insufBoost? true
       set totalInsufBoost totalInsufBoost + 1
    ]
-
-
 end
 
 to assess-allSolutions
@@ -651,7 +662,6 @@ end
 
 to implement-adaptation
     set adaptTicks fput ticks adaptTicks
-    set adaptation-change? true
     remove-links-between self current-solution
     set current-solution targetSolution
     set solEfficacy [efficacy] of targetSolution
@@ -1183,9 +1193,9 @@ trigger-network?
 -1000
 
 MONITOR
-380
+375
 420
-442
+437
 465
 notFound
 count orgs with [not-found?]
@@ -1194,9 +1204,9 @@ count orgs with [not-found?]
 11
 
 MONITOR
-455
+450
 420
-537
+532
 465
 foundLater
 count orgs with [not-found? and [adaptation?] of current-solution]
@@ -1314,6 +1324,28 @@ MONITOR
 490
 #used
 totalUtilizedWindows
+0
+1
+11
+
+MONITOR
+760
+445
+822
+490
+#Needed
+totalNeededWidows
+0
+1
+11
+
+MONITOR
+760
+390
+842
+435
+notNeed
+sufficientCap
 0
 1
 11
