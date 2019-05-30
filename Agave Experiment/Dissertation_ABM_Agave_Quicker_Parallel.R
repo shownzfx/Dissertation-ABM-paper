@@ -13,21 +13,23 @@ module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Dissertation_ABM_
 
 experiment <- nl_experiment(
   model_file = module_file_path,
-  repetitions =10,
-  random_seed = 1:10,
+  repetitions =25,
+  random_seed = 1:25,
   iterations =1000,
   
   param_values = nl_param_oat(
     n=10,
     meanRIskThreshold = 0.4,
-    scanningRange = c(2,4, 5),
-    numWindows = c(3,6,10),
+    scanningRange = 4,
+    numWindows = c(0,6,10),
     badImpact = 0.08,
     impactReductionRate =0.25,
     maxCopingReduction = 0.40,
     adaptationCost = 6.5,
-    capBoost = c(2.5, 3,5),
-    simTicks = 1000
+    capBoost = c(1, 2.5,4),
+    simTicks = 1000,
+    `officeRole?` = "false",
+    minNeighbor=c(1,2,4)
   ),
   
   run_measures = measures(
@@ -40,31 +42,31 @@ experiment <- nl_experiment(
     noSolution="totalNoSolution",
     utilizedWindows="totalUtilizedWindows",
     NeededWidows="totalNeededWidows",
-    notNeeded="sufficientCap"
+    notNeeded="sufficientCap",
+    usedDisasterWindows= "totalUtilizedDisasterWindows"
   ),
-  step_measures = measures(
-    sCoping="count orgs with [coping-change?]",
-    sAdapt="count orgs with [adaptation-change?]",
-    sNotFound="count orgs with [not-found?]",
-    SInsufBoost="count orgs with [insufBoost?]",
-    sWindowOpen="count orgs with [window-open?]",
-    sWindowMissed="count orgs with [window-missed?]",
-    sHappy="count orgs with [expectedImpact > riskPerceptionThreshold]"
-  ),
+  # step_measures = measures(
+  #   sCoping="count orgs with [coping-change?]",
+  #   sAdapt="count orgs with [adaptation-change?]",
+  #   sNotFound="count orgs with [not-found?]",
+  #   SInsufBoost="count orgs with [insufBoost?]",
+  #   sWindowOpen="count orgs with [window-open?]",
+  #   sWindowMissed="count orgs with [window-missed?]",
+  #   sHappy="count orgs with [expectedImpact > riskPerceptionThreshold]"
+  # ),
   # eval_criteria = criteria(
   #   meanAdaptNum=mean(step$sAdapt),
   #   stdAdaptNum=sd(step$sAdapt),
-  #   meanCopingNum=mean(step$sCoping),
-  #   sdCopingnum=sd(step$sCoping)
+  #   meanCopingNum=mean(sCoping),
+  #   sdCopingnum=sd(sCoping)
   # ),
   # agents_step = list(
   #   orgs = agent_set(
-  #     vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity"),
+  #     vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity","solution-ready?","utilizedWindow?","sufficientCap", "extremeWeatherProb","originalEfficacy","disasterProb","declarationRate","region","used-disasterWindow?"),
   #     agents = "orgs")
   # ),
   mapping = nl_default_mapping 
 )
-
 
 result <- nl_run(experiment,parallel = T)
 
@@ -73,7 +75,7 @@ result <- nl_run(experiment,parallel = T)
 # write.csv(runData,"Run measures 0527.csv")
 # write.csv(stepData,"Step measures 0527.csv")
 
-save.image("output_quicker_Parallel_10Runs.RData")
+save.image("output_1_to_25Reps.RData")
 
 
 

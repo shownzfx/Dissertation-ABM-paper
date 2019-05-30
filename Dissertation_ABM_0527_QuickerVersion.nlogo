@@ -90,6 +90,7 @@ orgs-own [
   disaster? ; whether happened disater or not
   satisfied?
   solution-ready?
+  no-solAttached?
 ]
 
 
@@ -195,6 +196,7 @@ to setup-orgs
     set solution-ready? false
     set innovation-ready? false
     set targetSolution nobody
+    set no-solAttached? true
     set copingChangeTicks []
   ]
 
@@ -1088,7 +1090,7 @@ maxCopingReduction
 maxCopingReduction
 0
 0.5
-0.31
+0.4
 0.01
 1
 NIL
@@ -1385,7 +1387,7 @@ SWITCH
 423
 officeRole?
 officeRole?
-0
+1
 1
 -1000
 

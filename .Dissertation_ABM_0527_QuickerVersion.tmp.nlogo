@@ -90,6 +90,7 @@ orgs-own [
   disaster? ; whether happened disater or not
   satisfied?
   solution-ready?
+  no-solAttached?
 ]
 
 
@@ -195,6 +196,7 @@ to setup-orgs
     set solution-ready? false
     set innovation-ready? false
     set targetSolution nobody
+    set no-solAttached? true
     set copingChangeTicks []
   ]
 
@@ -606,8 +608,7 @@ to check-window
       [
         ifelse postponed?
         [ boost-capacity]
-        [
-set totalNoSolution totalNoSolution + 1 ]
+        [set totalNoSolution totalNoSolution + 1 ]
       ]
     ]
    ]
@@ -658,7 +659,7 @@ to assess-thruNetwork
   let knownSolutions2 (turtle-set [current-solution] of org-sameReg-link-neighbors) with [adaptation?]
   let knownSolutions3  (turtle-set [current-solution] of org-diffReg-link-neighbors) with [adaptation?]
 
-  ifelse officeRole?
+  ifelse officeRole
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3 knownSolFromOffice)]
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3)]
 
@@ -1089,7 +1090,7 @@ maxCopingReduction
 maxCopingReduction
 0
 0.5
-0.31
+0.4
 0.01
 1
 NIL
