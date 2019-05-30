@@ -28,7 +28,7 @@ experiment <- nl_experiment(
     adaptationCost = 6.5,
     capBoost = c(1, 2.5,4),
     simTicks = 1000,
-    `officeRole?` = "false",
+    # `officeRole?` = "false",
     minNeighbor=c(1,2,4)
   ),
   
@@ -72,10 +72,7 @@ result <- nl_run(experiment,parallel = T)
 dataRun<-nl_get_run_result(result)
 write.csv(dataRun,"output 1_to_25Reps.csv")
 
-# runData<-nl_get_run_result(result)
-# stepData<-nl_get_step_result(result)
-# write.csv(runData,"Run measures 0527.csv")
-# write.csv(stepData,"Step measures 0527.csv")
+
 
 save.image("output_1_to_25Reps.RData")
 
