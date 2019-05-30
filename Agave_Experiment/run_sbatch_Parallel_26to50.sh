@@ -9,5 +9,5 @@
 #SBATCH --mail-user=fzhang59@asu.edu # send-to address
 
 module load rstudio/1.1.423
-srun Rscript Agave_51to75Reps.R
+srun Rscript Agave_26to50Reps.R
 date
