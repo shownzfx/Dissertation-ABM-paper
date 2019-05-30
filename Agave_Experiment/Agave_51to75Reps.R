@@ -28,10 +28,13 @@ experiment <- nl_experiment(
     adaptationCost = 6.5,
     capBoost = c(1, 2.5,4),
     simTicks = 1000,
-    `officeRole?` = "true",
+    officeRole = "true",
     minNeighbor=c(1,2,4)
   ),
   
+  mapping=c(
+    officeRole="OfficeRole?"
+  ),
   run_measures = measures(
     copingNum = "count orgs with [coping-change?]",
     adaptNum = "count orgs with [adaptation-change?]",
@@ -44,7 +47,7 @@ experiment <- nl_experiment(
     NeededWidows="totalNeededWidows",
     notNeeded="sufficientCap",
     usedDisasterWindows= "totalUtilizedDisasterWindows"
-  ),
+  )
   # step_measures = measures(
   #   sCoping="count orgs with [coping-change?]",
   #   sAdapt="count orgs with [adaptation-change?]",
@@ -65,10 +68,10 @@ experiment <- nl_experiment(
   #     vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity","solution-ready?","utilizedWindow?","sufficientCap", "extremeWeatherProb","originalEfficacy","disasterProb","declarationRate","region","used-disasterWindow?"),
   #     agents = "orgs")
   # ),
-  mapping = nl_default_mapping 
+  # mapping = nl_default_mapping 
 )
 
-result <- nl_run(experiment,parallel = T)
+result51to75 <- nl_run(experiment,parallel = T)
 
 # runData<-nl_get_run_result(result)
 # stepData<-nl_get_step_result(result)

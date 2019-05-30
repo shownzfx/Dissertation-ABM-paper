@@ -28,7 +28,7 @@ experiment <- nl_experiment(
     adaptationCost = 6.5,
     capBoost = c(1, 2.5,4),
     simTicks = 1000,
-     # `officeRole?` = "false",
+    # `officeRole` = "false",
      minNeighbor=1
   ),
   
@@ -65,7 +65,7 @@ experiment <- nl_experiment(
   #     vars = c("adaptation-change?", "coping-change?", "riskPerceptionThreshold", "expectedImpact", "solEfficacy","window-open?","window-missed?","insufBoost?","originalCapacity","solution-ready?","utilizedWindow?","sufficientCap", "extremeWeatherProb","originalEfficacy","disasterProb","declarationRate","region","used-disasterWindow?"),
   #     agents = "orgs")
   # ),
-  mapping = nl_default_mapping 
+  
 )
 
 result1to25 <- nl_run(experiment,parallel = T)
