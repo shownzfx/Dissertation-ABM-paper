@@ -17,6 +17,7 @@ experiment <- nl_experiment(
   random_seed = 26:50,
   iterations =1000,
   
+
   param_values = nl_param_oat(
     n=10,
     meanRIskThreshold = 0.4,
@@ -28,8 +29,8 @@ experiment <- nl_experiment(
     adaptationCost = 6.5,
     capBoost = c(1, 2.5,4),
     simTicks = 1000,
-    `officeRole?` = "false",
-    minNeighbor=c(1,2,4)
+    # `officeRole?` = "false"
+     minNeighbor=1
   ),
   
   run_measures = measures(
@@ -42,8 +43,8 @@ experiment <- nl_experiment(
     noSolution="totalNoSolution",
     utilizedWindows="totalUtilizedWindows",
     NeededWidows="totalNeededWidows",
-    notNeeded="sufficientCap",
-    usedDisasterWindows= "totalUtilizedDisasterWindows"
+    notNeeded="sufficientCap"
+    # usedDisasterWindows= "totalUtilizedDisasterWindows"
   ),
   # step_measures = measures(
   #   sCoping="count orgs with [coping-change?]",
