@@ -12,7 +12,7 @@ undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 
 globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalWindowMissed
          totalWindowOpen totalInsufBoost totalNoSolution totalDisasterWindows
-          totalUtilizedWindows totalNeededWidows sufficientCap]
+          totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost to-opportunity adaptation? solRegion]; solutions include both non-adaptation and adaptation measures
@@ -49,6 +49,7 @@ orgs-own [
   knownSolutions
   search-adaptation?
   missedWindows
+  utilizedWindow?
   insufBoost?
   insufBoostTicks
   knownSolFromOffice
@@ -75,6 +76,7 @@ orgs-own [
   windows
   window-open?
   window-missed?
+  used-disasterWindow?
   orgWindows
   disasterWindows
 ;  riskPerceptionfromAll  ; risk perceptiom from agency's own exp and from watching their neighbors
@@ -105,6 +107,7 @@ to setup
   set totalDisasterWindows 0
   set totalUtilizedWindows 0
   set totalNeededWidows 0
+  set totalUtilizedDisasterWindows 0
   set sufficientCap 0
   import-orgs
   setup-orgs
@@ -163,7 +166,6 @@ to setup-orgs
 
 ;    set resilience 2 + random-float 1 ;resilience is the ax magnitude of disturbances that can be tolerated before incurring impacts, can be negative
 ;    set initialResilience resilience
-    set solution-ready? false
     set not-found? false
     set copingLimit 0
     set windows []
@@ -178,9 +180,11 @@ to setup-orgs
     set adaptTicks []
     set knownSolFromOffice []
     set satisfied? true
+    set utilizedWindow? false
     set regional-leader? false
     set search-adaptation? false
     set adaptNum 0
+    set used-disasterWindow? false
     set leader? false
     set declared? false
     set coping-change? false
@@ -365,14 +369,14 @@ to setup-network
     set regionalNeighbors other orgs with [region = [region] of myself]
     set diffRegionNeighbors other orgs with [region != [region] of myself]
 
-    repeat 2 [ ; all orgs have at least two regional partners
+    repeat minNeighbor [ ; all orgs have at least two regional partners
       let candidate1 lottery-winner  ; candidate is a list of regionPartner diffRegPartner
       if item 0 candidate1 != nobody [
         create-org-sameReg-link-with item 0 candidate1 [hide-link]
         ]
       ]
 
-    repeat 2 [
+    repeat minNeighbor [
       let candidate2 lottery-winner
       if item 1 candidate2 != nobody [
          create-org-diffReg-link-with item 1 candidate2 [hide-link]
@@ -426,13 +430,13 @@ to go
     set capacity originalCapacity
     set extremeWeatherProb extremeWeatherProb * (1 + random-float 0.0001)
     set disasterProb disasterProb * (1 + random-float 0.0001)
+;    set declarationRate disasterProb * passRate
     if expectedBadWeatherSeverity < expectedImpact [
       print "warning: expected weather severity smaller than expected impact"
     ]
     if expectedImpact < 0 [
       print "warining: expectedImpact smaller than 0"
     ]
-    if expectedImpact > riskPerceptionThreshold [set satisfied? false]
   ]
 
   tick
@@ -504,6 +508,7 @@ to expect-impact
     set impactPerTick ifelse-value (weatherSeverity - solEfficacy < 0 ) [0] [weatherSeverity - solEfficacy]
 
     set expectedImpact (expectedBadWeatherSeverity - solEfficacy ) * expectedEWProb
+;    if expectedImpact < 0 [set expectedImpact 0.1]
 
 
     if resilience-decay?[
@@ -590,36 +595,43 @@ to check-window
       ]
 
       [
-        set window-open? true
-        set totalWindowOpen totalWindowOpen + 1
+       set window-open? true
+       set totalWindowOpen totalWindowOpen + 1
 
-        ifelse expectedImpact <= riskPerceptionThreshold
-        [
-          set window-missed? true
-          set TotalWindowMissed TotalWindowMissed + 1
-        ]
-        [
-          ifelse postponed?
-          [ boost-capacity]
-          [set totalNoSolution totalNoSolution + 1 ]
-       ]
-     ]
+      ifelse expectedImpact <= riskPerceptionThreshold
+      [
+        set window-missed? true
+        set TotalWindowMissed TotalWindowMissed + 1
+      ]
+      [
+        ifelse postponed?
+        [ boost-capacity]
+        [set totalNoSolution totalNoSolution + 1 ]
+      ]
     ]
-  ]
+   ]
+ ]
 end
 
 to boost-capacity
    set capacity capacity * (1  + random-float capBoost)
    ifelse capacity >= [cost] of targetSolution
-    [
+     [
+      set insufBoost? false
       implement-adaptation
       if not adaptation-change?
       [
         set adaptation-change? true
         set totalNeededWidows totalNeededWidows  + 1
       ]
+      set utilizedWindow? true
       set totalUtilizedWindows totalUtilizedWindows + 1 ; note orgs can adapt more than once
-
+      ifelse member? ticks disasterWindows [
+        set totalUtilizedDisasterWindows totalUtilizedDisasterWindows + 1
+        set used-disasterWindow? true
+      ][
+        set used-disasterWindow? false
+      ]
     ]
 
     [
@@ -645,8 +657,9 @@ to assess-thruNetwork
   let knownSolutions2 (turtle-set [current-solution] of org-sameReg-link-neighbors) with [adaptation?]
   let knownSolutions3  (turtle-set [current-solution] of org-diffReg-link-neighbors) with [adaptation?]
 
-
- set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3 knownSolFromOffice)
+  ifelse officeRole?
+  [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3 knownSolFromOffice)]
+  [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3)]
 
 
   ifelse any? knownSolutions
@@ -834,7 +847,7 @@ scanningRange
 scanningRange
 0
 10
-4.0
+3.0
 1
 1
 NIL
@@ -1145,10 +1158,10 @@ open-windows?
 -1000
 
 MONITOR
-545
-395
-607
 440
+435
+502
+480
 insuBoost
 totalInsufBoost
 0
@@ -1203,17 +1216,6 @@ count orgs with [not-found?]
 1
 11
 
-MONITOR
-450
-420
-532
-465
-foundLater
-count orgs with [not-found? and [adaptation?] of current-solution]
-0
-1
-11
-
 SWITCH
 575
 315
@@ -1252,10 +1254,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-475
-370
-532
-415
+375
+365
+432
+410
 #missed
 TotalWindowMissed
 0
@@ -1263,10 +1265,10 @@ TotalWindowMissed
 11
 
 MONITOR
-630
-395
-687
-440
+510
+435
+567
+480
 #open
 totalWindowOpen
 0
@@ -1274,10 +1276,10 @@ totalWindowOpen
 11
 
 MONITOR
-545
-445
-602
-490
+440
+485
+497
+530
 #noSol
 totalNoSolution
 0
@@ -1285,10 +1287,10 @@ totalNoSolution
 11
 
 MONITOR
-620
-445
-677
-490
+500
+485
+557
+530
 ready
 count orgs with [solution-ready?]
 0
@@ -1296,10 +1298,10 @@ count orgs with [solution-ready?]
 11
 
 MONITOR
-695
-395
-757
-440
+575
+435
+637
+480
 #declare
 totalDisasterWindows
 0
@@ -1307,10 +1309,10 @@ totalDisasterWindows
 11
 
 MONITOR
-690
-445
-747
-490
+560
+485
+617
+530
 #used
 totalUtilizedWindows
 0
@@ -1318,10 +1320,10 @@ totalUtilizedWindows
 11
 
 MONITOR
-760
-445
-822
-490
+625
+485
+687
+530
 #Needed
 totalNeededWidows
 0
@@ -1329,15 +1331,63 @@ totalNeededWidows
 11
 
 MONITOR
-760
-390
-842
+640
 435
+695
+480
 notNeed
 sufficientCap
 0
 1
 11
+
+MONITOR
+690
+485
+772
+530
+usedDisaster
+totalUtilizedDisasterWindows
+0
+1
+11
+
+MONITOR
+700
+435
+762
+480
+#disWind
+count orgs with [used-disasterWindow?]
+0
+1
+11
+
+SLIDER
+0
+450
+172
+483
+minNeighbor
+minNeighbor
+0
+10
+2.0
+1
+1
+NIL
+HORIZONTAL
+
+SWITCH
+580
+390
+697
+423
+officeRole?
+officeRole?
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?

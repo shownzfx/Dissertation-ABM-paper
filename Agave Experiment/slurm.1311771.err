@@ -1,0 +1,5 @@
+Error in checkForRemoteErrors(val) : 
+  one node produced an error: java.lang.IllegalMonitorStateException
+Calls: nl_run ... clusterApply -> staticClusterApply -> checkForRemoteErrors
+Execution halted
+srun: error: cg2-18: task 0: Exited with exit code 1

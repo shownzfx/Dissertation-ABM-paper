@@ -1,0 +1,416 @@
+---
+title: "R Experiments on Dissertation ABM"
+output: html_notebook
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup}
+library(dplyr)
+library(purrr)
+library(ggplot2)
+library(nlexperiment)
+library(tidyr)
+
+knitr::opts_knit$set(root.dir = "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Model experiment data")
+```
+ 
+
+## Windows
+```{r}
+nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
+setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
+module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation_ABM_0526_QuickerVersion.nlogo"
+```
+
+## experiment using windows
+
+```{r}
+nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
+setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
+module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation_ABM_0527_QuickerVersion.nlogo"
+
+experiment <- nl_experiment(
+  model_file = module_file_pathWindows,
+   repetitions =10,
+  random_seed = 1:10,
+  iterations =1000,
+  
+  param_values = nl_param_oat(
+    n=10,
+    meanRIskThreshold = 0.4,
+    scanningRange = c(2,4, 5),
+    numWindows = c(3,6,10),
+    badImpact = 0.08,
+    impactReductionRate =0.25,
+    maxCopingReduction = 0.40,
+    adaptationCost = 6.5,
+    capBoost = c(2.5, 3,5),
+    simTicks = 1000
+  ),
+  
+  run_measures = measures(
+    copingNum = "count orgs with [coping-change?]",
+    adaptNum = "count orgs with [adaptation-change?]",
+    insufBoost ="totalInsufBoost",
+    disasterWindows="totalDisasterWindows",
+    windowMissed="totalwindowMissed",
+    windowsOpen="totalWindowOpen",
+    noSolution="totalNoSolution",
+    utilizedWindows="totalUtilizedWindows",
+    NeededWidows="totalNeededWidows",
+    notNeeded="sufficientCap"
+  ),
+  step_measures = measures(
+    sCoping="count orgs with [coping-change?]",
+    sAdapt="count orgs with [adaptation-change?]",
+    sNotFound="count orgs with [not-found?]",
+    SInsufBoost="count orgs with [insufBoost?]",
+    sWindowOpen="count orgs with [window-open?]",
+    sWindowMissed="count orgs with [window-missed?]",
+    sHappy="count orgs with [expectedImpact > riskPerceptionThreshold]"
+  ),
+
+  mapping = nl_default_mapping 
+)
+
+# cbind(experiment$mapping)  #check parameter names mapping
+# result1<- nl_run(experiment,parallel = T)
+
+```
+ 
+```{r}
+cbind(experiment$mapping)  #check parameter names mapping
+nl_show_params(experiment)
+nl_get_param_range(experiment)
+# save.image("test dissertation data.RData")
+
+```
+
+## ## oat sensitivity analysis
+```{r}
+dataRun <- nl_get_run_result(result);dim(dataRun)
+
+dataRun=  dataRun %>% mutate(missedRatio=windowMissed/windowoOpen,insufRatio=insufBoost/windowoOpen,disasterRatio=disasterWindows/windowoOpen)
+
+data_long<-gather(dataRun,key="paramName",value="paramValue", c("windowoOpen","numWindows", "noSolution","disasterWindows","missedRatio","insufRatio","disasterRatio","windowMissed"))
+
+ggplot(data_long ,aes(x=paramValue,y=adaptNum))+
+  geom_point(alpha=0.4)+
+  stat_smooth(method="lm", color="red")+
+  facet_wrap(~paramName,scales="free_x")+
+  ggtitle("Adaptation and parameters")+
+  theme_bw()
+#adaptation is sensitive to capBoost, meanRiskThreshold,numWindows and scanning range,not sensitive to impactReductionRate,
+
+ggplot(data_long,aes(x=paramValue,y=copingNum))+
+  geom_point(alpha=0.4)+
+  stat_smooth(method="lm", color="red")+
+  facet_wrap(~paramName,scales="free_x")+
+  ggtitle("Coping and parameters")+
+  theme_bw() 
+#coping is not sensitive to capBoost,meanriskperception, numwindows, only slightly related to impactReductionRate and ScanningRange
+#Not sensitive to impactReductionRate and meanRiskThreshold
+
+```
+
+## summary stats on Missed windows, needed windows and sufficient capacity
+```{r}
+# dim(dataRun)
+summary(dataRun$adaptNum)#range from 8 to 61
+
+dataRun %>% summarise_at(vars("copingNum":"notNeeded"), funs(mean=mean(.)))
+
+```
+## Number of windows open are useful up to some extent
+More windows does not mean more adaptations
+```{r}
+data2Run=nl_get_run_result(result1000_0Window)
+
+ggplot(dataRun,mapping=aes(x=factor(ceiling(numWindows)), y=adaptNum))+
+  geom_violin()+
+  theme_minimal() #After some extent, the number of windows does not matter that much
+
+ggplot(data2Run,mapping=aes(x=as.factor(ceiling(numWindows)), y=adaptNum))+
+  geom_boxplot(fill=marron)+
+  theme_bw()+
+  xlab("# of windows")+
+  ylab("# of adapters")+
+  # ylim(0,197)+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),legend.position = "right",axis.title = element_text(size=20), axis.text  = element_text(size=14))
+  
+
+```
+
+## Missed windows are negatively associated with #adaptation, after controlling for total number of organizational windows and disaster windows
+```{r}
+lm(adaptNum~windowMissed+numWindows+disasterWindows,data=dataRun)
+lm(adaptNum~windowMissed+windowoOpen,data=dataRun)
+
+ggplot(dataRun, aes(x=windowMissed,y=adaptNum, colour=as.factor(ceiling(numWindows))))+
+  geom_point(shape=1)+
+  stat_smooth(method = lm,fullrange=T,aes(group=1))+
+  scale_colour_manual(name="number of windows", values=c(rainbow(7)))
+
+```
+
+##  Show step, not very useful
+
+```{r}
+dataStep<-nl_get_step_result(result)
+
+dataStepAgg<- dataStep %>% group_by(step_id) %>% summarise(meanAdaptNum=mean(sAdapt), sdAdaptNum=sd(sAdapt), meanCopingNum=mean(sCoping), meanNotFound=mean(sNotFound), meanInsufBoost=mean(SInsufBoost),meanWindowOpen=mean(sWindowOpen), meanWindowMissed=mean(sWindowMissed))
+
+
+ggplot(dataStepAgg)+
+  geom_line(aes(x=step_id, y=meanAdaptNum),color="red",size=1.2)+
+  geom_line(aes(x=step_id, y=meanCopingNum),color="green",size=1.2)+
+  geom_segment(aes(x=0,xend=0,y=0,yend=113),color="green",size=1.2)+
+  # geom_line(aes(x=step_id,y=meanWindowOpen), color="skyblue")+
+  # geom_line(aes(x=step_id,y=meanWindowMissed), color="yellow")+
+  scale_color_manual( name="Adopters",labels=c("Adaptation measures", "Coping measures"))+
+  theme_bw()+
+  xlab("Time")+
+  ylab("Number of adopters")+
+  # ylim(0,197)+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),legend.position = "right",axis.title = element_text(size=18))
+  
+
+```
+
+#use one example to check agent steps.
+```{r}
+agentStep<-nl_get_result(result1000,type = "agents_step", sub_type = "orgs");dim(agentStep)
+agentStep<-mutate( agentStep,agentID=rep(rep(1:197,1000),3))
+
+table(agentStep$param_set_id)  
+
+agentStep1<-agentStep %>% filter(param_set_id==1); dim(agentStep1)
+agentStep1<-agentStep1 %>% mutate(agentID=rep(1:197, 1000))
+# open<-agentStep1 %>% filter(`window-open?` == TRUE) ; dim(open)
+
+adapt<-agentStep1 %>% group_by(agentID) %>% summarise(adaptDummy=ifelse(sum(`adaptation-change?`)>=1,1,0), missedDummy=ifelse(sum(`window-missed?`) >=1, 1,0), numMissed=sum(`window-missed?`))
+
+agentStep1["adaptDummy"]<-with(adapt, adaptDummy[match(adapt$agentID,agentID)])
+agentStep1["numMissed"]<-with(adapt, numMissed[match(adapt$agentID,agentID)])
+
+
+unique(missed$numMissed)
+missed=filter(agentStep1, adaptDummy==0 & numMissed >=3 ) #choose one with missing 3 windows(median)
+unique(missed$agentID)
+
+# notSolution=filter(agentStep1,adaptDummy==0 & `solution-ready?`==FALSE )
+
+```
+
+## Plot one with 3 missed windows, randomly choosen
+```{r}
+gold<-rgb(200,166,43,maxColorValue = 255)  
+darkgold<-rgb(95,72,18,maxColorValue = 255)  
+blue<-rgb(43,103,200,maxColorValue = 255)  
+darkblue<-rgb(18,41,95,maxColorValue = 255) 
+marron<-rgb(140,29,64,maxColorValue = 255)
+
+org75<-agentStep %>% filter(agentID==75,run_id==1,param_set_id==1) 
+openWindows=org75 %>% filter(`window-open?`==TRUE) %>% select(step_id)
+openWindows=openWindows[[1]]
+
+ggplot(org75)+
+  geom_line(aes(x=step_id,y=riskPerceptionThreshold),color=gold,size=1.5)+
+  geom_line(aes(x=step_id,y=expectedImpact),color="grey50")+
+  geom_vline(xintercept=openWindows[1], color=marron,size=1.2)+
+  geom_vline(xintercept=openWindows[2], color=marron,size=1.2)+
+  geom_vline(xintercept=openWindows[3], color=marron,size=1.2)+
+  geom_vline(xintercept=openWindows[4], color=marron,size=1.2)+
+  geom_vline(xintercept=openWindows[5], color=marron,size=1.2)+
+  annotate("text",x=openWindows[2]-20,y=0.45, label="Under threshold",size=6, color=darkblue)+
+  annotate("text",x=openWindows[4]+140,y=0.57, label="Insufficient \ncapacity \nincrease",size=6,color=darkblue)+
+  theme_bw()+
+  xlab("Time")+
+  ylab("Perception/Expected impact")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text = element_text(size=12),axis.title = element_text(size=16))
+  
+
+org75 %>% filter(step_id==openWindows[4]) #Insufficient boost
+org75 %>% filter(step_id==openWindows[5]) #Insufficient boost
+
+
+```
+
+## plot least extreme weather
+```{r}
+
+# View(org195 %>% select(expectedImpact,originalEfficacy,`coping-change?`,`adaptation-change?`))
+
+smallEWprob=agentStep1 %>% filter(extremeWeatherProb<=min(extremeWeatherProb)[1]+0.01) 
+unique(smallEWprob %>% filter(`window-open?`==TRUE) %>% select(agentID))
+
+org112<-agentStep1 %>% filter(agentID==112)
+open112=org112 %>% filter(`window-open?`==TRUE) %>% select(step_id)
+open112=open112[[1]]
+
+
+ggplot(org112)+
+  geom_line(aes(x=step_id,y=riskPerceptionThreshold),color=gold,size=1.5)+
+  geom_line(aes(x=step_id,y=expectedImpact),color="gray20")+
+  geom_vline(xintercept=open112[1], color=marron,size=1.2)+
+  geom_vline(xintercept=open112[2], color=marron,size=1.2)+
+  geom_vline(xintercept=open112[3], color=marron,size=1.2)+
+  geom_vline(xintercept=open112[4], color=marron,size=1.2)+
+  geom_vline(xintercept=open112[5], color=marron,size=1.2)+
+  theme_bw()+
+  xlab("Time")+
+  ylim(0,0.5)+
+  ylab("Perception/Expected impact")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text = element_text(size=12),axis.title = element_text(size=16))
+
+```
+
+#plot most declarationRate
+```{r}
+
+agentStep1 %>% filter(declarationRate==max(declarationRate)[1]) %>% select(agentID)
+org28<-agentStep1 %>% filter(agentID==28)
+open28=org28 %>% filter(`window-open?`==TRUE) %>% select(step_id)
+open28=open28[[1]] #480 743
+
+ggplot(org28)+ #capacity lower than mean
+  geom_line(aes(x=step_id,y=riskPerceptionThreshold),color="gold",size=1.5)+
+  geom_line(aes(x=step_id,y=expectedImpact),color="gray50")+
+  geom_vline(xintercept=open28[1], color=marron,size=1.2)+
+  geom_vline(xintercept=open28[2], color=marron,size=1.2)+
+  annotate("text",x=open28[1]-150,y=0.40, label="Under threshold",size=6, color=blue)+
+  annotate("text",x=open28[2]+140,y=0.48, label="Utilized window",size=6, color=blue)+
+  theme_bw()+
+  xlab("Time")+
+  ylab("Perception/Expected impact")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text = element_text(size=12),axis.title = element_text(size=16))
+
+org28 %>% filter(step_id==open28[1])
+
+```
+
+## plot orgs who have utilized windows
+```{r}
+agentStep1 %>% filter(`adaptation-change?`==TRUE & `utilizedWindow?`==TRUE) %>% select(agentID)
+
+org157=agentStep1 %>% filter(agentID==157)
+
+Open157=match(TRUE,org157$`adaptation-change?`)[1]
+
+ggplot(org157 )+ #capacity lower than mean
+  geom_line(aes(x=step_id,y=riskPerceptionThreshold),color="gold",size=1.5)+
+  geom_line(aes(x=step_id,y=expectedImpact),color="gray50")+
+  geom_vline(xintercept=Open157[1], color=marron,size=1.2)+
+  annotate("text",x=Open157[1]+152,y=0.30, label="Utilized Window",size=6, color=blue)+
+  theme_bw()+
+  xlab("Time")+
+  ylab("Perception/Expected impact")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text = element_text(size=12),axis.title = element_text(size=16))
+
+# org116$originalCapacity #about the mean; the mean is 1.5
+org157 %>% filter(step_id==Open157)
+  
+```
+
+## Insufficient boost and eventually adapted
+```{r}
+
+adapt<-agentStep1 %>% filter(`adaptation-change?`==TRUE )
+adaptLater<-adapt %>% filter(`insufBoost?`==TRUE)
+
+org124<-agentStep1 %>% filter(agentID==124)
+
+
+
+org124= match(TRUE,org124$`adaptation-change?`)[[1]] #707
+open136<-org188 %>% filter(`window-open?`==TRUE & step_id<=adaptTick136) %>% select(step_id)
+open136<-open136[[1]]
+
+ggplot(org188)+ #capacity lower than mean
+  geom_line(aes(x=step_id,y=riskPerceptionThreshold),color="gold",size=1.5)+
+  geom_line(aes(x=step_id,y=expectedImpact),color="gray50")+
+  geom_vline(xintercept=open136[1], color=marron,size=1.2)+
+  geom_vline(xintercept=open136[2], color=marron,size=1.2)+
+  geom_vline(xintercept=open136[3], color=marron,size=1.2)+
+  annotate("text",x=open136[1]+180,y=0.30, label="Under threshold",size=6, color=blue)+
+  annotate("text",x=open136[3]+140,y=0.40, label="Utilized window",size=6, color=blue)+
+  theme_bw()+
+  xlab("Time")+
+  ylab("Perception/Expected impact")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text = element_text(size=12),axis.title = element_text(size=16))
+
+
+org188 %>% filter(step_id==open136[1]) 
+org188 %>% filter(step_id==open136[2]) 
+org188 %>% filter(step_id==open136[3]) 
+
+```
+
+
+
+## Check adaptation conditions
+```{r}
+data1Step <- nl_get_result(result, type = "agents_step", sub_type = "orgs");dim(data1Step)
+
+
+run1<-data1Step %>% filter(run_id==1)
+run1<-run1 %>% mutate(satisfied=ifelse(expectedImpact > riskPerceptionThreshold, 0,1))
+
+
+View(run1 %>% filter(satisfied==FALSE & `adaptation-change?`==TRUE) %>% select(`window-open?`,`window-missed?`,satisfied,`adaptation-change?`))
+
+#check whether windows are missed because of under risk perception threshold
+View(run1 %>% filter(`window-open?`==T & `window-missed?`==T) %>% select(`window-open?`,`window-missed?`,satisfied))
+
+#check things when windows are open
+View(run1 %>% filter(`window-open?`==T ) %>% select(`window-open?`,`window-missed?`,satisfied, `insufBoost?`,`adaptation-change?`))
+#three conditions: 1) beyond threshold, 2) windows-open; 3) sufficient boost
+
+
+```
+ 
+ ## graph adaptation over time
+```{r}
+
+data1StepAgg<-data1Step %>% group_by(step_id,param_set_id) %>% summarise(adaptNum=sum(`adaptation-change?`),copingNum=sum(`coping-change?`), missedNum=sum(`window-missed?`), openNum=sum(`window-open?`),`insufBoost?`=sum(`insufBoost?`))
+
+
+AverageAdapt<- data1StepAgg %>% group_by(step_id) %>% summarise(adaptNum=mean(adaptNum), copingNum=mean(copingNum))
+
+
+ggplot(AverageAdapt %>% filter(step_id!=c(1,2,3,4)))+
+  geom_line(aes(x=step_id, y=adaptNum),color="red")+
+  geom_line(aes(x=step_id, y=copingNum),color="green")+
+  theme_minimal()
+
+```
+
+
+## sensitivity analysis
+```{r}
+dataRun<-nl_get_run_result(result)
+
+ggplot(dataRun, aes(x=factor(numWindows),y=adaptNum))+
+  geom_boxplot()
+ggplot(dataRun, aes(x=factor(impactReductionRate),y=adaptNum))+
+  geom_boxplot()
+ggplot(dataRun, aes(x=factor(maxCopingReduction),y=adaptNum))+
+  geom_boxplot()
+ggplot(dataRun, aes(x=factor(capBoost),y=adaptNum))+
+  geom_boxplot()
+
+```
+
+
+
+## AGAVE
+Need to change the wd to github data
+
+```{r}
+nl_netlogo_path("/packages/7x/netlogo/6.0.2/app") # to netlogo installation
+nl_netlogo_path()
+# setwd("/home/fzhang59/dev/EW-model")
+model_file_path <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation ABM 0522.nlogo"
+```
+
