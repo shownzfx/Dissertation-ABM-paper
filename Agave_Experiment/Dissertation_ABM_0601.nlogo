@@ -659,7 +659,7 @@ to assess-thruNetwork
   if officeRole = 1
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3 knownSolFromOffice)]
 
-  if officeRole = 2
+  if officeRole = 0
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3)]
 
 
