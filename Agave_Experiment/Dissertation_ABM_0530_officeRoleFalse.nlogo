@@ -656,8 +656,10 @@ to assess-thruNetwork
   let knownSolutions2 (turtle-set [current-solution] of org-sameReg-link-neighbors) with [adaptation?]
   let knownSolutions3  (turtle-set [current-solution] of org-diffReg-link-neighbors) with [adaptation?]
 
-  ifelse officeRole?
+  if officeRole = 1
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3 knownSolFromOffice)]
+
+  if officeRole = 0
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3)]
 
 
@@ -1053,7 +1055,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.05
+0.39
 0.01
 1
 NIL
@@ -1358,17 +1360,6 @@ minNeighbor
 NIL
 HORIZONTAL
 
-SWITCH
-575
-390
-692
-423
-officeRole?
-officeRole?
-0
-1
--1000
-
 PLOT
 1240
 160
@@ -1387,6 +1378,16 @@ true
 PENS
 "RiskPer" 1.0 0 -14439633 true "" "plot sum [expectedImpact] of  orgs with-max [extremeWeatherProb]"
 "Threshold" 1.0 0 -5298144 true "" "plot sum  [riskperceptionthreshold] of orgs with-max [extremeWeatherProb]"
+
+CHOOSER
+750
+360
+888
+405
+officeRole
+officeRole
+0 1
+0
 
 @#$#@#$#@
 ## WHAT IS IT?

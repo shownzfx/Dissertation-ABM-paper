@@ -28,7 +28,7 @@ experiment <- nl_experiment(
     adaptationCost = 6.5,
     capBoost = c(1, 2.5,4),
     simTicks = 1000,
-    officeRole =2,
+    officeRole =0,
     minNeighbor=c(1,2,4)
   ),
   
