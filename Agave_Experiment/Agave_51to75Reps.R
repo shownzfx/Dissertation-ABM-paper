@@ -5,10 +5,10 @@ setwd("/home/fzhang59/dev/Dissertation-ABM-paper/Agave Experiment")
 module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0601.nlogo"
 
 
-#try windows
+# use in windows
 # nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
 # setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
-# module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Dissertation_ABM_0526_QuickerVersion.nlogo"
+# module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Agave_Experiment/Dissertation_ABM_0601.nlogo"
 
 
 experiment <- nl_experiment(
@@ -68,11 +68,12 @@ experiment <- nl_experiment(
   # mapping = nl_default_mapping 
 )
 
-result51to75 <- nl_run(experiment,parallel = T)
+result51to75 <- nl_run(experiment,parallel = T) #make sure to set parallel to T, otherwise it won't use multiple cores
 
-# runData<-nl_get_run_result(result)
+runData<-nl_get_run_result(result)
+write.csv(runData,"Run measures 50_75Reps.csv")
+
 # stepData<-nl_get_step_result(result)
-# write.csv(runData,"Run measures 0527.csv")
 # write.csv(stepData,"Step measures 0527.csv")
 
 save.image("output_51_to_75Reps.RData")
