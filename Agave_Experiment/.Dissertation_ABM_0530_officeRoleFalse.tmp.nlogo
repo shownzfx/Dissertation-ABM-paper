@@ -2,7 +2,6 @@ extensions [csv]
 
 breed [orgs org]
 breed [solutions solution]
-breed [opportunities opportunity]
 breed [FTAoffices FTAoffice]
 
 undirected-link-breed [org-sol-links org-sol-link]
@@ -15,7 +14,7 @@ globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalW
           totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows]
 
 patches-own [patchRegion]
-solutions-own [efficacy cost to-opportunity adaptation? solRegion]; solutions include both non-adaptation and adaptation measures
+solutions-own [efficacy cost adaptation? ]; solutions include both non-adaptation and adaptation measures
 FTAoffices-own [projectInventory]
 
 
@@ -136,7 +135,7 @@ to import-orgs
       set originalCapacity capacity
       set region item 3 row
       set disasterProb item 6 row + random-float 0.02
-      set passRate item 7 row
+      set passRate item 7 row + random-float 0.02
       set declarationRate item 14 row
       set FTARegion item 10 row
       set extremeWeatherProb item 12 row + random-float 0.02
@@ -298,8 +297,6 @@ to setup-solutions ; every turtle begins with a solution
        sprout-solutions 1
       [
          set color green
-         set to-opportunity nobody
-         set solRegion [patchRegion] of patch-here
          set adaptation? false  ; the default solutions are routine ones, not adaptation-based
          set efficacy 0.05 + random-float (1 - 0.05); for coping solutions
          set size efficacy
@@ -319,9 +316,8 @@ to setup-solutions ; every turtle begins with a solution
   ask n-of 30 patches with [not any? turtles-here and pcolor != grey][
     sprout-solutions 1 [
       set color cyan ; adaptation are set blue
-      set solRegion [patchRegion] of patch-here
-      set cost random-float adaptationCost + 2
       set efficacy 1.5 + random-float 2 ;weatherseverity ranges from approximately  4 to 6
+      set cost random-float adaptationCost + 2
       set size efficacy / 2.5
       set adaptation? true
     ]
@@ -432,7 +428,6 @@ to go
     set capacity originalCapacity
     set extremeWeatherProb extremeWeatherProb * (1 + random-float 0.0001)
     set disasterProb disasterProb * (1 + random-float 0.0001)
-;    set declarationRate disasterProb * passRate
     if expectedBadWeatherSeverity < expectedImpact [
       print "warning: expected weather severity smaller than expected impact"
     ]
@@ -477,7 +472,7 @@ to check-weather
       [
         set expectedEWProb expectedEWProb * (1 + 0.25 + random-float 0.05)
         set disaster? true
-        if random-float 1 < declarationRate [set declared? true]
+        if random-float 1 < passRate [set declared? true]
         set disasterFreq disasterFreq + 1
       ]
     ]
@@ -485,7 +480,7 @@ to check-weather
       ifelse othersInf?
         [if any? org-sameReg-link-neighbors with [disaster?]
           [set expectedEWProb expectedEWProb * (1 + random-float 0.02)]]
-        [set expectedEWProb expectedEWProb * (1 - (0.01 + random-float 0.02))] ; extremeweatherevent did not happen, then expectedprob decrease
+          [set expectedEWProb expectedEWProb * (1 - (0.01 + random-float 0.02))] ; extremeweatherevent did not happen, then expectedprob decrease
     ]
 
      if expectedEWProb >= 0.25 [set expectedEWProb  0.25] ; disaster more strongly enhance expected EW prob
@@ -497,7 +492,6 @@ to windows-byDeclaration
   ask orgs [
       if declared? [
       set disasterWindows fput ticks disasterWindows
-      set totalDisasterWindows totalDisasterWindows + 1
       set windows fput disasterWindows windows
       set windows remove-duplicates windows
     ]
@@ -600,6 +594,9 @@ to check-window
        set window-open? true
        set totalWindowOpen totalWindowOpen + 1
 
+       if member? ticks disasterWindows
+       [set totalDisasterWindows totalDisasterWindows + 1]
+
       ifelse expectedImpact <= riskPerceptionThreshold
       [
         set window-missed? true
@@ -652,19 +649,19 @@ to assess-allSolutions
 end
 
 to assess-thruNetwork
-  let scanningPatches patches in-radius scanningRange
+  let scanningPatches patches in-radius ( scanningRange)
   let currentSolEfficacy [efficacy] of current-solution
 
   let knownSolutions1 (solutions-on scanningPatches) with [adaptation?]
   let knownSolutions2 (turtle-set [current-solution] of org-sameReg-link-neighbors) with [adaptation?]
   let knownSolutions3  (turtle-set [current-solution] of org-diffReg-link-neighbors) with [adaptation?]
 
-  ifelse officeRole
+  ifelse officeRole?
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3 knownSolFromOffice)]
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3)]
 
 
-  ifelse any? knownSolutions
+  ifelse any? knownSolutions with [efficacy > currentSolEfficacy]
   [set targetSolution one-of knownSolutions
    set not-found? false]
   [
@@ -771,6 +768,16 @@ GRAPHICS-WINDOW
 ticks
 30.0
 
+CHOOSER
+0
+0
+0
+0
+NIL
+NIL
+
+0
+
 BUTTON
 5
 10
@@ -849,7 +856,7 @@ scanningRange
 scanningRange
 0
 10
-3.0
+6.0
 1
 1
 NIL
@@ -931,25 +938,6 @@ count orgs with [expectedImpact > riskPerceptionThreshold]
 11
 
 PLOT
-1240
-160
-1440
-310
-maxEWProb
-Time
-NIL
-0.0
-10.0
-0.0
-0.5
-true
-true
-"" ""
-PENS
-"RiskPer" 1.0 0 -14439633 true "" "plot sum [expectedImpact] of  orgs with-max [extremeWeatherProb]"
-"Threshold" 1.0 0 -5298144 true "" "plot sum  [riskperceptionthreshold] of orgs with-max [extremeWeatherProb]"
-
-PLOT
 1245
 320
 1445
@@ -969,10 +957,10 @@ PENS
 "threshold" 1.0 0 -8053223 true "" "plot  [riskPerceptionThreshold] of one-of orgs with-max [originalEfficacy]"
 
 SWITCH
-585
-165
-717
-198
+575
+160
+707
+193
 random-seed?
 random-seed?
 1
@@ -1054,7 +1042,7 @@ HORIZONTAL
 SLIDER
 0
 255
-180
+175
 288
 impactReductionRate
 impactReductionRate
@@ -1075,7 +1063,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.41
+0.05
 0.01
 1
 NIL
@@ -1112,9 +1100,9 @@ NIL
 HORIZONTAL
 
 MONITOR
-300
+285
 420
-357
+342
 465
 adapted
 count orgs with [adaptation-change?]
@@ -1142,16 +1130,16 @@ numWindows
 numWindows
 0
 10
-7.0
+6.0
 1
 1
 NIL
 HORIZONTAL
 
 SWITCH
-580
+575
 235
-717
+712
 268
 open-windows?
 open-windows?
@@ -1186,9 +1174,9 @@ NIL
 HORIZONTAL
 
 SWITCH
-580
+575
 200
-727
+710
 233
 resilience-decay?
 resilience-decay?
@@ -1199,7 +1187,7 @@ resilience-decay?
 SWITCH
 575
 275
-722
+715
 308
 trigger-network?
 trigger-network?
@@ -1208,9 +1196,9 @@ trigger-network?
 -1000
 
 MONITOR
-375
+345
 420
-437
+407
 465
 notFound
 count orgs with [not-found?]
@@ -1230,9 +1218,9 @@ random-riskThresh?
 -1000
 
 SWITCH
-580
+575
 355
-692
+685
 388
 othersInf?
 othersInf?
@@ -1374,22 +1362,41 @@ minNeighbor
 minNeighbor
 0
 10
-2.0
+1.0
 1
 1
 NIL
 HORIZONTAL
 
 SWITCH
-580
+575
 390
-697
+692
 423
 officeRole?
 officeRole?
-1
+0
 1
 -1000
+
+PLOT
+1240
+160
+1440
+310
+maxEWProb
+Time
+NIL
+0.0
+10.0
+0.0
+0.5
+true
+true
+"" ""
+PENS
+"RiskPer" 1.0 0 -14439633 true "" "plot sum [expectedImpact] of  orgs with-max [extremeWeatherProb]"
+"Threshold" 1.0 0 -5298144 true "" "plot sum  [riskperceptionthreshold] of orgs with-max [extremeWeatherProb]"
 
 @#$#@#$#@
 ## WHAT IS IT?
