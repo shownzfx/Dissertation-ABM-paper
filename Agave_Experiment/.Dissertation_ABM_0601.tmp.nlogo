@@ -482,9 +482,8 @@ to check-weather
     [
       ifelse othersInf?
         [if any? org-sameReg-link-neighbors with [disaster?]
-          [if random-float 1 < 0.1 [set expectedEWProb expectedEWProb * (1 + random-float 0.00001)]]]
-          [set expectedEWProb expectedEWProb * (1 - (0.005+ random-float 0.02))]
-;          [set expectedEWProb expectedEWProb * (1 - (0.01 + random-float 0.02))] ; extremeweatherevent did not happen, then expectedprob decrease
+          [set expectedEWProb expectedEWProb * (1 + random-float 0.02)]]
+          [set expectedEWProb expectedEWProb * (1 - (0.01 + random-float 0.02))] ; extremeweatherevent did not happen, then expectedprob decrease
     ]
 
      if expectedEWProb >= 0.25 [set expectedEWProb  0.25] ; disaster more strongly enhance expected EW prob
@@ -1059,7 +1058,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.4
+0.23
 0.01
 1
 NIL
