@@ -68,12 +68,8 @@ experiment <- nl_experiment(
   # mapping = nl_default_mapping 
 )
 
-result76to100 <- nl_run(experiment,parallel = T)
+result76to100 <- nl_run(experiment,parallel = T) #make sure you turn on parallel=T to use multiple cores; otherwise it runs on one core
 
-# runData<-nl_get_run_result(result)
-# stepData<-nl_get_step_result(result)
-# write.csv(runData,"Run measures 0527.csv")
-# write.csv(stepData,"Step measures 0527.csv")
 
 save.image("output_76_to_100Reps.RData")
 
