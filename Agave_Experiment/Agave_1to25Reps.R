@@ -68,8 +68,8 @@ experiment <- nl_experiment(
 )
 
 result1to25 <- nl_run(experiment,parallel = T)
-dataRun1to25 <-nl_get_run_result(result1to25)
-write.csv(dataRun1to25 ,"output 1_to_25Reps.csv")
+#dataRun1to25 <-nl_get_run_result(result1to25)
+#write.csv(dataRun1to25 ,"output 1_to_25Reps.csv")
 
 
 save.image("output_1_to_25Reps.RData")
