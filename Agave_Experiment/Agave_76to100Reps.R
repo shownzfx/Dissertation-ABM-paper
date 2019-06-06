@@ -1,8 +1,10 @@
 
+
 library(nlexperiment)
 nl_netlogo_path("/packages/7x/netlogo/6.0.2/app")  #to netlogo installation on AGAVE
-setwd("/home/fzhang59/dev/Dissertation-ABM-paper/Agave Experiment")
-module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0527_QuickerVersion.nlogo"
+setwd("/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment")
+module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0601.nlogo"
+
 
 
 #try windows
@@ -17,8 +19,9 @@ experiment <- nl_experiment(
   random_seed = 76:100,
   iterations =1000,
   
+  
   param_values = nl_param_oat(
-    n=10,
+    n=20,
     meanRIskThreshold = 0.4,
     scanningRange = 4,
     numWindows = c(0,6,10),
@@ -28,9 +31,10 @@ experiment <- nl_experiment(
     adaptationCost = 6.5,
     capBoost = c(1, 2.5,4),
     simTicks = 1000,
-    `officeRole?` = "true",
+    officeRole =0,
     minNeighbor=c(1,2,4)
   ),
+  
   
   run_measures = measures(
     copingNum = "count orgs with [coping-change?]",
@@ -68,7 +72,7 @@ experiment <- nl_experiment(
   mapping = nl_default_mapping 
 )
 
-result <- nl_run(experiment,parallel = T)
+result76to100 <- nl_run(experiment,parallel = T)
 
 # runData<-nl_get_run_result(result)
 # stepData<-nl_get_step_result(result)
