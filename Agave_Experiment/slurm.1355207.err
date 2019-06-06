@@ -1,0 +1,5 @@
+Error in nl_get_result(result, add_parameters, "run") : 
+  object 'result' not found
+Calls: nl_get_run_result -> nl_get_result
+Execution halted
+srun: error: cg1-18: task 0: Exited with exit code 1

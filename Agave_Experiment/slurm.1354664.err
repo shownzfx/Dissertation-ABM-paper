@@ -1,0 +1,4 @@
+Error in checkForRemoteErrors(val) : one node produced an error: 
+Calls: nl_run ... clusterApply -> staticClusterApply -> checkForRemoteErrors
+Execution halted
+srun: error: cg17-11: task 0: Exited with exit code 1
