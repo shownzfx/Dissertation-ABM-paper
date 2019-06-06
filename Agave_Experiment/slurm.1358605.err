@@ -1,0 +1,11 @@
+java.lang.IllegalMonitorStateException
+	at java.lang.Object.notifyAll(Native Method)
+	at org.nlogo.job.JobThread.runPrimaryJobs(JobThread.scala:117)
+	at org.nlogo.job.JobThread.$anonfun$run$1(JobThread.scala:68)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+	at scala.util.control.Exception$Catch.apply(Exception.scala:224)
+	at org.nlogo.api.Exceptions$.handling(Exceptions.scala:41)
+	at org.nlogo.job.JobThread.run(JobThread.scala:66)
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** STEP 1358605.0 ON cg15-14 CANCELLED AT 2019-06-06T00:30:52 ***
+slurmstepd: error: *** JOB 1358605 ON cg15-14 CANCELLED AT 2019-06-06T00:30:52 ***
