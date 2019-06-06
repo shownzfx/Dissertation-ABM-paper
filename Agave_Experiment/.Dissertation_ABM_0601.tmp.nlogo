@@ -148,7 +148,7 @@ to import-orgs
       set maxcopingefficacy 0
       set maxCopingEfficacy  maxCopingReduction * expectedBadWeatherSeverity  ; the maximum risk reduction coping measures can acheive,do not multiple ewprob
       If extremeWeatherProb < disasterProb [
-        set   extremeWeatherProb - 0.01
+        set disasterProb  extremeWeatherProb - 0.01
       ]
     ]
  ]
@@ -252,6 +252,10 @@ to setup-regionalRiskThreshold
   ifelse random-riskThresh?
   [ask orgs [set riskPerceptionThreshold random-normal meanRiskThreshold 0.1]]
   [riskThreshold-byRegion]
+
+  ask orgs [
+     if riskPerceptionThreshold < 0 [set riskPerceptionThreshold 0.05]
+  ]
 end
 
 to riskThreshold-byRegion
@@ -265,7 +269,6 @@ to riskThreshold-byRegion
       [x meanThreshold] ->
       ask orgs with [region = x] [
         set riskPerceptionThreshold random-normal meanThreshold 0.1
-        if riskPerceptionThreshold < 0 [set riskPerceptionThreshold 0.1]
       ]
     ])
 end
@@ -479,8 +482,9 @@ to check-weather
     [
       ifelse othersInf?
         [if any? org-sameReg-link-neighbors with [disaster?]
-          [set expectedEWProb expectedEWProb * (1 + random-float 0.02)]]
-          [set expectedEWProb expectedEWProb * (1 - (0.01 + random-float 0.02))] ; extremeweatherevent did not happen, then expectedprob decrease
+          [if random-float 1 < 0.1 [set expectedEWProb expectedEWProb * (1 + random-float 0.00001)]]]
+          [set expectedEWProb expectedEWProb * (1 - (0.005+ random-float 0.02))]
+;          [set expectedEWProb expectedEWProb * (1 - (0.01 + random-float 0.02))] ; extremeweatherevent did not happen, then expectedprob decrease
     ]
 
      if expectedEWProb >= 0.25 [set expectedEWProb  0.25] ; disaster more strongly enhance expected EW prob
@@ -1055,7 +1059,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.39
+0.4
 0.01
 1
 NIL

@@ -252,6 +252,10 @@ to setup-regionalRiskThreshold
   ifelse random-riskThresh?
   [ask orgs [set riskPerceptionThreshold random-normal meanRiskThreshold 0.1]]
   [riskThreshold-byRegion]
+
+  ask orgs [
+     if riskPerceptionThreshold < 0 [set riskPerceptionThreshold 0.05]
+  ]
 end
 
 to riskThreshold-byRegion
@@ -265,7 +269,6 @@ to riskThreshold-byRegion
       [x meanThreshold] ->
       ask orgs with [region = x] [
         set riskPerceptionThreshold random-normal meanThreshold 0.1
-        if riskPerceptionThreshold < 0 [set riskPerceptionThreshold 0.1]
       ]
     ])
 end
@@ -1055,7 +1058,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.39
+0.23
 0.01
 1
 NIL

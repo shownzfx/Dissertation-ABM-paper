@@ -1,4 +1,0 @@
-Error in nl_run(experiment, parallel = T, max.cores = 15) : 
-  unused argument (max.cores = 15)
-Execution halted
-srun: error: cg15-14: task 0: Exited with exit code 1
