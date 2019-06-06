@@ -32,6 +32,7 @@ experiment <- nl_experiment(
     minNeighbor=c(1,2,4)
   ),
   
+  
   run_measures = measures(
     copingNum = "count orgs with [coping-change?]",
     adaptNum = "count orgs with [adaptation-change?]",

@@ -148,7 +148,7 @@ to import-orgs
       set maxcopingefficacy 0
       set maxCopingEfficacy  maxCopingReduction * expectedBadWeatherSeverity  ; the maximum risk reduction coping measures can acheive,do not multiple ewprob
       If extremeWeatherProb < disasterProb [
-
+        set   extremeWeatherProb - 0.01
       ]
     ]
  ]
@@ -848,7 +848,7 @@ scanningRange
 scanningRange
 0
 10
-6.0
+3.0
 1
 1
 NIL
@@ -1159,7 +1159,7 @@ capBoost
 capBoost
 0
 10
-3.0
+3.6
 0.1
 1
 NIL
@@ -1387,7 +1387,7 @@ CHOOSER
 officeRole
 officeRole
 0 1
-0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
