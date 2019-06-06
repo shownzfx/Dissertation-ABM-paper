@@ -69,7 +69,7 @@ experiment <- nl_experiment(
   # mapping = nl_default_mapping 
 )
 
-result76to100 <- nl_run(experiment,parallel = T) #make sure you turn on parallel=T to use multiple cores; otherwise it runs on one core
+result76to100 <- nl_run(experiment,parallel = T, max.cores=15) #make sure you turn on parallel=T to use multiple cores; otherwise it runs on one core
 
 
 save.image("output_76_to_100Reps.RData")
