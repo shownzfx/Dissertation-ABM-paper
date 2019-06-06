@@ -1,6 +1,6 @@
 #!/bin/bash
  
-#SBATCH --cpus-per-task=10
+#SBATCH --cpus-per-task=9
 #SBATCH -t 0-12:00                  # wall time (D-HH:MM)
 ##SBATCH -A fzhang59                 # Account hours will be pulled from (commented out with double # in front)
 #SBATCH -o slurm.%j.out             # STDOUT (%j = JobId)

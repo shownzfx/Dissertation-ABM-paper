@@ -2,13 +2,13 @@
 library(nlexperiment)
 nl_netlogo_path("/packages/7x/netlogo/6.0.2/app")  #to netlogo installation on AGAVE
 setwd("/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment")
-module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0527_QuickerVersion.nlogo"
+module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0601.nlogo"
 
 
-#try windows
+# use in windows
 # nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
 # setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
-# module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Agave_EDissertation_ABM_0526_QuickerVersion.nlogo"
+# module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Agave_Experiment/Dissertation_ABM_0601.nlogo"
 
 
 experiment <- nl_experiment(
@@ -17,8 +17,8 @@ experiment <- nl_experiment(
   random_seed = 1:25,
   iterations =1000,
   
-  param_values = nl_param_lhs(
-    n=10,
+  param_values = nl_param_oat(
+    n=20,
     meanRIskThreshold = 0.4,
     scanningRange = 4,
     numWindows = c(0,6,10),
@@ -28,7 +28,8 @@ experiment <- nl_experiment(
     adaptationCost = 6.5,
     capBoost = c(1, 2.5,4),
     simTicks = 1000,
-     minNeighbor=1
+    officeRole =1,
+    minNeighbor=c(1,2,4)
   ),
   
   run_measures = measures(
@@ -41,8 +42,8 @@ experiment <- nl_experiment(
     noSolution="totalNoSolution",
     utilizedWindows="totalUtilizedWindows",
     NeededWidows="totalNeededWidows",
-    notNeeded="sufficientCap"
-    # usedDisasterWindows= "totalUtilizedDisasterWindows"
+    notNeeded="sufficientCap",
+    usedDisasterWindows= "totalUtilizedDisasterWindows"
   )
   # step_measures = measures(
   #   sCoping="count orgs with [coping-change?]",
