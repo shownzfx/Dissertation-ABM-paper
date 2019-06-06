@@ -7,3 +7,5 @@ java.util.ConcurrentModificationException
 	at scala.util.control.Exception$Catch.apply(Exception.scala:224)
 	at org.nlogo.api.Exceptions$.handling(Exceptions.scala:41)
 	at org.nlogo.job.JobThread.run(JobThread.scala:66)
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 1358416 ON cg17-9 CANCELLED AT 2019-06-05T19:28:43 ***
