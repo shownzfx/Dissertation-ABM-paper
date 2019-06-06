@@ -134,11 +134,11 @@ to import-orgs
       set capacity capacity - (- 1.57) ; -1.57 is the min capacity
       set originalCapacity capacity
       set region item 3 row
-      set disasterProb item 6 row + random-float 0.01
+      set disasterProb item 6 row + random-float 0.02
       set passRate item 7 row + random-float 0.02
       set declarationRate item 14 row
       set FTARegion item 10 row
-      set extremeWeatherProb item 12 row + random-float 0.02
+      set extremeWeatherProb item 12 row + random-float 0.0
       set extremeWeatherThreshold item 15 row
       set disasterThreshold item 16 row
       set expectedBadWeatherSeverity item 17 row

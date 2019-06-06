@@ -1,7 +1,7 @@
 
 library(nlexperiment)
 nl_netlogo_path("/packages/7x/netlogo/6.0.2/app")  #to netlogo installation on AGAVE
-setwd("/home/fzhang59/dev/Dissertation-ABM-paper/Agave Experiment")
+setwd("/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment")
 module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0601.nlogo"
 
 
@@ -70,13 +70,14 @@ experiment <- nl_experiment(
 
 result51to75 <- nl_run(experiment,parallel = T) #make sure to set parallel to T, otherwise it won't use multiple cores
 
+save.image("output_51_to_75Reps.RData")
 runData<-nl_get_run_result(result51to75)
 write.csv(runData,"Run measures 50_75Reps.csv")
 
 # stepData<-nl_get_step_result(result)
 # write.csv(stepData,"Step measures 0527.csv")
 
-save.image("output_51_to_75Reps.RData")
+
 
 
 
