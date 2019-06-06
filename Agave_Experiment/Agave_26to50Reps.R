@@ -70,14 +70,9 @@ experiment <- nl_experiment(
 )
 
 result26to50 <- nl_run(experiment,parallel = T)
-dataRun26to50<-nl_get_run_result(result26to50)
-write.csv(dataRun26to50,"output 26_50Reps.csv")
+#dataRun26to50<-nl_get_run_result(result26to50)
+#write.csv(dataRun26to50,"output 26_50Reps.csv")
 
-
-# runData<-nl_get_run_result(result)
-# stepData<-nl_get_step_result(result)
-# write.csv(runData,"Run measures 0527.csv")
-# write.csv(stepData,"Step measures 0527.csv")
 
 save.image("output_26_to_50Reps.RData")
 
