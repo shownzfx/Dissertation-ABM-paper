@@ -116,7 +116,7 @@ to setup
   setup-regionalRiskThreshold
   setup-FTARegion
   setup-solutions
-;  record-weather-norm
+  record-weather-norm
 ;  setup-leaders
   setup-network
 
@@ -134,21 +134,24 @@ to import-orgs
       set capacity capacity - (- 1.57) ; -1.57 is the min capacity
       set originalCapacity capacity
       set region item 3 row
-      set disasterProb item 6 row + random-float 0.01
+      set disasterProb item 6 row + random-float 0.02
       set passRate item 7 row + random-float 0.02
       set declarationRate item 14 row
       set FTARegion item 10 row
-      set extremeWeatherProb item 12 row + random-float 0.02
+      set extremeWeatherProb item 12 row + random-float 0.05
       set extremeWeatherThreshold item 15 row
       set disasterThreshold item 16 row
       set expectedBadWeatherSeverity item 17 row
+;      set extremeWeatherProb item 18 row + random-float 0.01 ; those are weekly prob
+;      set disasterProb item 19 row + random-float 0.01 ; those are weekly prob
       set expectedEWprob extremeWeatherProb
       set expectedImpact (expectedBadWeatherSeverity -  solEfficacy) * expectedEWprob
       if expectedImpact < 0 [set expectedImpact 0.1]
       set maxcopingefficacy 0
       set maxCopingEfficacy  maxCopingReduction * expectedBadWeatherSeverity  ; the maximum risk reduction coping measures can acheive,do not multiple ewprob
       If extremeWeatherProb < disasterProb [
-        set disasterProb  extremeWeatherProb - 0.01
+         print "extremeWeatherProb is smaller than disasterProb"
+         set extremeWeatherProb disasterProb + 0.005
       ]
     ]
  ]
@@ -252,10 +255,6 @@ to setup-regionalRiskThreshold
   ifelse random-riskThresh?
   [ask orgs [set riskPerceptionThreshold random-normal meanRiskThreshold 0.1]]
   [riskThreshold-byRegion]
-
-  ask orgs [
-     if riskPerceptionThreshold < 0 [set riskPerceptionThreshold 0.05]
-  ]
 end
 
 to riskThreshold-byRegion
@@ -269,6 +268,7 @@ to riskThreshold-byRegion
       [x meanThreshold] ->
       ask orgs with [region = x] [
         set riskPerceptionThreshold random-normal meanThreshold 0.1
+        if riskPerceptionThreshold < 0 [set riskPerceptionThreshold 0.1]
       ]
     ])
 end
@@ -1042,8 +1042,8 @@ SLIDER
 impactReductionRate
 impactReductionRate
 0
-0.2
-0.15
+0.4
+0.22
 0.01
 1
 NIL
@@ -1058,7 +1058,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.23
+0.6
 0.01
 1
 NIL
@@ -1087,8 +1087,8 @@ SLIDER
 adaptationCost
 adaptationCost
 0
-10
-6.5
+5.5
+5.8
 0.1
 1
 NIL
@@ -1162,7 +1162,7 @@ capBoost
 capBoost
 0
 10
-3.6
+3.0
 0.1
 1
 NIL
@@ -1239,10 +1239,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-375
-365
-432
-410
+510
+385
+567
+430
 #missed
 TotalWindowMissed
 0
@@ -1391,6 +1391,28 @@ officeRole
 officeRole
 0 1
 1
+
+MONITOR
+845
+440
+917
+485
+diasterOrg
+count orgs with [disaster?]
+0
+1
+11
+
+MONITOR
+840
+485
+922
+530
+expectedEW
+[expectedEWprob] of org 1
+3
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?

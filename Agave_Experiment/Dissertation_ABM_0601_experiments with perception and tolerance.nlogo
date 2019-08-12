@@ -78,7 +78,6 @@ orgs-own [
   used-disasterWindow?
   orgWindows
   disasterWindows
-;  riskPerceptionfromAll  ; risk perceptiom from agency's own exp and from watching their neighbors
   current-solution
   targetSolution
   not-found?
@@ -90,12 +89,20 @@ orgs-own [
   satisfied?
   solution-ready?
   no-solAttached?
+  currentAspiration
+  previousAspiration
+  currentAspiration
+  currentImpact
+  previousImpact
+  referenceGroup
+  normalizedImpact
+  originalRiskPerceptionThreshold
 ]
 
 
 to setup
   ca
-  if random-seed?
+  if random-seed_.
   [random-seed 100]
 
   set strategies ["routine" "adaptation"]
@@ -117,7 +124,6 @@ to setup
   setup-FTARegion
   setup-solutions
 ;  record-weather-norm
-;  setup-leaders
   setup-network
 
     reset-ticks
@@ -134,21 +140,24 @@ to import-orgs
       set capacity capacity - (- 1.57) ; -1.57 is the min capacity
       set originalCapacity capacity
       set region item 3 row
-      set disasterProb item 6 row + random-float 0.01
+      set disasterProb item 6 row + random-float 0.02
       set passRate item 7 row + random-float 0.02
       set declarationRate item 14 row
       set FTARegion item 10 row
-      set extremeWeatherProb item 12 row + random-float 0.02
+      set extremeWeatherProb item 12 row + random-float 0.05
       set extremeWeatherThreshold item 15 row
       set disasterThreshold item 16 row
       set expectedBadWeatherSeverity item 17 row
+;      set extremeWeatherProb item 18 row + random-float 0.01 ; those are weekly prob
+;      set disasterProb item 19 row + random-float 0.01 ; those are weekly prob
       set expectedEWprob extremeWeatherProb
       set expectedImpact (expectedBadWeatherSeverity -  solEfficacy) * expectedEWprob
       if expectedImpact < 0 [set expectedImpact 0.1]
       set maxcopingefficacy 0
       set maxCopingEfficacy  maxCopingReduction * expectedBadWeatherSeverity  ; the maximum risk reduction coping measures can acheive,do not multiple ewprob
       If extremeWeatherProb < disasterProb [
-        set disasterProb  extremeWeatherProb - 0.01
+         print "extremeWeatherProb is smaller than disasterProb"
+         set extremeWeatherProb disasterProb + 0.005
       ]
     ]
  ]
@@ -157,7 +166,6 @@ to import-orgs
 end
 
 to setup-orgs
-
   ask orgs [
     set color white
     set shape "circle"
@@ -197,6 +205,7 @@ to setup-orgs
     set targetSolution nobody
     set no-solAttached? true
     set copingChangeTicks []
+
   ]
 
   ask FTAoffices [
@@ -249,14 +258,17 @@ ask orgs [  ; one org per patch
 end
 
 to setup-regionalRiskThreshold
-  ifelse random-riskThresh?
+  ifelse random-riskThresh_.
   [ask orgs [set riskPerceptionThreshold random-normal meanRiskThreshold 0.1]]
   [riskThreshold-byRegion]
 
+
   ask orgs [
-     if riskPerceptionThreshold < 0 [set riskPerceptionThreshold 0.05]
+    set currentAspiration riskPerceptionThreshold
+    set originalRiskPerceptionThreshold riskPerceptionThreshold
   ]
 end
+
 
 to riskThreshold-byRegion
 
@@ -269,6 +281,7 @@ to riskThreshold-byRegion
       [x meanThreshold] ->
       ask orgs with [region = x] [
         set riskPerceptionThreshold random-normal meanThreshold 0.1
+        if riskPerceptionThreshold < 0 [set riskPerceptionThreshold 0.1]
       ]
     ])
 end
@@ -319,7 +332,7 @@ to setup-solutions ; every turtle begins with a solution
   ask n-of 30 patches with [not any? turtles-here and pcolor != grey][
     sprout-solutions 1 [
       set color cyan ; adaptation are set blue
-      set efficacy 1.5 + random-float 2 ;weatherseverity ranges from approximately  4 to 6
+      set efficacy 1.5 + random-float 1.5 ;weatherseverity ranges from approximately  3 to 6
       set cost random-float adaptationCost + 2
       set size efficacy / 2.5
       set adaptation? true
@@ -339,7 +352,6 @@ to record-weather-norm ; only activated when not using the hard coded weather pa
       set expectedBadWeatherSeverity item (ceiling simulateMonths * badImpact) weatherImpactExp
       set expectedImpact (expectedBadWeatherSeverity -  solEfficacy) * expectedEWprob
       if expectedImpact < 0 [set expectedImpact 0.1]
-;     set maxCopingEfficacy 0
       set maxCopingEfficacy  maxCopingReduction * expectedBadWeatherSeverity ; the maximum risk reduction coping measures can acheive
   ]
 end
@@ -370,14 +382,14 @@ to setup-network
     set regionalNeighbors other orgs with [region = [region] of myself]
     set diffRegionNeighbors other orgs with [region != [region] of myself]
 
-    repeat minNeighbor [ ; all orgs have at least two regional partners
-      let candidate1 lottery-winner  ; candidate is a list of regionPartner diffRegPartner
+    repeat minNeighbor [ ; all orgs have at least one regional partners
+      let candidate1 lottery-winner  ; candidate is a list of orgs from the same region
       if item 0 candidate1 != nobody [
         create-org-sameReg-link-with item 0 candidate1 [hide-link]
         ]
       ]
 
-    repeat minNeighbor [
+    repeat minNeighbor [  ;candidate is a list of orgs from different regions
       let candidate2 lottery-winner
       if item 1 candidate2 != nobody [
          create-org-diffReg-link-with item 1 candidate2 [hide-link]
@@ -420,7 +432,10 @@ to go
   search-solution
   check-implementation
   check-window
-  FTAcheck-adaptation ; this is the FTAoffice procedure; at
+  FTAcheck-adaptation ; this is the FTAoffice procedure;
+  if changeAspiration = 1[
+    update-aspiration
+  ]
 
   ; restore values of some variables
   ask orgs [
@@ -449,8 +464,40 @@ to go
  ]
 
  ;if ticks >= simTicks [stop]
-
 end
+
+to update-aspiration  ; do not use org's performance in the function
+;  let minImpactPerTick min [impactPerTick] of orgs
+;  let maxImpactPerTick max [impactPerTick] of orgs
+;  ask orgs[
+;    set normalizedImpact (impactPertick - minImpactPerTick) / maxImpactPerTick
+;    set previousImpact normalizedImpact
+;    set previousAspiration currentAspiration
+;  ]
+  ask orgs [
+    set previousAspiration currentAspiration
+  ]
+  ask orgs [
+    if impactPerTick > 0 [
+;      if reference = "sameRegion"
+;      [set referenceGroup orgs with [region = [region] of myself]]
+;
+;      if reference = "betterPerformer"
+;      [
+;        set referenceGroup orgs with [(extremeWeather?) and (region = [region] of myself) and (impactPerTick < [impactPerTick] of myself)]
+;      ]
+
+     set referenceGroup orgs with [(extremeWeather?) and (region = [region] of myself) and (impactPerTick < [impactPerTick] of myself)]
+     if any? referenceGroup [
+     let referenceAspiration mean [previousAspiration] of referenceGroup
+     set currentAspiration (b1 * previousAspiration + (1 - b1) * referenceAspiration)
+;     set currentAspiration (b1 * normalizedImpact + b2 * previousAspiration + b3 * referenceAspiration)
+     set riskPerceptionThreshold currentAspiration
+      ]
+    ]
+ ]
+end
+
 
 to-report update-windows
   let udpatedWindows []
@@ -464,33 +511,39 @@ end
 
 to check-weather
   ask orgs [
-    let tempSeverity log-normal 5 extremeWeatherProb
-    set weatherSeverity tempSeverity ; did not rescale
+;    let tempSeverity log-normal 5 extremeWeatherProb
+    set weatherSeverity log-normal 5 extremeWeatherProb ; did not rescale
     ifelse weatherSeverity >= extremeWeatherThreshold ; here to adjust the influence from others on risk perception
     [
       set extremeWeather? true
-      set extremeWeatherFreq extremeWeatherFreq + 1
       ifelse weatherSeverity < disasterThreshold
-      [set expectedEWProb expectedEWProb * (1 + 0.05 + random-float 0.05 )]
+      [ set disaster? false
+        set expectedEWProb expectedEWProb * (1 + 0.05 + random-float 0.05 )] ;for EW
       [
-        set expectedEWProb expectedEWProb * (1 + 0.25 + random-float 0.05)
+        set expectedEWProb expectedEWProb * (1 + 0.25 + random-float 0.05)  ;for disaster
         set disaster? true
         if random-float 1 < passRate [set declared? true]
         set disasterFreq disasterFreq + 1
       ]
     ]
+    [set extremeWeather? false]
+
+
+  if not extremeWeather?
+  [
+    ifelse othersInf?
     [
-      ifelse othersInf?
-        [if any? org-sameReg-link-neighbors with [disaster?]
-          [set expectedEWProb expectedEWProb * (1 + random-float 0.02)]]
-          [set expectedEWProb expectedEWProb * (1 - (0.01 + random-float 0.02))] ; extremeweatherevent did not happen, then expectedprob decrease
+      if (any? org-sameReg-link-neighbors with [disaster?]) and (random-float 1 < 0.1)
+      [set expectedEWProb expectedEWProb * (1 + random-float 0.005)]
     ]
+    [set expectedEWProb expectedEWProb * (1 - (EWProbDecay + random-float 0.001))] ; extremeweatherevent did not happen, then expectedprob decrease
+  ]
 
      if expectedEWProb >= 0.25 [set expectedEWProb  0.25] ; disaster more strongly enhance expected EW prob
      if expectedEWProb <= 0.01 [set expectedEWProb 0.01]
   ]
-
 end
+
 to windows-byDeclaration
   ask orgs [
       if declared? [
@@ -507,11 +560,9 @@ to expect-impact
     set impactPerTick ifelse-value (weatherSeverity - solEfficacy < 0 ) [0] [weatherSeverity - solEfficacy]
 
     set expectedImpact (expectedBadWeatherSeverity - solEfficacy ) * expectedEWProb
-;    if expectedImpact < 0 [set expectedImpact 0.1]
 
-
-    if resilience-decay?[
-      if impactPertick > 0 [ ; if impacted by weather, resilience goes down
+    if resilience-decay_.[
+      if impactPerTick > 0 [ ; if impacted by weather, resilience goes down
       set resilience resilience * (0.9998 + random-float 0.00009)
       if resilience < 1 [set resilience 1]
       ]
@@ -521,8 +572,8 @@ end
 
 
 
+
 to determine-satisfaction
-;  ask orgs with [not solution-ready? and (not adaptation-change?)][ ; add not adaptation-change to limit adaptation to only once
   ask orgs [;only orgs with no alternative solution are looking
     ifelse expectedImpact > riskPerceptionThreshold
     [set satisfied? false]
@@ -533,8 +584,8 @@ end
 to search-solution
   ask orgs with [not satisfied? and not adaptation-change?][
     if not solution-ready? [
-      let currentImpact expectedBadWeatherSeverity -  solEfficacy  ; note here it does not multiply the expectedEWProb
-      let targetSolEfficacy calculate-target-efficacy solEfficacy currentImpact expectedBadWeatherSeverity  (random-float impactReductionRate + 0.10)
+      let currentExpectedImpact expectedBadWeatherSeverity -  solEfficacy  ; note here it does not multiply the expectedEWProb
+      let targetSolEfficacy calculate-target-efficacy solEfficacy impactPerTick expectedBadWeatherSeverity  (random-float impactReductionRate + 0.10)
       ifelse (targetSolEfficacy < maxCopingEfficacy) and (copingLimit < 1)
     [
          ask current-solution [set efficacy targetSolEfficacy]
@@ -557,7 +608,7 @@ end
 
 
 to search-adaptation
-  ifelse trigger-network?
+  ifelse trigger-network_.
   [assess-thruNetwork]
   [assess-allSolutions]
 
@@ -584,7 +635,7 @@ end
 
 
 to check-window
-  if open-windows?[
+  if open-windows_.[
     ask orgs with [not adaptation-change?]
     [
       ifelse not member? ticks windows
@@ -747,10 +798,10 @@ to write-variables
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-564
-365
+325
+15
+679
+370
 -1
 -1
 10.5
@@ -825,28 +876,29 @@ NIL
 1
 
 PLOT
-597
+995
 10
-797
+1195
 160
-#crossThreshold
+riskThreshold
 Time
 riskPerception
 1.0
 100.0
-0.15
-0.3
+0.6
+0.8
 true
 true
 "" ""
 PENS
-"crossThre" 1.0 0 -15040220 true "" "plot count orgs with [expectedImpact > riskPerceptionThreshold]"
+"originalTh" 1.0 0 -15040220 true "" "plot mean [originalRiskPerceptionThreshold] of orgs"
+"currentTh" 1.0 0 -5298144 true "" "plot mean [riskPerceptionThreshold] of orgs"
 
 SLIDER
-5
-95
-177
-128
+165
+60
+310
+93
 scanningRange
 scanningRange
 0
@@ -858,10 +910,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-5
-175
-177
-208
+165
+100
+310
+133
 simulateMonths
 simulateMonths
 0
@@ -873,9 +925,9 @@ NIL
 HORIZONTAL
 
 PLOT
-805
+1203
 10
-1005
+1403
 160
 #Adopters
 NIL
@@ -892,40 +944,21 @@ PENS
 "coping" 1.0 0 -5298144 true "" "plot count orgs with [coping-change?]"
 
 MONITOR
-300
-370
-367
-415
+405
+375
+472
+420
 coping
 count orgs with [length copingChangeTicks > 0]
 0
 1
 11
 
-PLOT
-1235
-10
-1435
-160
-maxThreshold
-NIL
-NIL
-0.0
-10.0
-0.0
-0.3
-true
-true
-"" ""
-PENS
-"riskPer" 1.0 0 -15040220 true "" "plot [expectedImpact] of one-of orgs with-max [riskPerceptionThreshold]"
-"Thresh" 1.0 0 -10873583 true "" "plot [riskPerceptionThreshold] of one-of orgs with-max [riskPerceptionThreshold]"
-
 MONITOR
-215
-370
-292
-415
+315
+380
+392
+425
 crossThresh
 count orgs with [expectedImpact > riskPerceptionThreshold]
 0
@@ -933,9 +966,9 @@ count orgs with [expectedImpact > riskPerceptionThreshold]
 11
 
 PLOT
-1245
+1205
 320
-1445
+1405
 470
 maxOriginalEfficacy
 NIL
@@ -949,42 +982,24 @@ false
 "" ""
 PENS
 "NE" 1.0 0 -15040220 true "" "plot  [expectedImpact] of one-of orgs with-max [originalEfficacy]"
-"threshold" 1.0 0 -8053223 true "" "plot  [riskPerceptionThreshold] of one-of orgs with-max [originalEfficacy]"
+"threshold" 1.0 0 -8053223 true "" "plot  [originalRiskperceptionthreshold] of one-of orgs with-max [originalEfficacy]"
+"asp" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs with-max [originalEfficacy]"
 
 SWITCH
-575
-160
-707
-193
-random-seed?
-random-seed?
+690
+15
+827
+48
+random-seed_.
+random-seed_.
 1
 1
 -1000
 
 PLOT
-1030
-10
-1230
-160
-minThreshold
-NIL
-NIL
-0.0
-10.0
-0.0
-0.2
-true
-true
-"" ""
-PENS
-"riskPer" 1.0 0 -15040220 true "" "plot [expectedImpact] of one-of orgs with-min [riskPerceptionThreshold]"
-"Thresh" 1.0 0 -10873583 true "" "plot [riskPerceptionThreshold] of one-of orgs with-min [riskPerceptionThreshold]"
-
-PLOT
-1035
+995
 165
-1235
+1195
 315
 minEWProb
 NIL
@@ -998,12 +1013,13 @@ false
 "" ""
 PENS
 "default" 1.0 0 -14439633 true "" "plot sum [expectedImpact] of orgs with-min [extremeweatherprob]"
-"pen-1" 1.0 0 -8053223 true "" "plot sum [riskPerceptionThreshold] of orgs with-min [extremeweatherprob]"
+"percept" 1.0 0 -8053223 true "" "plot sum [originalRiskPerceptionThreshold] of orgs with-min [extremeweatherprob]"
+"asp" 1.0 0 -14737633 true "" "plot sum [currentAspiration] of orgs with-min [extremeweatherprob]"
 
 PLOT
-1040
+1000
 320
-1240
+1200
 470
 minOriginalEfficacy
 NIL
@@ -1017,13 +1033,14 @@ false
 "" ""
 PENS
 "riskPer" 1.0 0 -14439633 true "" "plot sum [expectedImpact] of orgs with-min [originalEfficacy]"
-"Thresh" 1.0 0 -8053223 true "" "plot sum [riskperceptionthreshold] of orgs with-min [originalEfficacy]"
+"Thresh" 1.0 0 -8053223 true "" "plot sum [originalRiskperceptionthreshold] of orgs with-min [originalEfficacy]"
+"pen-2" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs  with-min [originalEfficacy]"
 
 SLIDER
 5
-215
-177
-248
+140
+155
+173
 badImpact
 badImpact
 0
@@ -1035,15 +1052,15 @@ NIL
 HORIZONTAL
 
 SLIDER
-0
-255
-175
-288
+160
+140
+310
+173
 impactReductionRate
 impactReductionRate
 0
-0.2
-0.15
+0.4
+0.34
 0.01
 1
 NIL
@@ -1052,23 +1069,23 @@ HORIZONTAL
 SLIDER
 5
 60
-177
+155
 93
 meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.23
+0.4
 0.01
 1
 NIL
 HORIZONTAL
 
 SLIDER
-0
-295
-172
-328
+5
+180
+155
+213
 maxCopingReduction
 maxCopingReduction
 0
@@ -1080,25 +1097,25 @@ NIL
 HORIZONTAL
 
 SLIDER
-0
-335
-172
-368
+160
+180
+310
+213
 adaptationCost
 adaptationCost
 0
-10
-6.5
+5.5
+5.5
 0.1
 1
 NIL
 HORIZONTAL
 
 MONITOR
-285
-420
-342
-465
+390
+425
+447
+470
 adapted
 count orgs with [adaptation-change?]
 0
@@ -1106,10 +1123,10 @@ count orgs with [adaptation-change?]
 11
 
 MONITOR
-220
-420
-282
-465
+320
+430
+382
+475
 postpone
 count orgs with [postponed?]
 0
@@ -1118,9 +1135,9 @@ count orgs with [postponed?]
 
 SLIDER
 5
-135
-177
-168
+100
+155
+133
 numWindows
 numWindows
 0
@@ -1132,20 +1149,20 @@ NIL
 HORIZONTAL
 
 SWITCH
-575
-235
-712
-268
-open-windows?
-open-windows?
+690
+95
+837
+128
+open-windows_.
+open-windows_.
 0
 1
 -1000
 
 MONITOR
-440
+515
 435
-502
+577
 480
 insuBoost
 totalInsufBoost
@@ -1154,47 +1171,47 @@ totalInsufBoost
 11
 
 SLIDER
-0
-375
-172
-408
+5
+215
+155
+248
 capBoost
 capBoost
 0
 10
-3.6
+3.0
 0.1
 1
 NIL
 HORIZONTAL
 
 SWITCH
-575
-200
-710
-233
-resilience-decay?
-resilience-decay?
+690
+60
+842
+93
+resilience-decay_.
+resilience-decay_.
 1
 1
 -1000
 
 SWITCH
-575
-275
-715
-308
-trigger-network?
-trigger-network?
+690
+135
+842
+168
+trigger-network_.
+trigger-network_.
 0
 1
 -1000
 
 MONITOR
-345
-420
-407
-465
+450
+425
+512
+470
 notFound
 count orgs with [not-found?]
 0
@@ -1202,21 +1219,21 @@ count orgs with [not-found?]
 11
 
 SWITCH
-575
-315
-737
-348
-random-riskThresh?
-random-riskThresh?
-0
+690
+175
+857
+208
+random-riskThresh_.
+random-riskThresh_.
+1
 1
 -1000
 
 SWITCH
-575
-355
-685
-388
+690
+215
+800
+248
 othersInf?
 othersInf?
 1
@@ -1224,10 +1241,10 @@ othersInf?
 -1000
 
 SLIDER
-0
-410
-172
-443
+160
+215
+310
+248
 simTicks
 simTicks
 0
@@ -1239,10 +1256,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-375
-365
-432
-410
+515
+380
+572
+425
 #missed
 TotalWindowMissed
 0
@@ -1250,9 +1267,9 @@ TotalWindowMissed
 11
 
 MONITOR
-510
+585
 435
-567
+642
 480
 #open
 totalWindowOpen
@@ -1261,9 +1278,9 @@ totalWindowOpen
 11
 
 MONITOR
-440
+515
 485
-497
+572
 530
 #noSol
 totalNoSolution
@@ -1272,9 +1289,9 @@ totalNoSolution
 11
 
 MONITOR
-500
+575
 485
-557
+632
 530
 ready
 count orgs with [solution-ready?]
@@ -1283,9 +1300,9 @@ count orgs with [solution-ready?]
 11
 
 MONITOR
-575
+645
 435
-637
+707
 480
 #declare
 totalDisasterWindows
@@ -1294,9 +1311,9 @@ totalDisasterWindows
 11
 
 MONITOR
-560
+635
 485
-617
+692
 530
 #used
 totalUtilizedWindows
@@ -1305,10 +1322,10 @@ totalUtilizedWindows
 11
 
 MONITOR
-625
-485
-687
-530
+700
+490
+762
+535
 #Needed
 totalNeededWidows
 0
@@ -1316,9 +1333,9 @@ totalNeededWidows
 11
 
 MONITOR
-640
+710
 435
-695
+765
 480
 notNeed
 sufficientCap
@@ -1327,10 +1344,10 @@ sufficientCap
 11
 
 MONITOR
-690
-485
-772
-530
+765
+490
+847
+535
 usedDisaster
 totalUtilizedDisasterWindows
 0
@@ -1338,9 +1355,9 @@ totalUtilizedDisasterWindows
 11
 
 MONITOR
-700
+770
 435
-762
+832
 480
 #disWind
 count orgs with [used-disasterWindow?]
@@ -1349,10 +1366,10 @@ count orgs with [used-disasterWindow?]
 11
 
 SLIDER
-0
-450
-172
-483
+5
+250
+155
+283
 minNeighbor
 minNeighbor
 0
@@ -1364,9 +1381,9 @@ NIL
 HORIZONTAL
 
 PLOT
-1240
+1200
 160
-1440
+1400
 310
 maxEWProb
 Time
@@ -1380,17 +1397,157 @@ true
 "" ""
 PENS
 "RiskPer" 1.0 0 -14439633 true "" "plot sum [expectedImpact] of  orgs with-max [extremeWeatherProb]"
-"Threshold" 1.0 0 -5298144 true "" "plot sum  [riskperceptionthreshold] of orgs with-max [extremeWeatherProb]"
+"Threshold" 1.0 0 -5298144 true "" "plot sum  [originalRiskperceptionthreshold] of orgs with-max [extremeWeatherProb]"
+"asp" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs with-max [extremeWeatherProb]"
+
+MONITOR
+850
+435
+922
+480
+diasterOrg
+count orgs with [disaster?]
+0
+1
+11
+
+MONITOR
+850
+485
+932
+530
+expectedEW
+[expectedEWprob] of org 1
+3
+1
+11
+
+SLIDER
+160
+250
+310
+283
+EWProbDecay
+EWProbDecay
+0
+0.05
+0.021
+0.001
+1
+NIL
+HORIZONTAL
+
+SLIDER
+5
+290
+97
+323
+b1
+b1
+0
+1
+0.42
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+5
+325
+97
+358
+b2
+b2
+0
+1
+0.57
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+5
+360
+97
+393
+b3
+b3
+0
+1
+0.25
+0.01
+1
+NIL
+HORIZONTAL
+
+MONITOR
+340
+485
+402
+530
+meanAsp
+mean [currentAspiration] of orgs
+3
+1
+11
 
 CHOOSER
-750
-360
-888
-405
-officeRole
-officeRole
-0 1
+690
+340
+837
+385
+reference
+reference
+"sameRegion" "betterPerformer"
 1
+
+MONITOR
+255
+485
+317
+530
+normImp
+mean [normalizedImpact] of orgs
+3
+1
+11
+
+SLIDER
+160
+285
+310
+318
+referTime
+referTime
+0
+36
+12.0
+1
+1
+NIL
+HORIZONTAL
+
+CHOOSER
+695
+250
+833
+295
+officeRole
+officeRole
+1 0
+0
+
+CHOOSER
+695
+295
+833
+340
+changeAspiration
+changeAspiration
+1 0
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
