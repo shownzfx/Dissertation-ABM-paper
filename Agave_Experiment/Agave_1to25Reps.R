@@ -2,7 +2,7 @@
 library(nlexperiment)
 nl_netlogo_path("/packages/7x/netlogo/6.0.2/app")  #to netlogo installation on AGAVE
 setwd("/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment")
-module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0601.nlogo"
+module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0601_experiments with perception and tolerance.nlogo"
 
 
 # use in windows
@@ -28,8 +28,11 @@ experiment <- nl_experiment(
     adaptationCost = 6.5,
     capBoost = c(1, 2.5,4),
     simTicks = 1000,
+    minNeighbor=c(1,2,4), 
     officeRole =1,
-    minNeighbor=c(1,2,4)
+    changeAspiration=1, 
+    EWProbDecay=c(0, 0.015,0.030), 
+    b1=c(0,0.5,1)
   ),
   
   
