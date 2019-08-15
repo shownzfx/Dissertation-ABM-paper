@@ -13,12 +13,12 @@ module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/
 
 experiment <- nl_experiment(
   model_file = module_file_path,
-  repetitions =25,
-  random_seed = 76:100,
-  iterations =1000,
+  repetitions =1,
+  random_seed = 1,
+  iterations =1,
   
   param_values = nl_param_oat(
-    n=20,
+    n=1,
     meanRIskThreshold = 0.4,
     scanningRange = 4,
     numWindows = c(0,6,10),
@@ -72,7 +72,7 @@ experiment <- nl_experiment(
 result76to100 <- nl_run(experiment,parallel = T) #make sure you turn on parallel=T to use multiple cores; otherwise it runs on one core
 
 
-save.image("output_76_to_100Reps.RData")
+save.image("output_76_to_100RepsTEST.RData")
 
 
 
