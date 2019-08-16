@@ -490,7 +490,7 @@ to update-aspiration  ; do not use org's performance in the function
      set referenceGroup orgs with [(extremeWeather?) and (region = [region] of myself) and (impactPerTick < [impactPerTick] of myself)]
      if any? referenceGroup [
      let referenceAspiration mean [previousAspiration] of referenceGroup
-     set currentAspiration (b1 * previousAspiration + b * referenceAspiration)
+     set currentAspiration (b1 * previousAspiration + (1 - b1) * referenceAspiration)
 ;     set currentAspiration (b1 * normalizedImpact + b2 * previousAspiration + b3 * referenceAspiration)
      set riskPerceptionThreshold currentAspiration
       ]
@@ -1895,6 +1895,88 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles</metric>
+    <enumeratedValueSet variable="numWindows">
+      <value value="6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="othersInf?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b1">
+      <value value="0.42"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b2">
+      <value value="0.57"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="5.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="reference">
+      <value value="&quot;betterPerformer&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="resilience-decay_.">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.34"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="referTime">
+      <value value="12"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-seed_.">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="open-windows_.">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b3">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simulateMonths">
+      <value value="1169"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="changeAspiration">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.021"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="990"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="trigger-network_.">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="badImpact">
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-riskThresh_.">
+      <value value="false"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default
