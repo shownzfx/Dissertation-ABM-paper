@@ -1,0 +1,4 @@
+Error in nl_run(experiment, parallel = T) : 
+  File does not exist /home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0601.nlogo
+Execution halted
+srun: error: cg2-17: task 0: Exited with exit code 1
