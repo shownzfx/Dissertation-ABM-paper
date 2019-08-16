@@ -12,12 +12,12 @@ module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/
 
 experiment <- nl_experiment(
   model_file = module_file_path,
-  repetitions =1,
-  random_seed = 1,
+  repetitions =25,
+  random_seed = 1：25,
   iterations =1000,
   
   param_values = nl_param_oat(
-    n=1,
+    n=20,
     meanRIskThreshold = 0.4,
     scanningRange = 4,
     numWindows = c(0,6,10),
