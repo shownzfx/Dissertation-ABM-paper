@@ -1,5 +1,0 @@
-Error: unexpected input in:
-"  repetitions =25,
-  random_seed = 26ï"
-Execution halted
-srun: error: cg7-3: task 0: Exited with exit code 1
