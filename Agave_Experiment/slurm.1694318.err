@@ -1,0 +1,6 @@
+Error in unserialize(node$con) : error reading from connection
+Calls: nl_run ... FUN -> recvData -> recvData.SOCKnode -> unserialize
+Error in unserialize(node$con) : error reading from connection
+Calls: nl_run ... FUN -> recvData -> recvData.SOCKnode -> unserialize
+Execution halted
+srun: error: cg3-7: task 0: Exited with exit code 1
