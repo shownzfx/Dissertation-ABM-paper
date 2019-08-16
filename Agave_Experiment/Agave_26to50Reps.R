@@ -1,5 +1,5 @@
-
 library(nlexperiment)
+
 nl_netlogo_path("/packages/7x/netlogo/6.0.2/app")  #to netlogo installation on AGAVE
 setwd("/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment")
 module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0601_experiments with perception and tolerance.nlogo"
@@ -7,14 +7,13 @@ module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/
 
 # use in windows
 # nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
-# setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
-# module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Agave_Experiment/Dissertation_ABM_0601.nlogo"
+# module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Agave_Experiment/Dissertation_ABM_0601_experiments with perception and tolerance.nlogo"
 
 
 experiment <- nl_experiment(
   model_file = module_file_path,
   repetitions =25,
-  random_seed = 26:50,
+  random_seed = 26：50,
   iterations =1000,
   
   param_values = nl_param_oat(
