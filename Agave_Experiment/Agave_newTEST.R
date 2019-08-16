@@ -1,23 +1,21 @@
 
 library(nlexperiment)
-
-
-
 nl_netlogo_path("/packages/7x/netlogo/6.0.2/app")  #to netlogo installation on AGAVE
 setwd("/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment")
-module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0601_experiments with perception and tolerance.nlogo"
+module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0601.nlogo"
 
 
 # use in windows
 # nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
-# module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Agave_Experiment/Dissertation_ABM_0601_experiments with perception and tolerance.nlogo"
+# setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
+# module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Agave_Experiment/Dissertation_ABM_0601.nlogo"
 
 
 experiment <- nl_experiment(
-  model_file = module_file_pathWindows,
+  model_file = module_file_path,
   repetitions =1,
   random_seed = 1,
-  iterations =1000,
+  iterations =1,
   
   param_values = nl_param_oat(
     n=1,
@@ -30,11 +28,8 @@ experiment <- nl_experiment(
     adaptationCost = 6.5,
     capBoost = c(1, 2.5,4),
     simTicks = 1000,
-    minNeighbor=c(1,2,4), 
-    officeRole =1,
-    changeAspiration=1, 
-    EWProbDecay=c(0, 0.015,0.030), 
-    b1=c(0,0.5,1)
+    officeRole =0,
+    minNeighbor=c(1,2,4)
   ),
   
   
@@ -74,12 +69,10 @@ experiment <- nl_experiment(
   # mapping = nl_default_mapping 
 )
 
-testResult <- nl_run(experiment,parallel = T)
-#dataRun1to25 <-nl_get_run_result(result1to25)
-#write.csv(dataRun1to25 ,"output 1_to_25Reps.csv")
+result76to100 <- nl_run(experiment,parallel = T) #make sure you turn on parallel=T to use multiple cores; otherwise it runs on one core
 
 
-save.image("output_test1Reps.RData")
+save.image("output_76_to_100RepsTEST.RData")
 
 
 
