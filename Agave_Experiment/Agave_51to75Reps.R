@@ -1,20 +1,19 @@
-
 library(nlexperiment)
+
 nl_netlogo_path("/packages/7x/netlogo/6.0.2/app")  #to netlogo installation on AGAVE
 setwd("/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment")
-module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0601.nlogo"
+module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0601_experiments with perception and tolerance.nlogo"
 
 
 # use in windows
 # nl_netlogo_path("C:/Program Files/NetLogo 6.0.2/app")
-# setwd("C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper")
-# module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Agave_Experiment/Dissertation_ABM_0601.nlogo"
+# module_file_pathWindows <- "C:/Z-Work/Dissertation/Data and analysis/Dissertation ABM paper/Agave_Experiment/Dissertation_ABM_0601_experiments with perception and tolerance.nlogo"
 
 
 experiment <- nl_experiment(
   model_file = module_file_path,
   repetitions =25,
-  random_seed = 51:75,
+  random_seed =51:75,
   iterations =1000,
   
   param_values = nl_param_oat(
@@ -28,9 +27,13 @@ experiment <- nl_experiment(
     adaptationCost = 6.5,
     capBoost = c(1, 2.5,4),
     simTicks = 1000,
-    officeRole =0,
-    minNeighbor=c(1,2,4)
+    minNeighbor=c(1,2,4), 
+    officeRole =1,
+    changeAspiration=0, 
+    EWProbDecay=c(0, 0.015,0.030), 
+    b1=c(0,0.5,1)
   ),
+  
   
   run_measures = measures(
     copingNum = "count orgs with [coping-change?]",
