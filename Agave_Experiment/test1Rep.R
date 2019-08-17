@@ -14,8 +14,8 @@ module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/
 
 experiment <- nl_experiment(
   model_file = module_file_path,
-  repetitions =5,
-  random_seed = 1:5,
+  repetitions =9,
+  random_seed = 1:9,
   iterations =1000,
   
   param_values = nl_param_oat(

@@ -11,7 +11,7 @@ undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 
 globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalWindowMissed
          totalWindowOpen totalInsufBoost totalNoSolution totalDisasterWindows
-          totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows]
+          totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows logFile]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost adaptation? ]; solutions include both non-adaptation and adaptation measures
@@ -104,6 +104,8 @@ to setup
   ca
   if random-seed_.
   [random-seed 100]
+
+  set logFile (word "log" (random 100000) ".txt")
 
   set strategies ["routine" "adaptation"]
   set-default-shape solutions "box"
@@ -456,6 +458,10 @@ to go
 
   tick
 
+  file-open logFile
+  file-print ticks
+  file-close
+
   if ticks mod simTicks = 0 [
   ask orgs [
     set orgWindows update-windows
@@ -500,7 +506,7 @@ end
 
 
 to-report update-windows
-  let udpatedWindows []
+  let udpatedWindows [] ;spelling
   repeat random numWindows [
     let updatedWindow random simTicks + ticks
     set udpatedWindows fput updatedWindow windows
@@ -1895,6 +1901,88 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles</metric>
+    <enumeratedValueSet variable="numWindows">
+      <value value="6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="othersInf?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b1">
+      <value value="0.42"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b2">
+      <value value="0.57"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="5.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="reference">
+      <value value="&quot;betterPerformer&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="resilience-decay_.">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.34"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="referTime">
+      <value value="12"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-seed_.">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="open-windows_.">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b3">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simulateMonths">
+      <value value="1169"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="changeAspiration">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.021"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="990"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="trigger-network_.">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="badImpact">
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-riskThresh_.">
+      <value value="false"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default

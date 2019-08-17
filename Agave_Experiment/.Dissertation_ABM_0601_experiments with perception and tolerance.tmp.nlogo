@@ -11,7 +11,7 @@ undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 
 globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalWindowMissed
          totalWindowOpen totalInsufBoost totalNoSolution totalDisasterWindows
-          totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows]
+          totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows logFile]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost adaptation? ]; solutions include both non-adaptation and adaptation measures
@@ -104,6 +104,8 @@ to setup
   ca
   if random-seed_.
   [random-seed 100]
+
+  set logFile (word "log" (random 100000) ".txt"
 
   set strategies ["routine" "adaptation"]
   set-default-shape solutions "box"
@@ -456,6 +458,10 @@ to go
 
   tick
 
+  file-open logFile
+  file-print ticks
+  file-close
+
   if ticks mod simTicks = 0 [
   ask orgs [
     set orgWindows update-windows
@@ -500,7 +506,7 @@ end
 
 
 to-report update-windows
-  let udpatedWindows []
+  let udpatedWindows [] ;spelling
   repeat random numWindows [
     let updatedWindow random simTicks + ticks
     set udpatedWindows fput updatedWindow windows
