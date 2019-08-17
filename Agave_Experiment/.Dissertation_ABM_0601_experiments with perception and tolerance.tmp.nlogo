@@ -458,9 +458,7 @@ to go
 
   tick
 
-  file-open logFile
-  file-print word ticks wcapBoost
-  file-close
+
 
   if ticks mod simTicks = 0 [
   ask orgs [

@@ -458,10 +458,6 @@ to go
 
   tick
 
-  file-open logFile
-  file-print word ticks capBoost
-  file-close
-
   if ticks mod simTicks = 0 [
   ask orgs [
     set orgWindows update-windows

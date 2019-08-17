@@ -19,7 +19,7 @@ experiment <- nl_experiment(
   iterations =1000,
   
   param_values = nl_param_oat(
-    n=10,
+    n=20,
     meanRIskThreshold = 0.4,
     scanningRange = 4,
     numWindows = c(0,6,10),
