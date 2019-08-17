@@ -105,7 +105,7 @@ to setup
   if random-seed_.
   [random-seed 100]
 
-  set logFile (word "log" (random 100000) ".txt"
+  set logFile (word "log" (random 100000) ".txt")
 
   set strategies ["routine" "adaptation"]
   set-default-shape solutions "box"
@@ -459,7 +459,7 @@ to go
   tick
 
   file-open logFile
-  file-print ticks
+  file-print word ticks wcapBoost
   file-close
 
   if ticks mod simTicks = 0 [
