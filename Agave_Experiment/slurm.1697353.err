@@ -1,0 +1,8 @@
+Error in serialize(data, node$con) : ignoring SIGPIPE signal
+Calls: nl_run ... postNode -> sendData -> sendData.SOCKnode -> serialize
+Error in serialize(data, node$con) : error writing to connection
+Calls: nl_run ... postNode -> sendData -> sendData.SOCKnode -> serialize
+Execution halted
+slurmstepd: error: Detected 1 oom-kill event(s) in step 1697353.0 cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
+srun: error: cg17-6: task 0: Out Of Memory
+slurmstepd: error: Detected 1 oom-kill event(s) in step 1697353.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
