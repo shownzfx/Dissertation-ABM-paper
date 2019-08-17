@@ -78,7 +78,7 @@ testResult <- nl_run(experiment,parallel = T)
 #write.csv(dataRun1to25 ,"output 1_to_25Reps.csv")
 
 
-save.image("output_test1Reps.RData")
+save.image("output_test2Reps.RData")
 
 
 
