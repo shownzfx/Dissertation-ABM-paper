@@ -9,5 +9,7 @@
 #SBATCH --mail-user=fzhang59@asu.edu # send-to address
 
 module load rstudio/1.1.423
-srun Rscript test3Rep.R
+Rscript test3Rep.R
 date
+
+
