@@ -1,0 +1,6 @@
+Error in unserialize(node$con) : error reading from connection
+Calls: nl_run ... FUN -> recvData -> recvData.SOCKnode -> unserialize
+Error in unserialize(node$con) : error reading from connection
+Calls: nl_run ... FUN -> recvData -> recvData.SOCKnode -> unserialize
+Execution halted
+slurmstepd: error: Detected 1506 oom-kill event(s) in step 1725812.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
