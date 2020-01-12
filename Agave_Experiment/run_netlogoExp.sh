@@ -13,7 +13,7 @@
 #SBATCH --mail-user=fzhang59@asu.edu # send-to address
 
 
-bash /home/fzhang59/NetLogo\ 6.0.2/netlogo-headless.sh \
+bash /home/fzhang59/netlogo-headless.sh \
 --model Dissertation_ABM_update2020_experiments with perception and tolerance.nlogo \
 --experiment adaptation \
 --table netlogoExpResults_adaptation.csv \
