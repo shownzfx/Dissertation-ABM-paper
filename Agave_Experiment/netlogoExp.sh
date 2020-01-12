@@ -10,12 +10,13 @@
 #SBATCH --mail-user=fzhang59@asu.edu # send-to address
 
 
---model /Dissertation_ABM_01112020_experiments with perception and tolerance.nlogo
---
+bash netlogoExp.sh \
+--model Dissertation_ABM_01112020_experiments with perception and tolerance.nlogo \
+--experiment adaptation \
+--table netlogoExpResults_adaptation.csv \
+--threads 28
 
 
-module load rstudio/1.1.423
-Rscript test3Rep.R
 date
 
 
