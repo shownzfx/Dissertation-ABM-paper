@@ -144,7 +144,7 @@ to import-orgs
       set originalCapacity capacity
       set region item 3 row
       set disasterProb item 6 row + random-float 0.02
-      set passRate item 7 row + random-float 0.02
+      set passRate (item 7 row + random-float 0.02 ) * (1 / 24)
       set declarationRate item 14 row
       set FTARegion item 10 row
       set extremeWeatherProb item 12 row + random-float 0.05
@@ -663,6 +663,13 @@ end
 
 to boost-capacity
    set capacity capacity * (1  + random-float capBoost)
+   ifelse declared? ; limitations about how to use fund from declaration
+  [if random-float 1 < 0.2 [adaptation-discretion]]
+  [adaptation-discretion]
+end
+
+to adaptation-discretion
+
    ifelse capacity >= [cost] of targetSolution
      [
       set insufBoost? false
@@ -939,9 +946,9 @@ PENS
 
 MONITOR
 100
-465
+450
 167
-510
+495
 coping
 count orgs with [length copingChangeTicks > 0]
 0
@@ -950,9 +957,9 @@ count orgs with [length copingChangeTicks > 0]
 
 MONITOR
 0
-480
+465
 77
-525
+510
 crossThresh
 count orgs with [expectedImpact > riskPerceptionThreshold]
 0
@@ -1069,7 +1076,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.7
+0.5
 0.01
 1
 NIL
@@ -1107,9 +1114,9 @@ HORIZONTAL
 
 MONITOR
 365
-460
+445
 422
-505
+490
 adapted
 count orgs with [adaptation-change?]
 0
@@ -1118,9 +1125,9 @@ count orgs with [adaptation-change?]
 
 MONITOR
 295
-455
+440
 357
-500
+485
 postpone
 count orgs with [postponed?]
 0
@@ -1135,8 +1142,8 @@ SLIDER
 numWindows
 numWindows
 0
-10
-10.0
+20
+17.0
 1
 1
 NIL
@@ -1155,9 +1162,9 @@ open-windows_.
 
 MONITOR
 535
-460
+445
 597
-505
+490
 insuBoost
 totalInsufBoost
 0
@@ -1203,9 +1210,9 @@ trigger-network_.
 
 MONITOR
 425
-460
+445
 487
-505
+490
 notFound
 count orgs with [not-found?]
 0
@@ -1251,9 +1258,9 @@ HORIZONTAL
 
 MONITOR
 210
-470
+455
 267
-515
+500
 #missed
 TotalWindowMissed
 0
@@ -1262,9 +1269,9 @@ TotalWindowMissed
 
 MONITOR
 605
-460
+445
 662
-505
+490
 #open
 totalWindowOpen
 0
@@ -1273,9 +1280,9 @@ totalWindowOpen
 
 MONITOR
 535
-510
+495
 592
-555
+540
 #noSol
 totalNoSolution
 0
@@ -1284,9 +1291,9 @@ totalNoSolution
 
 MONITOR
 595
-510
+495
 652
-555
+540
 ready
 count orgs with [solution-ready?]
 0
@@ -1295,9 +1302,9 @@ count orgs with [solution-ready?]
 
 MONITOR
 665
-460
+445
 727
-505
+490
 #declare
 totalDisasterWindows
 0
@@ -1306,9 +1313,9 @@ totalDisasterWindows
 
 MONITOR
 655
-510
+495
 712
-555
+540
 #used
 totalUtilizedWindows
 0
@@ -1317,9 +1324,9 @@ totalUtilizedWindows
 
 MONITOR
 720
-510
+495
 782
-555
+540
 #Needed
 totalNeededWidows
 0
@@ -1328,9 +1335,9 @@ totalNeededWidows
 
 MONITOR
 730
-460
+445
 785
-505
+490
 notNeed
 sufficientCap
 0
@@ -1339,9 +1346,9 @@ sufficientCap
 
 MONITOR
 785
-510
+495
 867
-555
+540
 usedDisaster
 totalUtilizedDisasterWindows
 0
@@ -1350,9 +1357,9 @@ totalUtilizedDisasterWindows
 
 MONITOR
 790
-460
+445
 852
-505
+490
 #disWind
 count orgs with [used-disasterWindow?]
 0
@@ -1396,9 +1403,9 @@ PENS
 
 MONITOR
 995
-460
+445
 1067
-505
+490
 diasterOrg
 count orgs with [disaster?]
 0
@@ -1407,9 +1414,9 @@ count orgs with [disaster?]
 
 MONITOR
 870
-510
+495
 952
-555
+540
 expectedEW
 [expectedEWprob] of org 1
 3
@@ -1478,9 +1485,9 @@ HORIZONTAL
 
 MONITOR
 385
-505
+490
 447
-550
+535
 meanAsp
 mean [currentAspiration] of orgs
 3
@@ -1499,9 +1506,9 @@ reference
 
 MONITOR
 300
-505
+490
 362
-550
+535
 normImp
 mean [normalizedImpact] of orgs
 3
@@ -1905,7 +1912,7 @@ NetLogo 6.0.2
     <metric>totalNeededWidows</metric>
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
-    <steppedValueSet variable="meanRiskThreshold" first="0.5" step="0.1" last="0.8"/>
+    <steppedValueSet variable="meanRiskThreshold" first="0.4" step="0.1" last="0.8"/>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
@@ -1914,9 +1921,8 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="numWindows">
       <value value="0"/>
-      <value value="4"/>
-      <value value="6"/>
       <value value="10"/>
+      <value value="20"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
@@ -1929,7 +1935,7 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="1"/>
-      <value value="2.5"/>
+      <value value="2"/>
       <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="simTicks">
@@ -1937,21 +1943,19 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
-      <value value="2"/>
-      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="officeRole">
       <value value="1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="open-windows_.">
       <value value="true"/>
+      <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="changeAspiration">
       <value value="0"/>
       <value value="1"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
-    <steppedValueSet variable="b1" first="0" step="0.2" last="0.4"/>
   </experiment>
 </experiments>
 @#$#@#$#@
