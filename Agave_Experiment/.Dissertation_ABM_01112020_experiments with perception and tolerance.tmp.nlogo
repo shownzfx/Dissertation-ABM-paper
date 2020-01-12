@@ -1076,7 +1076,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.63
+0.6
 0.01
 1
 NIL
@@ -1106,7 +1106,7 @@ adaptationCost
 adaptationCost
 0
 7
-5.5
+6.5
 0.1
 1
 NIL
@@ -1143,7 +1143,7 @@ numWindows
 numWindows
 0
 10
-6.0
+7.0
 1
 1
 NIL
@@ -1375,7 +1375,7 @@ minNeighbor
 minNeighbor
 0
 10
-3.0
+1.0
 1
 1
 NIL
@@ -1447,7 +1447,7 @@ b1
 b1
 0
 1
-0.8
+0.5
 0.01
 1
 NIL
@@ -1548,7 +1548,7 @@ CHOOSER
 changeAspiration
 changeAspiration
 1 0
-0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?

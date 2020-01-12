@@ -1068,7 +1068,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.61
+0.7
 0.01
 1
 NIL
@@ -1098,7 +1098,7 @@ adaptationCost
 adaptationCost
 0
 7
-5.5
+6.5
 0.1
 1
 NIL
@@ -1135,7 +1135,7 @@ numWindows
 numWindows
 0
 10
-6.0
+10.0
 1
 1
 NIL
@@ -1242,7 +1242,7 @@ simTicks
 simTicks
 0
 3000
-2020.0
+1000.0
 10
 1
 NIL
@@ -1367,7 +1367,7 @@ minNeighbor
 minNeighbor
 0
 10
-1.0
+4.0
 1
 1
 NIL
@@ -1439,7 +1439,7 @@ b1
 b1
 0
 1
-0.8
+0.0
 0.01
 1
 NIL
@@ -1540,7 +1540,7 @@ CHOOSER
 changeAspiration
 changeAspiration
 1 0
-1
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -1889,7 +1889,7 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="experiment" repetitions="2" runMetricsEveryStep="false">
+  <experiment name="adaptation" repetitions="2" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 100</exitCondition>
@@ -1905,7 +1905,8 @@ NetLogo 6.0.2
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.4"/>
+      <value value="0.6"/>
+      <value value="0.7"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -1916,7 +1917,6 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="numWindows">
       <value value="0"/>
       <value value="4"/>
-      <value value="8"/>
       <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
@@ -1952,7 +1952,7 @@ NetLogo 6.0.2
       <value value="1"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
-    <steppedValueSet variable="b1" first="0" step="0.2" last="1"/>
+    <steppedValueSet variable="b1" first="0" step="0.2" last="0.4"/>
   </experiment>
 </experiments>
 @#$#@#$#@

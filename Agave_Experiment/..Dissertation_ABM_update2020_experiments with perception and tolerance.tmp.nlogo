@@ -1068,7 +1068,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.6
+0.7
 0.01
 1
 NIL
@@ -1135,7 +1135,7 @@ numWindows
 numWindows
 0
 10
-0.0
+10.0
 1
 1
 NIL
@@ -1172,7 +1172,7 @@ capBoost
 capBoost
 0
 10
-1.0
+4.0
 0.1
 1
 NIL
@@ -1367,7 +1367,7 @@ minNeighbor
 minNeighbor
 0
 10
-2.0
+4.0
 1
 1
 NIL
@@ -1424,7 +1424,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.01
+0.03
 0.001
 1
 NIL
@@ -1439,7 +1439,7 @@ b1
 b1
 0
 1
-1.0
+0.0
 0.01
 1
 NIL
@@ -1540,7 +1540,7 @@ CHOOSER
 changeAspiration
 changeAspiration
 1 0
-1
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -1889,7 +1889,7 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="experiment" repetitions="2" runMetricsEveryStep="false">
+  <experiment name="adaptation" repetitions="2" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 100</exitCondition>
@@ -1952,7 +1952,7 @@ NetLogo 6.0.2
       <value value="1"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
-    <steppedValueSet variable="b1" first="0" step="0.2" last="1"/>
+    <steppedValueSet variable="b1" first="0" step="0.2" last="0.4"/>
   </experiment>
 </experiments>
 @#$#@#$#@
