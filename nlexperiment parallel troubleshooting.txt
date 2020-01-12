@@ -1,0 +1,123 @@
+I'm using nl_run with parallel=T, I sometimes get an java.lang.IllegalMonitorStateException or java.util.ConcurrentModificationException.
+
+Do you know how I could debug that or if it would be a problem in my netlogo code or R code? Detailed exception messages, and a copy of my R code can be found below.
+
+ERROR MESSAGES:
+java.util.ConcurrentModificationException
+        at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:909)
+        at java.util.ArrayList$Itr.remove(ArrayList.java:873)
+        at org.nlogo.job.JobThread.compact(JobThread.scala:188)
+        at org.nlogo.job.JobThread.$anonfun$run$1(JobThread.scala:67)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+        at scala.util.control.Exception$Catch.apply(Exception.scala:224)
+        at org.nlogo.api.Exceptions$.handling(Exceptions.scala:41)
+        at org.nlogo.job.JobThread.run(JobThread.scala:66)
+java.util.ConcurrentModificationException
+        at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:909)
+        at java.util.ArrayList$Itr.remove(ArrayList.java:873)
+        at org.nlogo.job.JobThread.compact(JobThread.scala:188)
+        at org.nlogo.job.JobThread.$anonfun$run$1(JobThread.scala:67)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+        at scala.util.control.Exception$Catch.apply(Exception.scala:224)
+        at org.nlogo.api.Exceptions$.handling(Exceptions.scala:41)
+        at org.nlogo.job.JobThread.run(JobThread.scala:66)
+java.lang.IllegalMonitorStateException
+        at java.lang.Object.notifyAll(Native Method)
+        at org.nlogo.job.JobThread.runPrimaryJobs(JobThread.scala:117)
+        at org.nlogo.job.JobThread.$anonfun$run$1(JobThread.scala:68)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+        at scala.util.control.Exception$Catch.apply(Exception.scala:224)
+        at org.nlogo.api.Exceptions$.handling(Exceptions.scala:41)
+        at org.nlogo.job.JobThread.run(JobThread.scala:66)
+java.util.ConcurrentModificationException
+        at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:909)
+        at java.util.ArrayList$Itr.remove(ArrayList.java:873)
+        at org.nlogo.job.JobThread.compact(JobThread.scala:188)
+        at org.nlogo.job.JobThread.$anonfun$run$1(JobThread.scala:67)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+        at scala.util.control.Exception$Catch.apply(Exception.scala:224)
+        at org.nlogo.api.Exceptions$.handling(Exceptions.scala:41)
+        at org.nlogo.job.JobThread.run(JobThread.scala:66)
+java.lang.IllegalMonitorStateException
+        at java.lang.Object.wait(Native Method)
+        at org.nlogo.job.JobThread.$anonfun$run$2(JobThread.scala:77)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+        at scala.util.control.Exception$Catch.apply(Exception.scala:224)
+        at org.nlogo.api.Exceptions$.ignoring(Exceptions.scala:38)
+        at org.nlogo.job.JobThread.$anonfun$run$1(JobThread.scala:77)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+        at scala.util.control.Exception$Catch.apply(Exception.scala:224)
+        at org.nlogo.api.Exceptions$.handling(Exceptions.scala:41)
+        at org.nlogo.job.JobThread.run(JobThread.scala:66)
+Error in checkForRemoteErrors(val) : 
+  5 nodes produced errors; first error: java.lang.Exception: Found unknown datatype: null
+Calls: nl_run ... clusterApply -> staticClusterApply -> checkForRemoteErrors
+Execution halted
+
+
+
+java.lang.IllegalMonitorStateException
+        at java.lang.Object.wait(Native Method)
+        at org.nlogo.job.JobThread.$anonfun$run$2(JobThread.scala:77)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+        at scala.util.control.Exception$Catch.apply(Exception.scala:224)
+        at org.nlogo.api.Exceptions$.ignoring(Exceptions.scala:38)
+        at org.nlogo.job.JobThread.$anonfun$run$1(JobThread.scala:77)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+        at scala.util.control.Exception$Catch.apply(Exception.scala:224)
+        at org.nlogo.api.Exceptions$.handling(Exceptions.scala:41)
+        at org.nlogo.job.JobThread.run(JobThread.scala:66)
+Error in checkForRemoteErrors(val) : 
+  one node produced an error: java.lang.Exception: Found unknown datatype: null
+Calls: nl_run ... clusterApply -> staticClusterApply -> checkForRemoteErrors
+Execution halted
+
+
+My code:
+library(nlexperiment)
+nl_netlogo_path("/packages/7x/netlogo/6.0.2/app")  #to netlogo installation on AGAVE
+setwd("/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment")
+module_file_path =  "/home/fzhang59/dev/Dissertation-ABM-paper/Agave_Experiment/Dissertation_ABM_0601.nlogo"
+
+experiment <- nl_experiment(
+  model_file = module_file_path,
+  repetitions =25,
+  random_seed = 76:100,
+  iterations =1000,
+  
+  param_values = nl_param_oat(
+    n=20,
+    meanRIskThreshold = 0.4,
+    scanningRange = 4,
+    numWindows = c(0,6,10),
+    badImpact = 0.08,
+    impactReductionRate =0.25,
+    maxCopingReduction = 0.40,
+    adaptationCost = 6.5,
+    capBoost = c(1, 2.5,4),
+    simTicks = 1000,
+    officeRole =0,
+    minNeighbor=c(1,2,4)
+  ),
+  
+  run_measures = measures(
+    copingNum = "count orgs with [coping-change?]",
+    adaptNum = "count orgs with [adaptation-change?]",
+    insufBoost ="totalInsufBoost",
+    disasterWindows="totalDisasterWindows",
+    windowMissed="totalwindowMissed",
+    windowsOpen="totalWindowOpen",
+    noSolution="totalNoSolution",
+    utilizedWindows="totalUtilizedWindows",
+    NeededWidows="totalNeededWidows",
+    notNeeded="sufficientCap",
+    usedDisasterWindows= "totalUtilizedDisasterWindows"
+  )
+)
+
+result76to100 <- nl_run(experiment,parallel = T)
+
+save.image("output_76_to_100Reps.RData")
+
+
+

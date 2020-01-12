@@ -96,6 +96,7 @@ orgs-own [
   previousImpact
   referenceGroup
   normalizedImpact
+  originalExpectedImpact
   originalRiskPerceptionThreshold
 ]
 
@@ -150,8 +151,7 @@ to import-orgs
       set extremeWeatherThreshold item 15 row
       set disasterThreshold item 16 row
       set expectedBadWeatherSeverity item 17 row
-;      set extremeWeatherProb item 18 row + random-float 0.01 ; those are weekly prob
-;      set disasterProb item 19 row + random-float 0.01 ; those are weekly prob
+;
       set expectedEWprob extremeWeatherProb
       set expectedImpact (expectedBadWeatherSeverity -  solEfficacy) * expectedEWprob
       if expectedImpact < 0 [set expectedImpact 0.1]
@@ -208,6 +208,7 @@ to setup-orgs
     set no-solAttached? true
     set copingChangeTicks []
 
+
   ]
 
   ask FTAoffices [
@@ -219,9 +220,9 @@ end
 to setup-windows
   ask orgs [
     repeat random numWindows [
-      let window random 1000 ; 1000 ticks
-      set orgWindows fput window orgWindows
-      set windows orgwindows
+      let n random 1000 ; 1000 ticks
+      set orgWindows sentence n orgWindows
+      set windows remove-duplicates orgwindows
     ]
   ]
 
@@ -316,7 +317,7 @@ to setup-solutions ; every turtle begins with a solution
       [
          set color green
          set adaptation? false  ; the default solutions are routine ones, not adaptation-based
-         set efficacy 0.05 + random-float (1 - 0.05); for coping solutions
+         set efficacy 0.05 + random-float 0.95; for coping solutions
          set size efficacy
          set adaptation? false
          let my-org orgs-here
@@ -333,8 +334,8 @@ to setup-solutions ; every turtle begins with a solution
 
   ask n-of 30 patches with [not any? turtles-here and pcolor != grey][
     sprout-solutions 1 [
-      set color cyan ; adaptation are set blue
-      set efficacy 1.5 + random-float 1.5 ;weatherseverity ranges from approximately  3 to 6
+      set color green ; adaptation are set blue
+      set efficacy 1.5 + random-float 2 ;weatherseverity ranges from approximately  3 to 6
       set cost random-float adaptationCost + 2
       set size efficacy / 2.5
       set adaptation? true
@@ -353,7 +354,8 @@ to record-weather-norm ; only activated when not using the hard coded weather pa
       set expectedEWprob extremeWeatherProb
       set expectedBadWeatherSeverity item (ceiling simulateMonths * badImpact) weatherImpactExp
       set expectedImpact (expectedBadWeatherSeverity -  solEfficacy) * expectedEWprob
-      if expectedImpact < 0 [set expectedImpact 0.1]
+      ;if expectedImpact < 0  [set expectedImpact 0.1]
+      if expectedImpact < originalExpectedImpact [set expectedImpact 0.1]
       set maxCopingEfficacy  maxCopingReduction * expectedBadWeatherSeverity ; the maximum risk reduction coping measures can acheive
   ]
 end
@@ -429,8 +431,8 @@ end
 to go
   check-weather  ;unless otherwise indicated, the go procedures apply to orgs
   expect-impact
-  determine-satisfaction
   windows-byDeclaration
+  determine-satisfaction
   search-solution
   check-implementation
   check-window
@@ -439,14 +441,13 @@ to go
     update-aspiration
   ]
 
-  ; restore values of some variables
+
   ask orgs [
     set extremeWeather? false
     set disaster? false
     set declared? false
-;   set satisfied? true
     set capacity originalCapacity
-    set extremeWeatherProb extremeWeatherProb * (1 + random-float 0.0001)
+    set extremeWeatherProb extremeWeatherProb * (1 + random-float 0.0001); probability increases over time
     set disasterProb disasterProb * (1 + random-float 0.0001)
     if expectedBadWeatherSeverity < expectedImpact [
       print "warning: expected weather severity smaller than expected impact"
@@ -458,12 +459,12 @@ to go
 
   tick
 
-  if ticks mod simTicks = 0 [
-  ask orgs [
-    set orgWindows update-windows
-    set windows orgWindows
-  ]
- ]
+;  if ticks mod simTicks = 0 [
+;  ask orgs [
+;    set orgWindows update-windows
+;    set windows orgWindows
+;  ]
+; ]
 
  ;if ticks >= simTicks [stop]
 end
@@ -481,14 +482,6 @@ to update-aspiration  ; do not use org's performance in the function
   ]
   ask orgs [
     if impactPerTick > 0 [
-;      if reference = "sameRegion"
-;      [set referenceGroup orgs with [region = [region] of myself]]
-;
-;      if reference = "betterPerformer"
-;      [
-;        set referenceGroup orgs with [(extremeWeather?) and (region = [region] of myself) and (impactPerTick < [impactPerTick] of myself)]
-;      ]
-
      set referenceGroup orgs with [(extremeWeather?) and (region = [region] of myself) and (impactPerTick < [impactPerTick] of myself)]
      if any? referenceGroup [
      let referenceAspiration mean [previousAspiration] of referenceGroup
@@ -504,8 +497,8 @@ end
 to-report update-windows
   let udpatedWindows [] ;spelling
   repeat random numWindows [
-    let updatedWindow random simTicks + ticks
-    set udpatedWindows fput updatedWindow windows
+    let updatedWindow random (simTicks + ticks)
+    set udpatedWindows remove-duplicates (sentence updatedWindow windows)
   ]
   report udpatedWindows
 end
@@ -513,7 +506,6 @@ end
 
 to check-weather
   ask orgs [
-;    let tempSeverity log-normal 5 extremeWeatherProb
     set weatherSeverity log-normal 5 extremeWeatherProb ; did not rescale
     ifelse weatherSeverity >= extremeWeatherThreshold ; here to adjust the influence from others on risk perception
     [
@@ -524,8 +516,8 @@ to check-weather
       [
         set expectedEWProb expectedEWProb * (1 + 0.25 + random-float 0.05)  ;for disaster
         set disaster? true
-        if random-float 1 < passRate [set declared? true]
         set disasterFreq disasterFreq + 1
+        if random-float 1 < passRate [set declared? true]
       ]
     ]
     [set extremeWeather? false]
@@ -541,17 +533,17 @@ to check-weather
     [set expectedEWProb expectedEWProb * (1 - (EWProbDecay + random-float 0.001))] ; extremeweatherevent did not happen, then expectedprob decrease
   ]
 
-     if expectedEWProb >= 0.25 [set expectedEWProb  0.25] ; disaster more strongly enhance expected EW prob
-     if expectedEWProb <= 0.01 [set expectedEWProb 0.01]
+     if expectedEWProb >= 0.25 [set expectedEWProb  0.25] ; upper limit of expected prob
+     if expectedEWProb <= 0.01 [set expectedEWProb 0.01] ; bottom limit of expected prob
   ]
 end
+
 
 to windows-byDeclaration
   ask orgs [
       if declared? [
       set disasterWindows fput ticks disasterWindows
-      set windows fput disasterWindows windows
-      set windows remove-duplicates windows
+      set windows remove-duplicates (sentence disasterWindows orgwindows)
     ]
   ]
 end
@@ -561,7 +553,8 @@ to expect-impact
   ask orgs [
     set impactPerTick ifelse-value (weatherSeverity - solEfficacy < 0 ) [0] [weatherSeverity - solEfficacy]
 
-    set expectedImpact (expectedBadWeatherSeverity - solEfficacy ) * expectedEWProb
+    set originalExpectedImpact (expectedBadWeatherSeverity - solEfficacy ) * expectedEWProb
+    set expectedImpact originalExpectedImpact
 
     if resilience-decay_.[
       if impactPerTick > 0 [ ; if impacted by weather, resilience goes down
@@ -571,7 +564,6 @@ to expect-impact
     ]
   ]
 end
-
 
 
 
@@ -585,10 +577,10 @@ to determine-satisfaction
 end
 to search-solution
   ask orgs with [not satisfied? and not adaptation-change?][
-    if not solution-ready? [
+    if not solution-ready? [ ; coping
       let currentExpectedImpact expectedBadWeatherSeverity -  solEfficacy  ; note here it does not multiply the expectedEWProb
       let targetSolEfficacy calculate-target-efficacy solEfficacy impactPerTick expectedBadWeatherSeverity  (random-float impactReductionRate + 0.10)
-      ifelse (targetSolEfficacy < maxCopingEfficacy) and (copingLimit < 1)
+      ifelse (targetSolEfficacy < maxCopingEfficacy) and (copingLimit < 1) ; limit coping to once only to speed up
     [
          ask current-solution [set efficacy targetSolEfficacy]
          set solEfficacy [efficacy] of current-solution
@@ -757,7 +749,6 @@ end
 
 
 
-
 to remove-links-between [one-org one-sol]
     ask my-links with [other-end = one-sol][die]
 end
@@ -800,15 +791,15 @@ to write-variables
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-325
-15
-679
-370
+385
+10
+789
+415
 -1
 -1
-10.5
+12.0
 1
-25
+16
 1
 1
 1
@@ -878,9 +869,9 @@ NIL
 1
 
 PLOT
-995
+1120
 10
-1195
+1320
 160
 riskThreshold
 Time
@@ -905,7 +896,7 @@ scanningRange
 scanningRange
 0
 10
-3.0
+4.0
 1
 1
 NIL
@@ -927,9 +918,9 @@ NIL
 HORIZONTAL
 
 PLOT
-1203
+1328
 10
-1403
+1528
 160
 #Adopters
 NIL
@@ -946,10 +937,10 @@ PENS
 "coping" 1.0 0 -5298144 true "" "plot count orgs with [coping-change?]"
 
 MONITOR
-405
-375
-472
-420
+100
+465
+167
+510
 coping
 count orgs with [length copingChangeTicks > 0]
 0
@@ -957,10 +948,10 @@ count orgs with [length copingChangeTicks > 0]
 11
 
 MONITOR
-315
-380
-392
-425
+0
+480
+77
+525
 crossThresh
 count orgs with [expectedImpact > riskPerceptionThreshold]
 0
@@ -968,10 +959,10 @@ count orgs with [expectedImpact > riskPerceptionThreshold]
 11
 
 PLOT
-1205
-320
-1405
-470
+1325
+315
+1525
+465
 maxOriginalEfficacy
 NIL
 NIL
@@ -988,9 +979,9 @@ PENS
 "asp" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs with-max [originalEfficacy]"
 
 SWITCH
-690
+955
 15
-827
+1092
 48
 random-seed_.
 random-seed_.
@@ -999,9 +990,9 @@ random-seed_.
 -1000
 
 PLOT
-995
+1120
 165
-1195
+1320
 315
 minEWProb
 NIL
@@ -1019,9 +1010,9 @@ PENS
 "asp" 1.0 0 -14737633 true "" "plot sum [currentAspiration] of orgs with-min [extremeweatherprob]"
 
 PLOT
-1000
+1120
 320
-1200
+1320
 470
 minOriginalEfficacy
 NIL
@@ -1062,7 +1053,7 @@ impactReductionRate
 impactReductionRate
 0
 0.4
-0.34
+0.25
 0.01
 1
 NIL
@@ -1077,7 +1068,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.4
+0.61
 0.01
 1
 NIL
@@ -1106,7 +1097,7 @@ SLIDER
 adaptationCost
 adaptationCost
 0
-5.5
+7
 5.5
 0.1
 1
@@ -1114,10 +1105,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-390
-425
-447
-470
+365
+460
+422
+505
 adapted
 count orgs with [adaptation-change?]
 0
@@ -1125,10 +1116,10 @@ count orgs with [adaptation-change?]
 11
 
 MONITOR
-320
-430
-382
-475
+295
+455
+357
+500
 postpone
 count orgs with [postponed?]
 0
@@ -1151,9 +1142,9 @@ NIL
 HORIZONTAL
 
 SWITCH
-690
+955
 95
-837
+1102
 128
 open-windows_.
 open-windows_.
@@ -1162,10 +1153,10 @@ open-windows_.
 -1000
 
 MONITOR
-515
-435
-577
-480
+535
+460
+597
+505
 insuBoost
 totalInsufBoost
 0
@@ -1181,16 +1172,16 @@ capBoost
 capBoost
 0
 10
-3.0
+4.0
 0.1
 1
 NIL
 HORIZONTAL
 
 SWITCH
-690
+955
 60
-842
+1107
 93
 resilience-decay_.
 resilience-decay_.
@@ -1199,9 +1190,9 @@ resilience-decay_.
 -1000
 
 SWITCH
-690
+955
 135
-842
+1107
 168
 trigger-network_.
 trigger-network_.
@@ -1210,10 +1201,10 @@ trigger-network_.
 -1000
 
 MONITOR
-450
 425
-512
-470
+460
+487
+505
 notFound
 count orgs with [not-found?]
 0
@@ -1221,9 +1212,9 @@ count orgs with [not-found?]
 11
 
 SWITCH
-690
+955
 175
-857
+1122
 208
 random-riskThresh_.
 random-riskThresh_.
@@ -1232,9 +1223,9 @@ random-riskThresh_.
 -1000
 
 SWITCH
-690
+955
 215
-800
+1065
 248
 othersInf?
 othersInf?
@@ -1251,17 +1242,17 @@ simTicks
 simTicks
 0
 3000
-990.0
+2020.0
 10
 1
 NIL
 HORIZONTAL
 
 MONITOR
+210
+470
+267
 515
-380
-572
-425
 #missed
 TotalWindowMissed
 0
@@ -1269,10 +1260,10 @@ TotalWindowMissed
 11
 
 MONITOR
-585
-435
-642
-480
+605
+460
+662
+505
 #open
 totalWindowOpen
 0
@@ -1280,10 +1271,10 @@ totalWindowOpen
 11
 
 MONITOR
-515
-485
-572
-530
+535
+510
+592
+555
 #noSol
 totalNoSolution
 0
@@ -1291,10 +1282,10 @@ totalNoSolution
 11
 
 MONITOR
-575
-485
-632
-530
+595
+510
+652
+555
 ready
 count orgs with [solution-ready?]
 0
@@ -1302,10 +1293,10 @@ count orgs with [solution-ready?]
 11
 
 MONITOR
-645
-435
-707
-480
+665
+460
+727
+505
 #declare
 totalDisasterWindows
 0
@@ -1313,10 +1304,10 @@ totalDisasterWindows
 11
 
 MONITOR
-635
-485
-692
-530
+655
+510
+712
+555
 #used
 totalUtilizedWindows
 0
@@ -1324,10 +1315,10 @@ totalUtilizedWindows
 11
 
 MONITOR
-700
-490
-762
-535
+720
+510
+782
+555
 #Needed
 totalNeededWidows
 0
@@ -1335,10 +1326,10 @@ totalNeededWidows
 11
 
 MONITOR
-710
-435
-765
-480
+730
+460
+785
+505
 notNeed
 sufficientCap
 0
@@ -1346,10 +1337,10 @@ sufficientCap
 11
 
 MONITOR
-765
-490
-847
-535
+785
+510
+867
+555
 usedDisaster
 totalUtilizedDisasterWindows
 0
@@ -1357,10 +1348,10 @@ totalUtilizedDisasterWindows
 11
 
 MONITOR
-770
-435
-832
-480
+790
+460
+852
+505
 #disWind
 count orgs with [used-disasterWindow?]
 0
@@ -1383,9 +1374,9 @@ NIL
 HORIZONTAL
 
 PLOT
-1200
+1325
 160
-1400
+1525
 310
 maxEWProb
 Time
@@ -1403,10 +1394,10 @@ PENS
 "asp" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs with-max [extremeWeatherProb]"
 
 MONITOR
-850
-435
-922
-480
+995
+460
+1067
+505
 diasterOrg
 count orgs with [disaster?]
 0
@@ -1414,10 +1405,10 @@ count orgs with [disaster?]
 11
 
 MONITOR
-850
-485
-932
-530
+870
+510
+952
+555
 expectedEW
 [expectedEWprob] of org 1
 3
@@ -1433,7 +1424,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.021
+0.03
 0.001
 1
 NIL
@@ -1448,7 +1439,7 @@ b1
 b1
 0
 1
-0.42
+0.8
 0.01
 1
 NIL
@@ -1485,10 +1476,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-340
-485
-402
-530
+385
+505
+447
+550
 meanAsp
 mean [currentAspiration] of orgs
 3
@@ -1496,9 +1487,9 @@ mean [currentAspiration] of orgs
 11
 
 CHOOSER
-690
+955
 340
-837
+1102
 385
 reference
 reference
@@ -1506,10 +1497,10 @@ reference
 1
 
 MONITOR
-255
-485
-317
-530
+300
+505
+362
+550
 normImp
 mean [normalizedImpact] of orgs
 3
@@ -1532,9 +1523,9 @@ NIL
 HORIZONTAL
 
 CHOOSER
-695
+960
 250
-833
+1098
 295
 officeRole
 officeRole
@@ -1542,14 +1533,14 @@ officeRole
 0
 
 CHOOSER
-695
+960
 295
-833
+1098
 340
 changeAspiration
 changeAspiration
 1 0
-0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -1898,85 +1889,70 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="experiment" repetitions="1" runMetricsEveryStep="false">
+  <experiment name="experiment" repetitions="2" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <metric>count turtles</metric>
-    <enumeratedValueSet variable="numWindows">
-      <value value="6"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="othersInf?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="b1">
-      <value value="0.42"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="maxCopingReduction">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="b2">
-      <value value="0.57"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="adaptationCost">
-      <value value="5.5"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="reference">
-      <value value="&quot;betterPerformer&quot;"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="resilience-decay_.">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="impactReductionRate">
-      <value value="0.34"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="referTime">
-      <value value="12"/>
-    </enumeratedValueSet>
+    <exitCondition>ticks &gt; 100</exitCondition>
+    <metric>count orgs with [coping-change?]</metric>
+    <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalInsufBoost</metric>
+    <metric>totalDisasterWindows</metric>
+    <metric>totalwindowMissed</metric>
+    <metric>totalWindowOpen</metric>
+    <metric>totalNoSolution</metric>
+    <metric>totalUtilizedWindows</metric>
+    <metric>totalNeededWidows</metric>
+    <metric>sufficientCap</metric>
+    <metric>totalUtilizedDisasterWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
       <value value="0.4"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="random-seed_.">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="open-windows_.">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="b3">
-      <value value="0.25"/>
-    </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
-      <value value="3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="simulateMonths">
-      <value value="1169"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="changeAspiration">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="EWProbDecay">
-      <value value="0.021"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="simTicks">
-      <value value="990"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="minNeighbor">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="capBoost">
-      <value value="3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="trigger-network_.">
-      <value value="true"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="random-riskThresh_.">
-      <value value="false"/>
+    <enumeratedValueSet variable="numWindows">
+      <value value="0"/>
+      <value value="4"/>
+      <value value="8"/>
+      <value value="10"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="6.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="1"/>
+      <value value="2.5"/>
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+      <value value="2"/>
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="open-windows_.">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="changeAspiration">
+      <value value="0"/>
+      <value value="1"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
+    <steppedValueSet variable="b1" first="0" step="0.2" last="1"/>
   </experiment>
 </experiments>
 @#$#@#$#@
