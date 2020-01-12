@@ -1913,9 +1913,7 @@ NetLogo 6.0.2
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.4"/>
       <value value="0.6"/>
-      <value value="0.8"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -1924,10 +1922,7 @@ NetLogo 6.0.2
       <value value="0.08"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="numWindows">
-      <value value="0"/>
-      <value value="4"/>
-      <value value="8"/>
-      <value value="10"/>
+      <value value="7"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
@@ -1939,8 +1934,6 @@ NetLogo 6.0.2
       <value value="6.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
-      <value value="1"/>
-      <value value="2.5"/>
       <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="simTicks">
@@ -1948,8 +1941,6 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
-      <value value="2"/>
-      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="officeRole">
       <value value="1"/>
@@ -1961,8 +1952,16 @@ NetLogo 6.0.2
       <value value="0"/>
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
-    <steppedValueSet variable="b1" first="0" step="0.2" last="1"/>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.03"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b1">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="changeAspiration">
+      <value value="0"/>
+      <value value="1"/>
+    </enumeratedValueSet>
   </experiment>
 </experiments>
 @#$#@#$#@

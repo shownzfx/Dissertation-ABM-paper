@@ -1,6 +1,9 @@
 #!/bin/bash
  
  
+##SBATCH --nodes=1                  # set number of processes x per node
+##SBATCH --ntasks-per-node=28 # set cores per node
+#SBATCH -n 28                     # number of cores
 #SBATCH --cpus-per-task=1
 #SBATCH -t 0-48:00                  # wall time (D-HH:MM)
 ##SBATCH -A fzhang59                 # Account hours will be pulled from (commented out with double # in front)
