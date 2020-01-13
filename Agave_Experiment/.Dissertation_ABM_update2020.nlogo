@@ -107,7 +107,8 @@ to setup
   if random-seed_.
   [random-seed 100]
 
-  set logFile (word "log" (random 100000) ".txt")
+;  set logFile (word "log" (random 100000) ".txt")
+  set logFile (word "start " ticks)
 
   set strategies ["routine" "adaptation"]
   set-default-shape solutions "box"
@@ -131,6 +132,12 @@ to setup
   setup-network
 
     reset-ticks
+end
+
+to write-logFile
+  file-open "test logfile.txt"
+  file-write word "end " ticks
+  file-close
 end
 
 to import-orgs
@@ -1464,7 +1471,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.03
+0.02
 0.001
 1
 NIL

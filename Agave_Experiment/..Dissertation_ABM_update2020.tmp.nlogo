@@ -107,7 +107,8 @@ to setup
   if random-seed_.
   [random-seed 100]
 
-  set logFile (word "log" (random 100000) ".txt")
+;  set logFile (word "log" (random 100000) ".txt")
+
 
   set strategies ["routine" "adaptation"]
   set-default-shape solutions "box"
@@ -132,6 +133,8 @@ to setup
 
     reset-ticks
 end
+
+
 
 to import-orgs
   file-open "Transit agencies ABM_noHeader.csv"
@@ -430,6 +433,7 @@ end
 
 
 to go
+  set logFile (word "start " ticks)
   check-weather  ;unless otherwise indicated, the go procedures apply to orgs
   expect-impact
   windows-byDeclaration
@@ -458,7 +462,9 @@ to go
     ]
   ]
 
+  write-logFile
   tick
+
 
 ;  if ticks mod simTicks = 0 [
 ;  ask orgs [
@@ -1108,7 +1114,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.8
+0.4
 0.01
 1
 NIL
@@ -1175,7 +1181,7 @@ numWindows
 numWindows
 0
 20
-10.0
+0.0
 1
 1
 NIL
@@ -1188,7 +1194,7 @@ SWITCH
 128
 open-windows_.
 open-windows_.
-1
+0
 1
 -1000
 
@@ -1464,7 +1470,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.03
+0.02
 0.001
 1
 NIL
@@ -1991,7 +1997,8 @@ set BS-output "adaptationTest.csv"</setup>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
   </experiment>
   <experiment name="test" repetitions="1" runMetricsEveryStep="false">
-    <setup>setup
+    <setup>reset-ticks
+setup
 set BS-output "adaptationTest3.csv"</setup>
     <go>go</go>
     <exitCondition>ticks = 5</exitCondition>
