@@ -1982,7 +1982,10 @@ set BS_output "adaptationTest.csv"</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 5</exitCondition>
     <metric>save-BSoutput</metric>
-    <steppedValueSet variable="meanRiskThreshold" first="0.4" step="0.1" last="0.8"/>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.4"/>
+      <value value="0.8"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
@@ -2004,9 +2007,7 @@ set BS_output "adaptationTest.csv"</setup>
       <value value="6.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
-      <value value="1"/>
       <value value="2"/>
-      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="simTicks">
       <value value="1000"/>
@@ -2024,7 +2025,9 @@ set BS_output "adaptationTest.csv"</setup>
     <enumeratedValueSet variable="changeAspiration">
       <value value="0"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.03"/>
+    </enumeratedValueSet>
   </experiment>
 </experiments>
 @#$#@#$#@
