@@ -11,7 +11,8 @@ undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 
 globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalWindowMissed
          totalWindowOpen totalInsufBoost totalNoSolution totalDisasterWindows
-          totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows logFile]
+          totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows logFile
+         BS-output]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost adaptation? ]; solutions include both non-adaptation and adaptation measures
@@ -778,6 +779,23 @@ to-report log-normal [mu sigma]
   let beta ln (1 + ((sigma / 2) / (mu ^ 2)))
   let x exp (random-normal (ln (mu) - (beta / 2)) sqrt beta)
   report x
+end
+
+to-report save-BSoutput  ; save BS output from command line
+  let filename BS-output
+  file-open filename
+
+  let text-out (sentence ",numWindows,meanRiskThreshold, adaptedNum")
+  file-type text-out
+  file-print ""
+
+  ask turtles [
+    set text-out (sentence ","meanRiskThreshold","numWindows","count orgs with [adaptation-change?]",")
+    file-type text-out
+    file-print ""
+  ]
+  file-close
+  report "table output done"
 end
 
 to write-variables
@@ -1898,9 +1916,10 @@ NetLogo 6.0.2
 @#$#@#$#@
 <experiments>
   <experiment name="adaptation" repetitions="10" runMetricsEveryStep="false">
-    <setup>setup</setup>
+    <setup>setup
+set BS_output "adaptationTest.csv"</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt; 1</exitCondition>
     <metric>count orgs with [coping-change?]</metric>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalInsufBoost</metric>
@@ -1954,6 +1973,56 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="changeAspiration">
       <value value="0"/>
       <value value="1"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
+  </experiment>
+  <experiment name="test" repetitions="1" runMetricsEveryStep="false">
+    <setup>setup
+set BS_output "adaptationTest.csv"</setup>
+    <go>go</go>
+    <exitCondition>ticks &gt; 5</exitCondition>
+    <metric>save-BSoutput</metric>
+    <steppedValueSet variable="meanRiskThreshold" first="0.4" step="0.1" last="0.8"/>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="badImpact">
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="numWindows">
+      <value value="0"/>
+      <value value="10"/>
+      <value value="20"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="6.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="1"/>
+      <value value="2"/>
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="open-windows_.">
+      <value value="true"/>
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="changeAspiration">
+      <value value="0"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
   </experiment>
