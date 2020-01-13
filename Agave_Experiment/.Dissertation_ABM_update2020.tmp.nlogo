@@ -2005,7 +2005,7 @@ set BS-output "adaptationTest.csv"</setup>
   <experiment name="test" repetitions="1" runMetricsEveryStep="false">
     <setup>reset-ticks
 setup
-set BS-output "adaptationTest3.csv"</setup>
+set BS-output "test.csv"</setup>
     <go>go</go>
     <exitCondition>ticks = 100</exitCondition>
     <metric>save-BSoutput</metric>
