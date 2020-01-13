@@ -11,7 +11,8 @@ undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 
 globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalWindowMissed
          totalWindowOpen totalInsufBoost totalNoSolution totalDisasterWindows
-          totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows logFile]
+          totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows logFile
+         BS-output]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost adaptation? ]; solutions include both non-adaptation and adaptation measures
@@ -106,7 +107,8 @@ to setup
   if random-seed_.
   [random-seed 100]
 
-  set logFile (word "log" (random 100000) ".txt")
+;  set logFile (word "log" (random 100000) ".txt")
+
 
   set strategies ["routine" "adaptation"]
   set-default-shape solutions "box"
@@ -132,6 +134,8 @@ to setup
     reset-ticks
 end
 
+
+
 to import-orgs
   file-open "Transit agencies ABM_noHeader.csv"
   while [not file-at-end?]
@@ -144,7 +148,7 @@ to import-orgs
       set originalCapacity capacity
       set region item 3 row
       set disasterProb item 6 row + random-float 0.02
-      set passRate item 7 row + random-float 0.02
+      set passRate (item 7 row + random-float 0.02 ) * (1 / 24)
       set declarationRate item 14 row
       set FTARegion item 10 row
       set extremeWeatherProb item 12 row + random-float 0.05
@@ -429,6 +433,7 @@ end
 
 
 to go
+  set logFile (word "start " ticks)
   check-weather  ;unless otherwise indicated, the go procedures apply to orgs
   expect-impact
   windows-byDeclaration
@@ -448,7 +453,7 @@ to go
     set declared? false
     set capacity originalCapacity
     set extremeWeatherProb extremeWeatherProb * (1 + random-float 0.0001); probability increases over time
-    set disasterProb disasterProb * (1 + random-float 0.0001)
+;    set disasterProb disasterProb * (1 + random-float 0.0001)
     if expectedBadWeatherSeverity < expectedImpact [
       print "warning: expected weather severity smaller than expected impact"
     ]
@@ -457,7 +462,9 @@ to go
     ]
   ]
 
+  write-logFile
   tick
+
 
 ;  if ticks mod simTicks = 0 [
 ;  ask orgs [
@@ -467,6 +474,12 @@ to go
 ; ]
 
  ;if ticks >= simTicks [stop]
+end
+
+to write-logFile
+  file-open "test logfile.txt"
+  file-write word "end ticks " ticks
+  file-close
 end
 
 to update-aspiration  ; do not use org's performance in the function
@@ -492,6 +505,7 @@ to update-aspiration  ; do not use org's performance in the function
     ]
  ]
 end
+
 
 
 to-report update-windows
@@ -662,6 +676,13 @@ end
 
 to boost-capacity
    set capacity capacity * (1  + random-float capBoost)
+   ifelse declared? ; limitations about how to use fund from declaration
+  [if random-float 1 < 0.2 [adaptation-discretion]]
+  [adaptation-discretion]
+end
+
+to adaptation-discretion
+
    ifelse capacity >= [cost] of targetSolution
      [
       set insufBoost? false
@@ -771,6 +792,37 @@ to-report log-normal [mu sigma]
   let x exp (random-normal (ln (mu) - (beta / 2)) sqrt beta)
   report x
 end
+
+to-report save-BSoutput  ; save BS output from command line
+  let filename BS-output
+  file-open filename
+
+  ;headers
+  let text-out (sentence ",numWindows,meanRiskThreshold, adaptedNum")
+  file-type text-out
+  file-print ""
+
+  ;print dat
+  set text-out (sentence ","meanRiskThreshold","numWindows","count orgs with [adaptation-change?]",")
+  file-type text-out
+  file-print ""
+
+
+  file-close
+  report "table output done"
+end
+
+to-report save-BSoutput1
+  let filename BS-output
+  file-open filename
+  file-write meanRiskThreshold
+  file-write numWindows
+  file-write (count orgs with [adaptation-change?])
+  file-close
+  report "use csv done"
+end
+
+
 
 to write-variables
   file-open "DissertationABM hard coded weather parameters.txt"
@@ -938,9 +990,9 @@ PENS
 
 MONITOR
 100
-465
+450
 167
-510
+495
 coping
 count orgs with [length copingChangeTicks > 0]
 0
@@ -949,9 +1001,9 @@ count orgs with [length copingChangeTicks > 0]
 
 MONITOR
 0
-480
+465
 77
-525
+510
 crossThresh
 count orgs with [expectedImpact > riskPerceptionThreshold]
 0
@@ -1068,7 +1120,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.7
+0.8
 0.01
 1
 NIL
@@ -1106,9 +1158,9 @@ HORIZONTAL
 
 MONITOR
 365
-460
+445
 422
-505
+490
 adapted
 count orgs with [adaptation-change?]
 0
@@ -1117,9 +1169,9 @@ count orgs with [adaptation-change?]
 
 MONITOR
 295
-455
+440
 357
-500
+485
 postpone
 count orgs with [postponed?]
 0
@@ -1134,7 +1186,7 @@ SLIDER
 numWindows
 numWindows
 0
-10
+20
 10.0
 1
 1
@@ -1148,15 +1200,15 @@ SWITCH
 128
 open-windows_.
 open-windows_.
-0
+1
 1
 -1000
 
 MONITOR
 535
-460
+445
 597
-505
+490
 insuBoost
 totalInsufBoost
 0
@@ -1172,7 +1224,7 @@ capBoost
 capBoost
 0
 10
-4.0
+2.0
 0.1
 1
 NIL
@@ -1202,9 +1254,9 @@ trigger-network_.
 
 MONITOR
 425
-460
+445
 487
-505
+490
 notFound
 count orgs with [not-found?]
 0
@@ -1250,9 +1302,9 @@ HORIZONTAL
 
 MONITOR
 210
-470
+455
 267
-515
+500
 #missed
 TotalWindowMissed
 0
@@ -1261,9 +1313,9 @@ TotalWindowMissed
 
 MONITOR
 605
-460
+445
 662
-505
+490
 #open
 totalWindowOpen
 0
@@ -1272,9 +1324,9 @@ totalWindowOpen
 
 MONITOR
 535
-510
+495
 592
-555
+540
 #noSol
 totalNoSolution
 0
@@ -1283,9 +1335,9 @@ totalNoSolution
 
 MONITOR
 595
-510
+495
 652
-555
+540
 ready
 count orgs with [solution-ready?]
 0
@@ -1294,9 +1346,9 @@ count orgs with [solution-ready?]
 
 MONITOR
 665
-460
+445
 727
-505
+490
 #declare
 totalDisasterWindows
 0
@@ -1305,9 +1357,9 @@ totalDisasterWindows
 
 MONITOR
 655
-510
+495
 712
-555
+540
 #used
 totalUtilizedWindows
 0
@@ -1316,9 +1368,9 @@ totalUtilizedWindows
 
 MONITOR
 720
-510
+495
 782
-555
+540
 #Needed
 totalNeededWidows
 0
@@ -1327,9 +1379,9 @@ totalNeededWidows
 
 MONITOR
 730
-460
+445
 785
-505
+490
 notNeed
 sufficientCap
 0
@@ -1338,9 +1390,9 @@ sufficientCap
 
 MONITOR
 785
-510
+495
 867
-555
+540
 usedDisaster
 totalUtilizedDisasterWindows
 0
@@ -1349,9 +1401,9 @@ totalUtilizedDisasterWindows
 
 MONITOR
 790
-460
+445
 852
-505
+490
 #disWind
 count orgs with [used-disasterWindow?]
 0
@@ -1367,7 +1419,7 @@ minNeighbor
 minNeighbor
 0
 10
-4.0
+1.0
 1
 1
 NIL
@@ -1395,9 +1447,9 @@ PENS
 
 MONITOR
 995
-460
+445
 1067
-505
+490
 diasterOrg
 count orgs with [disaster?]
 0
@@ -1406,9 +1458,9 @@ count orgs with [disaster?]
 
 MONITOR
 870
-510
+495
 952
-555
+540
 expectedEW
 [expectedEWprob] of org 1
 3
@@ -1477,9 +1529,9 @@ HORIZONTAL
 
 MONITOR
 385
-505
+490
 447
-550
+535
 meanAsp
 mean [currentAspiration] of orgs
 3
@@ -1498,9 +1550,9 @@ reference
 
 MONITOR
 300
-505
+490
 362
-550
+535
 normImp
 mean [normalizedImpact] of orgs
 3
@@ -1540,7 +1592,7 @@ CHOOSER
 changeAspiration
 changeAspiration
 1 0
-0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -1889,10 +1941,11 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="adaptation" repetitions="2" runMetricsEveryStep="false">
-    <setup>setup</setup>
+  <experiment name="adaptation" repetitions="10" runMetricsEveryStep="false">
+    <setup>setup
+set BS-output "adaptationTest.csv"</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 100</exitCondition>
+    <exitCondition>ticks &gt; 1</exitCondition>
     <metric>count orgs with [coping-change?]</metric>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalInsufBoost</metric>
@@ -1904,10 +1957,7 @@ NetLogo 6.0.2
     <metric>totalNeededWidows</metric>
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
-    <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.6"/>
-      <value value="0.7"/>
-    </enumeratedValueSet>
+    <steppedValueSet variable="meanRiskThreshold" first="0.4" step="0.1" last="0.8"/>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
@@ -1916,8 +1966,8 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="numWindows">
       <value value="0"/>
-      <value value="4"/>
       <value value="10"/>
+      <value value="20"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
@@ -1930,7 +1980,7 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="1"/>
-      <value value="2.5"/>
+      <value value="2"/>
       <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="simTicks">
@@ -1938,21 +1988,74 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
-      <value value="2"/>
-      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="officeRole">
       <value value="1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="open-windows_.">
       <value value="true"/>
+      <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="changeAspiration">
       <value value="0"/>
       <value value="1"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
-    <steppedValueSet variable="b1" first="0" step="0.2" last="0.4"/>
+  </experiment>
+  <experiment name="test" repetitions="1" runMetricsEveryStep="false">
+    <setup>reset-ticks
+setup
+set BS-output "adaptationTest3.csv"</setup>
+    <go>go</go>
+    <exitCondition>ticks = 100</exitCondition>
+    <metric>save-BSoutput</metric>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.4"/>
+      <value value="0.8"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="badImpact">
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="numWindows">
+      <value value="0"/>
+      <value value="10"/>
+      <value value="20"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="6.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="open-windows_.">
+      <value value="true"/>
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="changeAspiration">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.02"/>
+      <value value="0.03"/>
+    </enumeratedValueSet>
   </experiment>
 </experiments>
 @#$#@#$#@

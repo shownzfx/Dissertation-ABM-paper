@@ -2007,7 +2007,7 @@ set BS-output "adaptationTest.csv"</setup>
 setup
 set BS-output "adaptationTest3.csv"</setup>
     <go>go</go>
-    <exitCondition>ticks = 5</exitCondition>
+    <exitCondition>ticks = 100</exitCondition>
     <metric>save-BSoutput</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
       <value value="0.4"/>
