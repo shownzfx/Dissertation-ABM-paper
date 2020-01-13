@@ -785,18 +785,32 @@ to-report save-BSoutput  ; save BS output from command line
   let filename BS-output
   file-open filename
 
+  ;headers
   let text-out (sentence ",numWindows,meanRiskThreshold, adaptedNum")
   file-type text-out
   file-print ""
 
-  ask turtles [
-    set text-out (sentence ","meanRiskThreshold","numWindows","count orgs with [adaptation-change?]",")
-    file-type text-out
-    file-print ""
-  ]
+  ;print dat
+  set text-out (sentence ","meanRiskThreshold","numWindows","count orgs with [adaptation-change?]",")
+  file-type text-out
+  file-print ""
+
+
   file-close
   report "table output done"
 end
+
+to-report save-BSoutput1
+  let filename BS-output
+  file-open filename
+  file-write meanRiskThreshold
+  file-write numWindows
+  file-write (count orgs with [adaptation-change?])
+  file-close
+  report "use csv done"
+end
+
+
 
 to write-variables
   file-open "DissertationABM hard coded weather parameters.txt"
@@ -1161,7 +1175,7 @@ numWindows
 numWindows
 0
 20
-20.0
+10.0
 1
 1
 NIL
@@ -1198,7 +1212,7 @@ capBoost
 capBoost
 0
 10
-4.0
+2.0
 0.1
 1
 NIL
@@ -1566,7 +1580,7 @@ CHOOSER
 changeAspiration
 changeAspiration
 1 0
-0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -1917,7 +1931,7 @@ NetLogo 6.0.2
 <experiments>
   <experiment name="adaptation" repetitions="10" runMetricsEveryStep="false">
     <setup>setup
-set BS_output "adaptationTest.csv"</setup>
+set BS-output "adaptationTest.csv"</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1</exitCondition>
     <metric>count orgs with [coping-change?]</metric>
@@ -1977,8 +1991,9 @@ set BS_output "adaptationTest.csv"</setup>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
   </experiment>
   <experiment name="test" repetitions="1" runMetricsEveryStep="false">
-    <setup>setup
-set BS_output "adaptationTest.csv"</setup>
+    <setup>reset-ticks
+setup
+set BS-output "adaptationTest3.csv"</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 5</exitCondition>
     <metric>save-BSoutput</metric>
@@ -2026,6 +2041,7 @@ set BS_output "adaptationTest.csv"</setup>
       <value value="0"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.02"/>
       <value value="0.03"/>
     </enumeratedValueSet>
   </experiment>
