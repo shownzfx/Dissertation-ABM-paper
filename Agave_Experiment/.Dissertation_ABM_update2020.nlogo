@@ -1188,7 +1188,7 @@ SWITCH
 128
 open-windows_.
 open-windows_.
-1
+0
 1
 -1000
 
@@ -1991,11 +1991,10 @@ set BS-output "adaptationTest.csv"</setup>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
   </experiment>
   <experiment name="test" repetitions="1" runMetricsEveryStep="false">
-    <setup>reset-ticks
-setup
+    <setup>setup
 set BS-output "adaptationTest3.csv"</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 5</exitCondition>
+    <exitCondition>ticks = 5</exitCondition>
     <metric>save-BSoutput</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
       <value value="0.4"/>
