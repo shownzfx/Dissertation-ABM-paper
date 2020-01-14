@@ -1,0 +1,355 @@
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+	at org.nlogo.agent.TurtleManagement.breedsOwnIndexOf(TurtleManagement.scala:47)
+	at org.nlogo.agent.TurtleManagement.breedsOwnIndexOf$(TurtleManagement.scala:46)
+	at org.nlogo.agent.World.breedsOwnIndexOf(World.scala:109)
+	at org.nlogo.agent.Turtle.getBreedVariable(Turtle.java:322)
+	at org.nlogo.prim._asm_procedureupdateaspiration_and_4.report(:3)
+	at org.nlogo.nvm.Context.evaluateReporter(Context.java:243)
+	at org.nlogo.prim._asm_procedureupdateaspiration_setbreedvariable_3.perform(:2)
+	at org.nlogo.nvm.Context.runExclusive(Context.java:135)
+	at org.nlogo.nvm.ExclusiveJob.run(ExclusiveJob.scala:39)
+	at org.nlogo.nvm.Context.runExclusiveJob(Context.java:181)
+	at org.nlogo.prim._asm_procedureupdateaspiration_ask_0.perform(:1)
+	at org.nlogo.nvm.Context.stepConcurrent(Context.java:107)
+	at org.nlogo.nvm.ConcurrentJob.step(ConcurrentJob.scala:65)
+	at org.nlogo.job.JobThread.runPrimaryJobs(JobThread.scala:133)
+	at org.nlogo.job.JobThread.$anonfun$run$1(JobThread.scala:68)
+	at org.nlogo.job.JobThread$$Lambda$50/915760002.apply$mcV$sp(Unknown Source)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+	at scala.util.control.Exception$Catch.apply(Exception.scala:224)
+	at org.nlogo.api.Exceptions$.handling(Exceptions.scala:41)
+	at org.nlogo.job.JobThread.run(JobThread.scala:66)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+	at org.nlogo.nvm.Binding.enterScope(Binding.scala:69)
+	at org.nlogo.nvm.AnonymousCommand.perform(AnonymousProcedure.scala:173)
+	at org.nlogo.nvm.AnonymousCommand.perform(AnonymousProcedure.scala:158)
+	at org.nlogo.prim.etc._foreach.perform(_foreach.scala:33)
+	at org.nlogo.nvm.Context.runExclusive(Context.java:135)
+	at org.nlogo.nvm.ExclusiveJob.run(ExclusiveJob.scala:39)
+	at org.nlogo.nvm.Context.runExclusiveJob(Context.java:181)
+	at org.nlogo.prim._asm_procedureupdateaspiration_ask_0.perform(:1)
+	at org.nlogo.nvm.Context.stepConcurrent(Context.java:107)
+	at org.nlogo.nvm.ConcurrentJob.step(ConcurrentJob.scala:65)
+	at org.nlogo.job.JobThread.runPrimaryJobs(JobThread.scala:133)
+	at org.nlogo.job.JobThread.$anonfun$run$1(JobThread.scala:68)
+	at org.nlogo.job.JobThread$$Lambda$50/915760002.apply$mcV$sp(Unknown Source)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+	at scala.util.control.Exception$Catch.apply(Exception.scala:224)
+	at org.nlogo.api.Exceptions$.handling(Exceptions.scala:41)
+	at org.nlogo.job.JobThread.run(JobThread.scala:66)
+Run #174, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Run #161, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+	at java.util.LinkedHashMap.newNode(LinkedHashMap.java:256)
+	at java.util.HashMap.putVal(HashMap.java:642)
+	at java.util.HashMap.put(HashMap.java:612)
+	at java.util.HashSet.add(HashSet.java:220)
+	at org.nlogo.prim.etc._turtleset.report(_turtleset.java:38)
+	at org.nlogo.prim._asm_updateaspiration_anonymouscommandxifticksitem0xmemorysetmyreferenceturtles$55bbc57b82fb16bd9413148048170129$_setbreedvariable_1.perform()
+	at org.nlogo.nvm.Context.runExclusive(Context.java:135)
+	at org.nlogo.nvm.AnonymousCommand.perform(AnonymousProcedure.scala:175)
+	at org.nlogo.nvm.AnonymousCommand.perform(AnonymousProcedure.scala:158)
+	at org.nlogo.prim.etc._foreach.perform(_foreach.scala:33)
+	at org.nlogo.nvm.Context.runExclusive(Context.java:135)
+	at org.nlogo.nvm.ExclusiveJob.run(ExclusiveJob.scala:39)
+	at org.nlogo.nvm.Context.runExclusiveJob(Context.java:181)
+	at org.nlogo.prim._asm_procedureupdateaspiration_ask_0.perform(:1)
+	at org.nlogo.nvm.Context.stepConcurrent(Context.java:107)
+	at org.nlogo.nvm.ConcurrentJob.step(ConcurrentJob.scala:65)
+	at org.nlogo.job.JobThread.runPrimaryJobs(JobThread.scala:133)
+	at org.nlogo.job.JobThread.$anonfun$run$1(JobThread.scala:68)
+	at org.nlogo.job.JobThread$$Lambda$50/915760002.apply$mcV$sp(Unknown Source)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+	at scala.util.control.Exception$Catch.apply(Exception.scala:224)
+	at org.nlogo.api.Exceptions$.handling(Exceptions.scala:41)
+	at org.nlogo.job.JobThread.run(JobThread.scala:66)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+	at org.nlogo.nvm.Binding.enterScope(Binding.scala:72)
+	at org.nlogo.nvm.AnonymousCommand.perform(AnonymousProcedure.scala:173)
+	at org.nlogo.nvm.AnonymousCommand.perform(AnonymousProcedure.scala:158)
+	at org.nlogo.prim.etc._foreach.perform(_foreach.scala:33)
+	at org.nlogo.nvm.Context.runExclusive(Context.java:135)
+	at org.nlogo.nvm.ExclusiveJob.run(ExclusiveJob.scala:39)
+	at org.nlogo.nvm.Context.runExclusiveJob(Context.java:181)
+	at org.nlogo.prim._asm_procedureupdateaspiration_ask_0.perform(:1)
+	at org.nlogo.nvm.Context.stepConcurrent(Context.java:107)
+	at org.nlogo.nvm.ConcurrentJob.step(ConcurrentJob.scala:65)
+	at org.nlogo.job.JobThread.runPrimaryJobs(JobThread.scala:133)
+	at org.nlogo.job.JobThread.$anonfun$run$1(JobThread.scala:68)
+	at org.nlogo.job.JobThread$$Lambda$50/915760002.apply$mcV$sp(Unknown Source)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)
+	at scala.util.control.Exception$Catch.apply(Exception.scala:224)
+	at org.nlogo.api.Exceptions$.handling(Exceptions.scala:41)
+	at org.nlogo.job.JobThread.run(JobThread.scala:66)
+Run #185, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Run #168, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #180, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #172, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #183, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #176, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #173, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #171, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #182, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #177, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #163, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #175, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #186, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #165, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #181, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+Exception in thread "JobThread" org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Exception in thread "JobThread" Exception in thread "JobThread" Exception in thread "JobThread" Exception in thread "JobThread" Exception in thread "JobThread" Exception in thread "JobThread" 
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "JobThread"
+Exception in thread "JobThread" 
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "JobThread"
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #169, JAVA EXCEPTION: GC overhead limit exceeded
+Exception in thread "Timer-0" java.lang.OutOfMemoryError: GC overhead limit exceeded
+Exception in thread "JobThread" Exception in thread "JobThread" java.lang.OutOfMemoryError: GC overhead limit exceeded
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #178, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+Run #167, JAVA EXCEPTION: GC overhead limit exceeded
+Run #187, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Run #170, JAVA EXCEPTION: GC overhead limit exceeded
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #188, JAVA EXCEPTION: GC overhead limit exceeded
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #162, JAVA EXCEPTION: GC overhead limit exceeded
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #164, JAVA EXCEPTION: GC overhead limit exceeded
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #179, JAVA EXCEPTION: GC overhead limit exceeded
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #166, JAVA EXCEPTION: GC overhead limit exceeded
+java.lang.OutOfMemoryError: GC overhead limit exceeded
+Run #184, RUNTIME ERROR: Stopping condition failed to report a result:
+ticks > 1000
+org.nlogo.lab.Worker$Runner$FailedException: Stopping condition failed to report a result:
+ticks > 1000
+	at org.nlogo.lab.Worker$Runner.exitConditionTrue$1(Worker.scala:143)
+	at org.nlogo.lab.Worker$Runner.callHelper(Worker.scala:178)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:91)
+	at org.nlogo.lab.Worker$Runner.call(Worker.scala:74)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)Exception in thread "pool-1-thread-24" 
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "pool-1-thread-24"
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
