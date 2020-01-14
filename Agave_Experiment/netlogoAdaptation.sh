@@ -16,7 +16,7 @@
 bash /home/fzhang59/NetLogo\ 6.0.2/netlogo-headless.sh \
 --model Dissertation_ABM_update2020.nlogo \
 --experiment adaptation \
---table ExpResults2400Runs.csv \
+#--table ExpResults2400Runs.csv \
 --threads 28
 
 

@@ -818,12 +818,11 @@ to-report save-BSoutput  ; save BS output from command line
   file-open filename
 
   ;headers
-  let text-out (sentence ",numWindows,meanRiskThreshold, adaptedNum")
+  let text-out (sentence ",numWindows,meanRiskThreshold, scanningRange,badImpact,numWindows,impactReductionRate,maxCopingReduction,adaptationCost,capBoost,simTicks,minNeighbor,officeRole,changeAspiration,EWProbDecay,b1,count orgs with [coping-change?],count orgs with [adaptation-change?],totalInsufBoost,totalDisasterWindows,totalwindowMissed,totalWindowOpen,totalNoSolution,totalUtilizedWindows,totalNeededWidows,sufficientCap,totalUtilizedDisasterWindows")
   file-type text-out
   file-print ""
 
-  ;print dat
-  set text-out (sentence ","meanRiskThreshold","numWindows","count orgs with [adaptation-change?]",")
+  set text-out (sentence ", "numWindows", "meanRiskThreshold","scanningRange","badImpact","numWindows","impactReductionRate","maxCopingReduction","adaptationCost","capBoost","simTicks","minNeighbor","officeRole","changeAspiration","EWProbDecay","b1","count orgs with [coping-change?]","count orgs with [adaptation-change?]", "totalInsufBoost","totalDisasterWindows","totalwindowMissed","totalWindowOpen","totalNoSolution","totalUtilizedWindows","totalNeededWidows","totalNeededWidows","sufficientCap","totalUtilizedDisasterWindows",")
   file-type text-out
   file-print ""
 
@@ -1140,7 +1139,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.4
+0.8
 0.01
 1
 NIL
@@ -1207,7 +1206,7 @@ numWindows
 numWindows
 0
 20
-0.0
+10.0
 1
 1
 NIL
@@ -1220,7 +1219,7 @@ SWITCH
 128
 open-windows_.
 open-windows_.
-0
+1
 1
 -1000
 
@@ -1244,7 +1243,7 @@ capBoost
 capBoost
 0
 10
-1.0
+2.0
 0.1
 1
 NIL
@@ -1496,7 +1495,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.0
+0.03
 0.001
 1
 NIL
@@ -1976,7 +1975,7 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="adaptation" repetitions="2" runMetricsEveryStep="false">
+  <experiment name="adaptation" repetitions="1" runMetricsEveryStep="false">
     <setup>setup
 set BS-output "adaptation24000Runs.csv"</setup>
     <go>go</go>
