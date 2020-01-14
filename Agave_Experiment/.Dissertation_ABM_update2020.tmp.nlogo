@@ -99,6 +99,8 @@ orgs-own [
   normalizedImpact
   originalExpectedImpact
   originalRiskPerceptionThreshold
+  allReference
+  myReference
 ]
 
 
@@ -211,6 +213,7 @@ to setup-orgs
     set targetSolution nobody
     set no-solAttached? true
     set copingChangeTicks []
+    set allReference []
 
 
   ]
@@ -473,7 +476,7 @@ to go
 ;  ]
 ; ]
 
- ;if ticks >= simTicks [stop]
+; if ticks >= simTicks [stop]
 end
 
 to write-logFile
@@ -490,22 +493,39 @@ to update-aspiration  ; do not use org's performance in the function
 ;    set previousImpact normalizedImpact
 ;    set previousAspiration currentAspiration
 ;  ]
+
   ask orgs [
     set previousAspiration currentAspiration
-  ]
-  ask orgs [
     if impactPerTick > 0 [
      set referenceGroup orgs with [(extremeWeather?) and (region = [region] of myself) and (impactPerTick < [impactPerTick] of myself)]
-     if any? referenceGroup [
-     let referenceAspiration mean [previousAspiration] of referenceGroup
+     set allReference fput (list ticks referenceGroup) allReference
+     set myReference []
+     (
+        foreach allReference [x ->
+        if ticks - item 0 x < memory
+        [set myReference (turtle-set myReference (item 1 x)) ]
+     ])
+
+
+     if any? myReference [
+     let referenceAspiration mean [previousAspiration] of myReference
      set currentAspiration (b1 * previousAspiration + (1 - b1) * referenceAspiration)
 ;     set currentAspiration (b1 * normalizedImpact + b2 * previousAspiration + b3 * referenceAspiration)
      set riskPerceptionThreshold currentAspiration
       ]
-    ]
+   ]
  ]
 end
 
+
+
+
+;  foreach listToFilter [x ->
+;;    filter [item 0 x > ticks - 2] x
+;    if item 0 x > ticks - memory
+;    [set myReference sentence item 1 x myReference]
+; ]
+;end
 
 
 to-report update-windows
@@ -677,7 +697,7 @@ end
 to boost-capacity
    set capacity capacity * (1  + random-float capBoost)
    ifelse declared? ; limitations about how to use fund from declaration
-  [if random-float 1 < 0.2 [adaptation-discretion]]
+  [if random-float 1 < 0.5 [adaptation-discretion]]
   [adaptation-discretion]
 end
 
@@ -963,7 +983,7 @@ simulateMonths
 simulateMonths
 0
 3600
-1169.0
+28.0
 1
 1
 NIL
@@ -990,9 +1010,9 @@ PENS
 
 MONITOR
 100
-450
+440
 167
-495
+485
 coping
 count orgs with [length copingChangeTicks > 0]
 0
@@ -1001,9 +1021,9 @@ count orgs with [length copingChangeTicks > 0]
 
 MONITOR
 0
-465
+455
 77
-510
+500
 crossThresh
 count orgs with [expectedImpact > riskPerceptionThreshold]
 0
@@ -1120,7 +1140,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.8
+0.53
 0.01
 1
 NIL
@@ -1135,7 +1155,7 @@ maxCopingReduction
 maxCopingReduction
 0
 0.5
-0.4
+0.24
 0.01
 1
 NIL
@@ -1150,7 +1170,7 @@ adaptationCost
 adaptationCost
 0
 7
-6.5
+6.6
 0.1
 1
 NIL
@@ -1158,9 +1178,9 @@ HORIZONTAL
 
 MONITOR
 365
-445
+435
 422
-490
+480
 adapted
 count orgs with [adaptation-change?]
 0
@@ -1169,9 +1189,9 @@ count orgs with [adaptation-change?]
 
 MONITOR
 295
-440
+430
 357
-485
+475
 postpone
 count orgs with [postponed?]
 0
@@ -1187,7 +1207,7 @@ numWindows
 numWindows
 0
 20
-10.0
+11.0
 1
 1
 NIL
@@ -1200,15 +1220,15 @@ SWITCH
 128
 open-windows_.
 open-windows_.
-1
+0
 1
 -1000
 
 MONITOR
 535
-445
+435
 597
-490
+480
 insuBoost
 totalInsufBoost
 0
@@ -1224,7 +1244,7 @@ capBoost
 capBoost
 0
 10
-2.0
+2.5
 0.1
 1
 NIL
@@ -1254,9 +1274,9 @@ trigger-network_.
 
 MONITOR
 425
-445
+435
 487
-490
+480
 notFound
 count orgs with [not-found?]
 0
@@ -1294,7 +1314,7 @@ simTicks
 simTicks
 0
 3000
-1000.0
+0.0
 10
 1
 NIL
@@ -1302,9 +1322,9 @@ HORIZONTAL
 
 MONITOR
 210
-455
+445
 267
-500
+490
 #missed
 TotalWindowMissed
 0
@@ -1313,9 +1333,9 @@ TotalWindowMissed
 
 MONITOR
 605
-445
+435
 662
-490
+480
 #open
 totalWindowOpen
 0
@@ -1324,9 +1344,9 @@ totalWindowOpen
 
 MONITOR
 535
-495
+485
 592
-540
+530
 #noSol
 totalNoSolution
 0
@@ -1335,9 +1355,9 @@ totalNoSolution
 
 MONITOR
 595
-495
+485
 652
-540
+530
 ready
 count orgs with [solution-ready?]
 0
@@ -1346,9 +1366,9 @@ count orgs with [solution-ready?]
 
 MONITOR
 665
-445
+435
 727
-490
+480
 #declare
 totalDisasterWindows
 0
@@ -1357,9 +1377,9 @@ totalDisasterWindows
 
 MONITOR
 655
-495
+485
 712
-540
+530
 #used
 totalUtilizedWindows
 0
@@ -1368,9 +1388,9 @@ totalUtilizedWindows
 
 MONITOR
 720
-495
+485
 782
-540
+530
 #Needed
 totalNeededWidows
 0
@@ -1379,9 +1399,9 @@ totalNeededWidows
 
 MONITOR
 730
-445
+435
 785
-490
+480
 notNeed
 sufficientCap
 0
@@ -1390,9 +1410,9 @@ sufficientCap
 
 MONITOR
 785
-495
+485
 867
-540
+530
 usedDisaster
 totalUtilizedDisasterWindows
 0
@@ -1401,9 +1421,9 @@ totalUtilizedDisasterWindows
 
 MONITOR
 790
-445
+435
 852
-490
+480
 #disWind
 count orgs with [used-disasterWindow?]
 0
@@ -1419,7 +1439,7 @@ minNeighbor
 minNeighbor
 0
 10
-1.0
+2.0
 1
 1
 NIL
@@ -1442,14 +1462,14 @@ true
 "" ""
 PENS
 "RiskPer" 1.0 0 -14439633 true "" "plot sum [expectedImpact] of  orgs with-max [extremeWeatherProb]"
-"Threshold" 1.0 0 -5298144 true "" "plot sum  [originalRiskperceptionthreshold] of orgs with-max [extremeWeatherProb]"
-"asp" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs with-max [extremeWeatherProb]"
+"originThres" 1.0 0 -5298144 true "" "plot sum  [originalRiskperceptionthreshold] of orgs with-max [extremeWeatherProb]"
+"riskThresh" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs with-max [extremeWeatherProb]"
 
 MONITOR
 995
-445
+435
 1067
-490
+480
 diasterOrg
 count orgs with [disaster?]
 0
@@ -1458,9 +1478,9 @@ count orgs with [disaster?]
 
 MONITOR
 870
-495
+485
 952
-540
+530
 expectedEW
 [expectedEWprob] of org 1
 3
@@ -1491,7 +1511,7 @@ b1
 b1
 0
 1
-0.0
+0.39
 0.01
 1
 NIL
@@ -1506,7 +1526,7 @@ b2
 b2
 0
 1
-0.57
+0.0
 0.01
 1
 NIL
@@ -1521,7 +1541,7 @@ b3
 b3
 0
 1
-0.25
+0.0
 0.01
 1
 NIL
@@ -1529,9 +1549,9 @@ HORIZONTAL
 
 MONITOR
 385
-490
+480
 447
-535
+525
 meanAsp
 mean [currentAspiration] of orgs
 3
@@ -1550,9 +1570,9 @@ reference
 
 MONITOR
 300
-490
+480
 362
-535
+525
 normImp
 mean [normalizedImpact] of orgs
 3
@@ -1568,7 +1588,7 @@ referTime
 referTime
 0
 36
-12.0
+11.0
 1
 1
 NIL
@@ -1582,7 +1602,7 @@ CHOOSER
 officeRole
 officeRole
 1 0
-0
+1
 
 CHOOSER
 960
@@ -1592,7 +1612,22 @@ CHOOSER
 changeAspiration
 changeAspiration
 1 0
+0
+
+SLIDER
+160
+320
+332
+353
+memory
+memory
+0
+96
+48.0
 1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -1943,9 +1978,9 @@ NetLogo 6.0.2
 <experiments>
   <experiment name="adaptation" repetitions="10" runMetricsEveryStep="false">
     <setup>setup
-set BS-output "adaptationTest.csv"</setup>
+set BS-output "adaptation24000Runs.csv"</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1</exitCondition>
+    <exitCondition>ticks &gt; 1000</exitCondition>
     <metric>count orgs with [coping-change?]</metric>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalInsufBoost</metric>
@@ -1964,11 +1999,7 @@ set BS-output "adaptationTest.csv"</setup>
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="numWindows">
-      <value value="0"/>
-      <value value="10"/>
-      <value value="20"/>
-    </enumeratedValueSet>
+    <steppedValueSet variable="numWindows" first="0" step="5" last="20"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
@@ -1992,15 +2023,17 @@ set BS-output "adaptationTest.csv"</setup>
     <enumeratedValueSet variable="officeRole">
       <value value="1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="open-windows_.">
-      <value value="true"/>
-      <value value="false"/>
-    </enumeratedValueSet>
     <enumeratedValueSet variable="changeAspiration">
       <value value="0"/>
       <value value="1"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
+    <enumeratedValueSet variable="b1">
+      <value value="0"/>
+      <value value="0.3"/>
+      <value value="0.6"/>
+      <value value="1"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="test" repetitions="1" runMetricsEveryStep="false">
     <setup>reset-ticks
