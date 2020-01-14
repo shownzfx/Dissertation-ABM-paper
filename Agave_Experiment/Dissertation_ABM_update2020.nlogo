@@ -1976,7 +1976,7 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="adaptation" repetitions="10" runMetricsEveryStep="false">
+  <experiment name="adaptation" repetitions="1" runMetricsEveryStep="false">
     <setup>setup
 set BS-output "adaptation24000Runs.csv"</setup>
     <go>go</go>

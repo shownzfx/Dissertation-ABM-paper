@@ -1140,7 +1140,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.53
+0.4
 0.01
 1
 NIL
@@ -1155,7 +1155,7 @@ maxCopingReduction
 maxCopingReduction
 0
 0.5
-0.24
+0.4
 0.01
 1
 NIL
@@ -1170,7 +1170,7 @@ adaptationCost
 adaptationCost
 0
 7
-6.6
+6.5
 0.1
 1
 NIL
@@ -1207,7 +1207,7 @@ numWindows
 numWindows
 0
 20
-11.0
+0.0
 1
 1
 NIL
@@ -1244,7 +1244,7 @@ capBoost
 capBoost
 0
 10
-2.5
+1.0
 0.1
 1
 NIL
@@ -1314,7 +1314,7 @@ simTicks
 simTicks
 0
 3000
-0.0
+1000.0
 10
 1
 NIL
@@ -1439,7 +1439,7 @@ minNeighbor
 minNeighbor
 0
 10
-2.0
+1.0
 1
 1
 NIL
@@ -1496,7 +1496,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.03
+0.0
 0.001
 1
 NIL
@@ -1511,7 +1511,7 @@ b1
 b1
 0
 1
-0.39
+0.0
 0.01
 1
 NIL
@@ -1602,7 +1602,7 @@ CHOOSER
 officeRole
 officeRole
 1 0
-1
+0
 
 CHOOSER
 960
@@ -1612,7 +1612,7 @@ CHOOSER
 changeAspiration
 changeAspiration
 1 0
-0
+1
 
 SLIDER
 160
@@ -1976,7 +1976,7 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="adaptation" repetitions="10" runMetricsEveryStep="false">
+  <experiment name="adaptation" repetitions="2" runMetricsEveryStep="false">
     <setup>setup
 set BS-output "adaptation24000Runs.csv"</setup>
     <go>go</go>
