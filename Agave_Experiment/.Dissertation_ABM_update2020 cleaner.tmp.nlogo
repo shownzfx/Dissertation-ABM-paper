@@ -170,7 +170,7 @@ to import-orgs
       set maxCopingEfficacy  maxCopingReduction * expectedBadWeatherSeverity  ; the maximum risk reduction coping measures can acheive,do not multiple ewprob
       If extremeWeatherProb < disasterProb [
          print "extremeWeatherProb is smaller than disasterProb"
-         set extremeWeatherProb disasterProb + 0.005
+         set extremeWeatherProb disasterProb + 0.01
       ]
     ]
  ]
@@ -1984,7 +1984,7 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="adaptation" repetitions="1" runMetricsEveryStep="false">
+  <experiment name="adaptation" repetitions="5" runMetricsEveryStep="false">
     <setup>setup
 set BS-output "adaptation24000Runs.csv"</setup>
     <go>go</go>
@@ -1999,14 +1999,18 @@ set BS-output "adaptation24000Runs.csv"</setup>
     <metric>totalNeededWidows</metric>
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
-    <steppedValueSet variable="meanRiskThreshold" first="0.4" step="0.1" last="0.8"/>
+    <steppedValueSet variable="meanRiskThreshold" first="0.4" step="0.2" last="0.8"/>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="5" last="20"/>
+    <enumeratedValueSet variable="numWindows">
+      <value value="0"/>
+      <value value="10"/>
+      <value value="20"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
@@ -2036,8 +2040,7 @@ set BS-output "adaptation24000Runs.csv"</setup>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
     <enumeratedValueSet variable="b1">
       <value value="0"/>
-      <value value="0.3"/>
-      <value value="0.6"/>
+      <value value="0.5"/>
       <value value="1"/>
     </enumeratedValueSet>
   </experiment>
