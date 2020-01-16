@@ -107,7 +107,7 @@ orgs-own [
 
 to setup
   ca
-
+;  profiler:start
   if random-seed_.
   [random-seed 100]
 
@@ -441,7 +441,7 @@ end
 
 
 to go
-  profiler:start
+;  profile:start
 
   set logFile (word "start " ticks)
   check-weather  ;unless otherwise indicated, the go procedures apply to orgs
@@ -474,8 +474,8 @@ to go
 
   write-logFile
   tick
-  profiler:stop
-  print profiler:report
+;  profiler:start
+;  print profiler:report
 
 
 ;  if ticks mod simTicks = 0 [
@@ -683,21 +683,21 @@ to check-window
 
       [
        set window-open? true
-      ; set totalWindowOpen totalWindowOpen + 1
+       set totalWindowOpen totalWindowOpen + 1
 
-;       if member? ticks disasterWindows
-;       [set totalDisasterWindows totalDisasterWindows + 1]
+       if member? ticks disasterWindows
+       [set totalDisasterWindows totalDisasterWindows + 1]
 
-;      ifelse expectedImpact <= riskPerceptionThreshold
-;      [
-;        set window-missed? true
-;        set TotalWindowMissed TotalWindowMissed + 1
-;      ]
-;      [
-;        ifelse postponed?
-;        [ boost-capacity]
-;        [set totalNoSolution totalNoSolution + 1 ]
-;      ]
+      ifelse expectedImpact <= riskPerceptionThreshold
+      [
+        set window-missed? true
+        set TotalWindowMissed TotalWindowMissed + 1
+      ]
+      [
+        ifelse postponed?
+        [ boost-capacity]
+        [set totalNoSolution totalNoSolution + 1 ]
+      ]
     ]
    ]
  ]
@@ -719,12 +719,12 @@ to adaptation-discretion
       if not adaptation-change?
       [
         set adaptation-change? true
-       ; set totalNeededWidows totalNeededWidows  + 1
+        set totalNeededWidows totalNeededWidows  + 1
       ]
       set utilizedWindow? true
-      ;set totalUtilizedWindows totalUtilizedWindows + 1 ; note orgs can adapt more than once
+      set totalUtilizedWindows totalUtilizedWindows + 1 ; note orgs can adapt more than once
       ifelse member? ticks disasterWindows [
-        ;set totalUtilizedDisasterWindows totalUtilizedDisasterWindows + 1
+        set totalUtilizedDisasterWindows totalUtilizedDisasterWindows + 1
         set used-disasterWindow? true
       ][
         set used-disasterWindow? false
@@ -1215,7 +1215,7 @@ numWindows
 numWindows
 0
 20
-0.0
+8.0
 1
 1
 NIL
@@ -1252,7 +1252,7 @@ capBoost
 capBoost
 0
 10
-1.0
+3.5
 0.1
 1
 NIL
@@ -1989,7 +1989,6 @@ NetLogo 6.0.2
 set BS-output "adaptation24000Runs.csv"</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
-    <metric>count orgs with [coping-change?]</metric>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
@@ -2033,7 +2032,6 @@ set BS-output "adaptation24000Runs.csv"</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="changeAspiration">
       <value value="0"/>
-      <value value="1"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
     <enumeratedValueSet variable="b1">
