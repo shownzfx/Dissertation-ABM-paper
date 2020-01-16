@@ -1999,7 +1999,10 @@ set BS-output "adaptation24000Runs.csv"</setup>
     <metric>totalNeededWidows</metric>
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
-    <steppedValueSet variable="meanRiskThreshold" first="0.4" step="0.2" last="0.8"/>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.6"/>
+      <value value="0.8"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
@@ -2021,7 +2024,6 @@ set BS-output "adaptation24000Runs.csv"</setup>
       <value value="6.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
-      <value value="1"/>
       <value value="2"/>
       <value value="4"/>
     </enumeratedValueSet>
@@ -2038,11 +2040,6 @@ set BS-output "adaptation24000Runs.csv"</setup>
       <value value="0"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
-    <enumeratedValueSet variable="b1">
-      <value value="0"/>
-      <value value="0.5"/>
-      <value value="1"/>
-    </enumeratedValueSet>
   </experiment>
   <experiment name="test" repetitions="1" runMetricsEveryStep="false">
     <setup>reset-ticks
@@ -2053,6 +2050,7 @@ set BS-output "test.csv"</setup>
     <metric>save-BSoutput</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
       <value value="0.4"/>
+      <value value="0.6"/>
       <value value="0.8"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
