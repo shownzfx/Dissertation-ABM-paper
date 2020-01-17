@@ -1986,7 +1986,7 @@ NetLogo 6.0.2
 <experiments>
   <experiment name="adaptation" repetitions="5" runMetricsEveryStep="false">
     <setup>setup
-set BS-output "adaptation240Runs.csv"</setup>
+set BS-output "adaptation2160Runs.csv"</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
