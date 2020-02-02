@@ -2134,7 +2134,7 @@ set BS-output "adaptation3456Runs2.csv"</setup>
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="AspirationOn4" repetitions="10" runMetricsEveryStep="false">
+  <experiment name="AspirationOn4" repetitions="5" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
@@ -2199,7 +2199,6 @@ set BS-output "adaptation3456Runs2.csv"</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="change-aspiration?">
       <value value="true"/>
-      <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="trigger-network?">
       <value value="true"/>
