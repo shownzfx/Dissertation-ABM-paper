@@ -2011,9 +2011,9 @@ set BS-output "adaptation240Runs.csv"</setup>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
   </experiment>
-  <experiment name="AspirationOn" repetitions="5" runMetricsEveryStep="false">
+  <experiment name="AspirationOn" repetitions="1" runMetricsEveryStep="false">
     <setup>setup
-set BS-output "adaptation5760Runs.csv"</setup>
+set BS-output "adaptation1152Runs.csv"</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
