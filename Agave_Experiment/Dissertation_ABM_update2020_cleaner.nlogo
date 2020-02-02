@@ -1434,7 +1434,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.03
+0.0
 0.001
 1
 NIL
@@ -1519,7 +1519,7 @@ disasterUti
 disasterUti
 0
 1
-0.6
+0.0
 0.01
 1
 NIL
@@ -1552,13 +1552,13 @@ NIL
 HORIZONTAL
 
 SWITCH
-995
-310
-1112
-343
+955
+295
+1072
+328
 officeRole?
 officeRole?
-1
+0
 1
 -1000
 
@@ -2089,9 +2089,6 @@ set BS-output "adaptation3456Runs.csv"</setup>
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole">
-      <value value="1"/>
-    </enumeratedValueSet>
     <steppedValueSet variable="memory" first="24" step="12" last="48"/>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
@@ -2113,6 +2110,9 @@ set BS-output "adaptation3456Runs.csv"</setup>
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="trigger-network?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
@@ -2164,9 +2164,6 @@ set BS-output "adaptation3456Runs2.csv"</setup>
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole">
-      <value value="1"/>
-    </enumeratedValueSet>
     <steppedValueSet variable="memory" first="24" step="12" last="48"/>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
@@ -2188,6 +2185,9 @@ set BS-output "adaptation3456Runs2.csv"</setup>
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="trigger-network?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
