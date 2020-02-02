@@ -746,10 +746,8 @@ to assess-thruNetwork
   let knownSolutions2 (turtle-set [current-solution] of org-sameReg-link-neighbors) with [adaptation?]
   let knownSolutions3  (turtle-set [current-solution] of org-diffReg-link-neighbors) with [adaptation?]
 
-  if officeRole?
+  ifelse officeRole?
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3 knownSolFromOffice)]
-
-  if officeRole? = 0
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3)]
 
 
@@ -1184,7 +1182,7 @@ numWindows
 numWindows
 0
 20
-10.0
+0.0
 1
 1
 NIL
