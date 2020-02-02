@@ -818,11 +818,11 @@ to-report save-BSoutput  ; save BS output from command line
   file-open filename
 
   ;headers
-  let text-out (sentence ",numWindows,meanRiskThreshold, scanningRange,badImpact,numWindows,impactReductionRate,maxCopingReduction,adaptationCost,capBoost,simTicks,minNeighbor,changeAspiration,EWProbDecay,b1,count orgs with [coping-change?],count orgs with [adaptation-change?],totalInsufBoost,totalDisasterWindows,totalwindowMissed,totalWindowOpen,totalNoSolution,totalUtilizedWindows,totalNeededWidows,sufficientCap,totalUtilizedDisasterWindows")
+  let text-out (sentence ",numWindows,meanRiskThreshold, scanningRange,badImpact,numWindows,impactReductionRate,maxCopingReduction,adaptationCost,capBoost,simTicks,minNeighbor,officeRole?,changeAspiration,EWProbDecay,b1,count orgs with [coping-change?],count orgs with [adaptation-change?],totalInsufBoost,totalDisasterWindows,totalwindowMissed,totalWindowOpen,totalNoSolution,totalUtilizedWindows,totalNeededWidows,sufficientCap,totalUtilizedDisasterWindows")
   file-type text-out
   file-print ""
 
-  set text-out (sentence ", "numWindows", "meanRiskThreshold","scanningRange","badImpact","numWindows","impactReductionRate","maxCopingReduction","adaptationCost","capBoost","simTicks","minNeighbor","EWProbDecay","b1","count orgs with [coping-change?]","count orgs with [adaptation-change?]", "totalInsufBoost","totalDisasterWindows","totalwindowMissed","totalWindowOpen","totalNoSolution","totalUtilizedWindows","totalNeededWidows","totalNeededWidows","sufficientCap","totalUtilizedDisasterWindows",")
+  set text-out (sentence ", "numWindows", "meanRiskThreshold","scanningRange","badImpact","numWindows","impactReductionRate","maxCopingReduction","adaptationCost","capBoost","simTicks","minNeighbor","officeRole","EWProbDecay","b1","count orgs with [coping-change?]","count orgs with [adaptation-change?]", "totalInsufBoost","totalDisasterWindows","totalwindowMissed","totalWindowOpen","totalNoSolution","totalUtilizedWindows","totalNeededWidows","totalNeededWidows","sufficientCap","totalUtilizedDisasterWindows",")
   file-type text-out
   file-print ""
 
