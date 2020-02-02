@@ -1434,7 +1434,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.03
+0.0
 0.001
 1
 NIL
@@ -1519,7 +1519,7 @@ disasterUti
 disasterUti
 0
 1
-0.6
+0.0
 0.01
 1
 NIL
@@ -1558,7 +1558,7 @@ SWITCH
 328
 officeRole?
 officeRole?
-1
+0
 1
 -1000
 
@@ -2089,9 +2089,6 @@ set BS-output "adaptation3456Runs.csv"</setup>
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole">
-      <value value="1"/>
-    </enumeratedValueSet>
     <steppedValueSet variable="memory" first="24" step="12" last="48"/>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
@@ -2115,79 +2112,7 @@ set BS-output "adaptation3456Runs.csv"</setup>
     <enumeratedValueSet variable="trigger-network?">
       <value value="true"/>
     </enumeratedValueSet>
-  </experiment>
-  <experiment name="AspirationOn3" repetitions="3" runMetricsEveryStep="false">
-    <setup>setup
-set BS-output "adaptation3456Runs2.csv"</setup>
-    <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
-    <metric>count orgs with [adaptation-change?]</metric>
-    <metric>totalInsufBoost</metric>
-    <metric>totalDisasterWindows</metric>
-    <metric>totalwindowMissed</metric>
-    <metric>totalWindowOpen</metric>
-    <metric>totalNoSolution</metric>
-    <metric>totalUtilizedWindows</metric>
-    <metric>totalNeededWidows</metric>
-    <metric>sufficientCap</metric>
-    <metric>totalUtilizedDisasterWindows</metric>
-    <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="scanningRange">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="badImpact">
-      <value value="0.08"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="numWindows">
-      <value value="0"/>
-      <value value="10"/>
-      <value value="15"/>
-      <value value="20"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="impactReductionRate">
-      <value value="0.25"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="maxCopingReduction">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="adaptationCost">
-      <value value="6.5"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="capBoost">
-      <value value="2"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="simTicks">
-      <value value="1000"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="minNeighbor">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <steppedValueSet variable="memory" first="24" step="12" last="48"/>
-    <enumeratedValueSet variable="b1">
-      <value value="0.3"/>
-      <value value="0.6"/>
-      <value value="1"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="disasterUti">
-      <value value="0"/>
-      <value value="0.3"/>
-      <value value="0.6"/>
-      <value value="1"/>
-    </enumeratedValueSet>
-    <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
-    <enumeratedValueSet variable="open-windows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="change-aspiration?">
-      <value value="true"/>
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="trigger-network?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole">
+    <enumeratedValueSet variable="officeRole?">
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
