@@ -452,7 +452,7 @@ to go
   check-implementation
   check-window
   FTAcheck-adaptation ; this is the FTAoffice procedure;
-  if changeAspiration = 1[
+  if change-aspiration? [
     update-aspiration
   ]
 
@@ -525,16 +525,6 @@ to update-aspiration  ; do not use org's performance in the function
    ]
  ]
 end
-
-
-
-
-;  foreach listToFilter [x ->
-;;    filter [item 0 x > ticks - 2] x
-;    if item 0 x > ticks - memory
-;    [set myReference sentence item 1 x myReference]
-; ]
-;end
 
 
 to-report update-windows
@@ -645,7 +635,7 @@ end
 
 
 to search-adaptation
-  ifelse trigger-network_.
+  ifelse trigger-network?
   [assess-thruNetwork]
   [assess-allSolutions]
 
@@ -672,7 +662,7 @@ end
 
 
 to check-window
-  if open-windows_.[
+  if open-windows?[
     ask orgs with [not adaptation-change?]
     [
       ifelse not member? ticks windows
@@ -706,7 +696,8 @@ end
 to boost-capacity
    set capacity capacity * (1  + random-float capBoost)
    ifelse declared? ; limitations about how to use fund from declaration
-  [if random-float 1 < 0.5 [adaptation-discretion]]
+  [if random-float 1 < disasterUti [adaptation-discretion]]
+;  [adaptation-discretion]
   [adaptation-discretion]
 end
 
@@ -722,6 +713,7 @@ to adaptation-discretion
         set totalNeededWidows totalNeededWidows  + 1
       ]
       set utilizedWindow? true
+
       set totalUtilizedWindows totalUtilizedWindows + 1 ; note orgs can adapt more than once
       ifelse member? ticks disasterWindows [
         set totalUtilizedDisasterWindows totalUtilizedDisasterWindows + 1
@@ -788,7 +780,6 @@ end
 
 
 to FTAcheck-adaptation
-
   ask FTAoffices[
     set projectInventory (turtle-set [current-solution] of FTAoffice-org-link-neighbors) with [adaptation?]
     ask FTAoffice-org-link-neighbors [
@@ -831,7 +822,7 @@ to-report save-BSoutput  ; save BS output from command line
   file-type text-out
   file-print ""
 
-  set text-out (sentence ", "numWindows", "meanRiskThreshold","scanningRange","badImpact","numWindows","impactReductionRate","maxCopingReduction","adaptationCost","capBoost","simTicks","minNeighbor","officeRole","changeAspiration","EWProbDecay","b1","count orgs with [coping-change?]","count orgs with [adaptation-change?]", "totalInsufBoost","totalDisasterWindows","totalwindowMissed","totalWindowOpen","totalNoSolution","totalUtilizedWindows","totalNeededWidows","totalNeededWidows","sufficientCap","totalUtilizedDisasterWindows",")
+  set text-out (sentence ", "numWindows", "meanRiskThreshold","scanningRange","badImpact","numWindows","impactReductionRate","maxCopingReduction","adaptationCost","capBoost","simTicks","minNeighbor","officeRole","EWProbDecay","b1","count orgs with [coping-change?]","count orgs with [adaptation-change?]", "totalInsufBoost","totalDisasterWindows","totalwindowMissed","totalWindowOpen","totalNoSolution","totalUtilizedWindows","totalNeededWidows","totalNeededWidows","sufficientCap","totalUtilizedDisasterWindows",")
   file-type text-out
   file-print ""
 
@@ -1215,7 +1206,7 @@ numWindows
 numWindows
 0
 20
-8.0
+0.0
 1
 1
 NIL
@@ -1226,9 +1217,9 @@ SWITCH
 95
 1102
 128
-open-windows_.
-open-windows_.
-1
+open-windows?
+open-windows?
+0
 1
 -1000
 
@@ -1252,7 +1243,7 @@ capBoost
 capBoost
 0
 10
-3.5
+2.0
 0.1
 1
 NIL
@@ -1274,8 +1265,8 @@ SWITCH
 135
 1107
 168
-trigger-network_.
-trigger-network_.
+trigger-network?
+trigger-network?
 0
 1
 -1000
@@ -1473,28 +1464,6 @@ PENS
 "originThres" 1.0 0 -5298144 true "" "plot sum  [originalRiskperceptionthreshold] of orgs with-max [extremeWeatherProb]"
 "riskThresh" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs with-max [extremeWeatherProb]"
 
-MONITOR
-995
-435
-1067
-480
-diasterOrg
-count orgs with [disaster?]
-0
-1
-11
-
-MONITOR
-870
-485
-952
-530
-expectedEW
-[expectedEWprob] of org 1
-3
-1
-11
-
 SLIDER
 160
 250
@@ -1504,7 +1473,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.03
+0.0
 0.001
 1
 NIL
@@ -1519,7 +1488,7 @@ b1
 b1
 0
 1
-1.0
+0.3
 0.01
 1
 NIL
@@ -1567,10 +1536,10 @@ mean [currentAspiration] of orgs
 11
 
 CHOOSER
-955
-340
-1102
-385
+935
+400
+1082
+445
 reference
 reference
 "sameRegion" "betterPerformer"
@@ -1587,55 +1556,56 @@ mean [normalizedImpact] of orgs
 1
 11
 
-SLIDER
-160
-285
+CHOOSER
+940
 310
-318
-referTime
-referTime
-0
-36
-11.0
-1
-1
-NIL
-HORIZONTAL
-
-CHOOSER
-960
-250
-1098
-295
+1078
+355
 officeRole
 officeRole
-1 0
-0
-
-CHOOSER
-960
-295
-1098
-340
-changeAspiration
-changeAspiration
 1 0
 0
 
 SLIDER
-160
-320
-332
-353
+155
+290
+327
+323
 memory
 memory
 0
 96
-48.0
+24.0
 1
 1
 NIL
 HORIZONTAL
+
+SLIDER
+155
+330
+327
+363
+disasterUti
+disasterUti
+0
+1
+0.0
+0.01
+1
+NIL
+HORIZONTAL
+
+SWITCH
+955
+255
+1112
+288
+change-aspiration?
+change-aspiration?
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -2043,7 +2013,7 @@ set BS-output "adaptation240Runs.csv"</setup>
   </experiment>
   <experiment name="AspirationOn" repetitions="5" runMetricsEveryStep="false">
     <setup>setup
-set BS-output "adaptation3000Runs.csv"</setup>
+set BS-output "adaptation5760Runs.csv"</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
@@ -2057,9 +2027,7 @@ set BS-output "adaptation3000Runs.csv"</setup>
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.2"/>
-      <value value="0.5"/>
-      <value value="0.8"/>
+      <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2069,7 +2037,6 @@ set BS-output "adaptation3000Runs.csv"</setup>
     </enumeratedValueSet>
     <enumeratedValueSet variable="numWindows">
       <value value="0"/>
-      <value value="5"/>
       <value value="10"/>
       <value value="15"/>
       <value value="20"/>
@@ -2095,18 +2062,29 @@ set BS-output "adaptation3000Runs.csv"</setup>
     <enumeratedValueSet variable="officeRole">
       <value value="1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="changeAspiration">
-      <value value="0"/>
+    <steppedValueSet variable="memory" first="24" step="12" last="48"/>
+    <enumeratedValueSet variable="b1">
+      <value value="0.3"/>
+      <value value="0.6"/>
       <value value="1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="b1">
+    <enumeratedValueSet variable="disasterUti">
       <value value="0"/>
-      <value value="0.2"/>
-      <value value="0.5"/>
-      <value value="0.7"/>
+      <value value="0.3"/>
+      <value value="0.6"/>
       <value value="1"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
+    <enumeratedValueSet variable="open-windows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="change-aspiration?">
+      <value value="true"/>
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="trigger-network?">
+      <value value="true"/>
+    </enumeratedValueSet>
   </experiment>
 </experiments>
 @#$#@#$#@
