@@ -472,7 +472,7 @@ to go
     ]
   ]
 
-  write-logFile
+ ; write-logFile
   tick
 ;  profiler:start
 ;  print profiler:report
