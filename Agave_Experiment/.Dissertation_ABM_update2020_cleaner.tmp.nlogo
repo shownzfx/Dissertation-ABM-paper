@@ -2207,7 +2207,7 @@ set BS-output "adaptation3456Runs2.csv"</setup>
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="AspirationOn5" repetitions="10" runMetricsEveryStep="false">
+  <experiment name="AspirationOn5" repetitions="10" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
