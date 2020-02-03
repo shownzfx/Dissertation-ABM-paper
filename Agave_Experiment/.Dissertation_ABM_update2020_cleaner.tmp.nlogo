@@ -1182,7 +1182,7 @@ numWindows
 numWindows
 0
 20
-10.0
+0.0
 1
 1
 NIL
@@ -1449,7 +1449,7 @@ b1
 b1
 0
 1
-0.3
+0.5
 0.01
 1
 NIL
@@ -1504,7 +1504,7 @@ memory
 memory
 0
 96
-24.0
+48.0
 1
 1
 NIL
@@ -2207,7 +2207,7 @@ set BS-output "adaptation3456Runs2.csv"</setup>
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="AspirationOn5" repetitions="10" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="AspirationOn5" repetitions="10" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
