@@ -1923,14 +1923,14 @@ NetLogo 6.0.2
     <metric>totalNeededWidows</metric>
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
-    <steppedValueSet variable="meanRiskThreshold" first="0.2" step="0.2" last="0.8"/>
+    <steppedValueSet variable="meanRiskThreshold" first="0" step="0.2" last="0.8"/>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="2" last="14"/>
+    <steppedValueSet variable="numWindows" first="0" step="2" last="12"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
@@ -1994,7 +1994,7 @@ NetLogo 6.0.2
       <value value="0.08"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="numWindows">
-      <value value="8"/>
+      <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
