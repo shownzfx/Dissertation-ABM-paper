@@ -1909,7 +1909,7 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="AspirationOn5" repetitions="10" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="AspirationOn" repetitions="10" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
@@ -1970,7 +1970,7 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="baseline" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="Baseline" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
