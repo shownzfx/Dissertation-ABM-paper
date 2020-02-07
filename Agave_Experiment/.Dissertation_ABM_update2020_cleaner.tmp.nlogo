@@ -1449,7 +1449,7 @@ b1
 b1
 0
 1
-0.5
+0.73
 0.01
 1
 NIL
@@ -1532,7 +1532,7 @@ SWITCH
 288
 change-aspiration?
 change-aspiration?
-1
+0
 1
 -1000
 
@@ -1909,7 +1909,7 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="AspirationOn1" repetitions="5" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="AspirationOn1" repetitions="4" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
@@ -2040,6 +2040,67 @@ NetLogo 6.0.2
     </enumeratedValueSet>
   </experiment>
   <experiment name="AspirationOn2" repetitions="4" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>ticks &gt; 1000</exitCondition>
+    <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalInsufBoost</metric>
+    <metric>totalDisasterWindows</metric>
+    <metric>totalwindowMissed</metric>
+    <metric>totalWindowOpen</metric>
+    <metric>totalNoSolution</metric>
+    <metric>totalUtilizedWindows</metric>
+    <metric>totalNeededWidows</metric>
+    <metric>sufficientCap</metric>
+    <metric>totalUtilizedDisasterWindows</metric>
+    <steppedValueSet variable="meanRiskThreshold" first="0" step="0.2" last="0.8"/>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="badImpact">
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="numWindows" first="0" step="2" last="12"/>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="6.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="memory">
+      <value value="48"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b1">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="disasterUti" first="0" step="0.3" last="1"/>
+    <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
+    <enumeratedValueSet variable="open-windows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="change-aspiration?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="trigger-network?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="AspirationOn3" repetitions="4" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
