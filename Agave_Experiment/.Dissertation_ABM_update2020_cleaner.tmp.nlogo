@@ -1930,7 +1930,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="2" last="24"/>
+    <steppedValueSet variable="numWindows" first="0" step="3" last="24"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
@@ -2021,7 +2021,7 @@ NetLogo 6.0.2
       <value value="0.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="disasterUti">
-      <value value="0.5"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
@@ -2060,7 +2060,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="2" last="20"/>
+    <steppedValueSet variable="numWindows" first="0" step="3" last="24"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
@@ -2121,7 +2121,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="2" last="20"/>
+    <steppedValueSet variable="numWindows" first="0" step="3" last="24"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
