@@ -2021,7 +2021,7 @@ NetLogo 6.0.2
       <value value="0.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="disasterUti">
-      <value value="0.5"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
