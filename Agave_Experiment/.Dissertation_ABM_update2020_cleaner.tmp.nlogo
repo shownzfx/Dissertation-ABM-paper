@@ -1909,7 +1909,7 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="AspirationOn1" repetitions="4" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="AspirationOn1" repetitions="3" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
@@ -1930,7 +1930,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="2" last="12"/>
+    <steppedValueSet variable="numWindows" first="0" step="2" last="24"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
@@ -1955,7 +1955,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="b1">
       <value value="0.5"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="disasterUti" first="0" step="0.3" last="1"/>
+    <steppedValueSet variable="disasterUti" first="0" step="0.2" last="1"/>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
@@ -2039,7 +2039,7 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="AspirationOn2" repetitions="4" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="AspirationOn2" repetitions="3" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
@@ -2060,7 +2060,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="2" last="12"/>
+    <steppedValueSet variable="numWindows" first="0" step="2" last="20"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
@@ -2085,7 +2085,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="b1">
       <value value="0.5"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="disasterUti" first="0" step="0.3" last="1"/>
+    <steppedValueSet variable="disasterUti" first="0" step="0.2" last="1"/>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
@@ -2100,7 +2100,7 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="AspirationOn3" repetitions="4" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="AspirationOn3" repetitions="3" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
@@ -2121,7 +2121,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="2" last="12"/>
+    <steppedValueSet variable="numWindows" first="0" step="2" last="20"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
@@ -2146,7 +2146,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="b1">
       <value value="0.5"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="disasterUti" first="0" step="0.3" last="1"/>
+    <steppedValueSet variable="disasterUti" first="0" step="0.2" last="1"/>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
