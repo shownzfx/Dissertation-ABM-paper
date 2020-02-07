@@ -2251,7 +2251,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="magChance" first="0" step="2" last="10"/>
+    <steppedValueSet variable="magChance" first="0" step="2" last="20"/>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
     </enumeratedValueSet>

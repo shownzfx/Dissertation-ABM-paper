@@ -585,7 +585,7 @@ to generate-orgWindows
     let filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)  and (item 1 i < disasterthreshold)] pastWeather) ; find weahter intensity bigger than EW but smaller than disasterThreshold
 ;    print word "filter results: "  member? true filterEW
     ifelse member? true filterEW
-      [if random-float 1 < randomChance * magChance [set orgWindows sentence ticks orgWindows]]
+      [if random-float 1 < randomChance * increaseChance [set orgWindows sentence ticks orgWindows]]
       [if random-float 1 < randomChance  [set orgWindows sentence ticks orgWindows]]
   ]
 end
@@ -1586,8 +1586,8 @@ SLIDER
 365
 327
 398
-magChance
-magChance
+increaseChance
+increaseChance
 0
 10
 4.0
@@ -2251,7 +2251,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="magChance" first="0" step="2" last="10"/>
+    <steppedValueSet variable="magChance" first="0" step="2" last="20"/>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
     </enumeratedValueSet>
