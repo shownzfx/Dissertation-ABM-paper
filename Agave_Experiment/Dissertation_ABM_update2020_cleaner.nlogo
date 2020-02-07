@@ -1449,7 +1449,7 @@ b1
 b1
 0
 1
-0.5
+0.73
 0.01
 1
 NIL
@@ -1532,7 +1532,7 @@ SWITCH
 288
 change-aspiration?
 change-aspiration?
-1
+0
 1
 -1000
 
