@@ -1909,7 +1909,7 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="AspirationOn" repetitions="10" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="AspirationOn" repetitions="5" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
