@@ -54,7 +54,6 @@ orgs-own [
   insufBoost?
   insufBoostTicks
   knownSolFromOffice
-  regional-leader?
   regionalNeighbors
   resilience  ; higher resilience means lower impact on agencies in extreme weather
   capacity ;used to decide if orgs have sufficient capacity to implement solutions
@@ -65,6 +64,7 @@ orgs-own [
   copingLimit
 ;  freqImpactExp ; cumulative
   weatherSeverityImpactExp
+  pastWeather
   weatherImpactExp
   expectedBadWeatherSeverity
   innovation-ready?
@@ -127,7 +127,9 @@ to setup
   set sufficientCap 0
   import-orgs
   setup-orgs
-  setup-windows
+  if random-orgWindows?
+  [setup-orgWindows]
+
   distribute-orgs
   setup-regionalRiskThreshold
   setup-FTARegion
@@ -202,7 +204,6 @@ to setup-orgs
     set knownSolFromOffice []
     set satisfied? true
     set utilizedWindow? false
-    set regional-leader? false
     set search-adaptation? false
     set adaptNum 0
     set used-disasterWindow? false
@@ -219,7 +220,7 @@ to setup-orgs
     set no-solAttached? true
     set copingChangeTicks []
     set allReference []
-
+    set pastWeather []
 
   ]
 
@@ -229,7 +230,7 @@ to setup-orgs
 end
 
 
-to setup-windows
+to setup-orgWindows
   ask orgs [
     repeat random numWindows [
       let n random 1000 ; 1000 ticks
@@ -239,6 +240,7 @@ to setup-windows
   ]
 
 end
+
 
 to distribute-orgs  ; distribute orgs to 4 census region, with similar weather profile
   ask patches [if pxcor >= -0.05 and pxcor <= 0.05 [set pcolor grey]]
@@ -444,6 +446,7 @@ to go
 ;  profile:start
 
   set logFile (word "start " ticks)
+  if not random-orgWindows? [generate-orgWindows]
   check-weather  ;unless otherwise indicated, the go procedures apply to orgs
   expect-impact
   windows-byDeclaration
@@ -527,6 +530,7 @@ to update-aspiration  ; do not use org's performance in the function
 end
 
 
+
 to-report update-windows
   let udpatedWindows [] ;spelling
   repeat random numWindows [
@@ -540,6 +544,9 @@ end
 to check-weather
   ask orgs [
     set weatherSeverity log-normal 5 extremeWeatherProb ; did not rescale
+    set pastWeather fput (list ticks weatherSeverity) pastWeather
+    if length pastWeather > memory
+    [set pastWeather sublist pastWeather 0 min (list length pastWeather memory)] ; keep only the first n elements defined by length of memory
     ifelse weatherSeverity >= extremeWeatherThreshold ; here to adjust the influence from others on risk perception
     [
       set extremeWeather? true
@@ -568,6 +575,18 @@ to check-weather
 
      if expectedEWProb >= 0.25 [set expectedEWProb  0.25] ; upper limit of expected prob
      if expectedEWProb <= 0.01 [set expectedEWProb 0.01] ; bottom limit of expected prob
+  ]
+end
+
+
+to generate-orgWindows
+  ask orgs [
+    let randomChance  numWindows / 1000
+    let filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)  and (item 1 i < disasterthreshold)] pastWeather) ; find weahter intensity bigger than EW but smaller than disasterThreshold
+;    print word "filter results: "  member? true filterEW
+    ifelse member? true filterEW
+      [if random-float 1 < randomChance * magChance [set orgWindows sentence ticks orgWindows]]
+      [if random-float 1 < randomChance  [set orgWindows sentence ticks orgWindows]]
   ]
 end
 
@@ -980,7 +999,7 @@ simulateMonths
 simulateMonths
 0
 3600
-28.0
+0.0
 1
 1
 NIL
@@ -1026,9 +1045,9 @@ PENS
 "asp" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs with-max [originalEfficacy]"
 
 SWITCH
-955
+945
 15
-1092
+1082
 48
 random-seed_.
 random-seed_.
@@ -1115,7 +1134,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.4
+0.41
 0.01
 1
 NIL
@@ -1145,7 +1164,7 @@ adaptationCost
 adaptationCost
 0
 7
-6.5
+6.6
 0.1
 1
 NIL
@@ -1153,9 +1172,9 @@ HORIZONTAL
 
 MONITOR
 365
-435
+425
 422
-480
+470
 adapted
 count orgs with [adaptation-change?]
 0
@@ -1164,9 +1183,9 @@ count orgs with [adaptation-change?]
 
 MONITOR
 295
-430
+420
 357
-475
+465
 postpone
 count orgs with [postponed?]
 0
@@ -1182,16 +1201,16 @@ numWindows
 numWindows
 0
 20
-8.0
+10.0
 1
 1
 NIL
 HORIZONTAL
 
 SWITCH
-955
+945
 95
-1102
+1092
 128
 open-windows?
 open-windows?
@@ -1201,9 +1220,9 @@ open-windows?
 
 MONITOR
 535
-435
+425
 597
-480
+470
 insuBoost
 totalInsufBoost
 0
@@ -1226,9 +1245,9 @@ NIL
 HORIZONTAL
 
 SWITCH
-955
+945
 60
-1107
+1097
 93
 resilience-decay_.
 resilience-decay_.
@@ -1237,9 +1256,9 @@ resilience-decay_.
 -1000
 
 SWITCH
-955
+945
 135
-1107
+1097
 168
 trigger-network?
 trigger-network?
@@ -1249,9 +1268,9 @@ trigger-network?
 
 MONITOR
 425
-435
+425
 487
-480
+470
 notFound
 count orgs with [not-found?]
 0
@@ -1259,9 +1278,9 @@ count orgs with [not-found?]
 11
 
 SWITCH
-955
+945
 175
-1122
+1112
 208
 random-riskThresh_.
 random-riskThresh_.
@@ -1270,9 +1289,9 @@ random-riskThresh_.
 -1000
 
 SWITCH
-955
+945
 215
-1065
+1055
 248
 othersInf?
 othersInf?
@@ -1282,9 +1301,9 @@ othersInf?
 
 MONITOR
 870
-485
+475
 927
-530
+520
 #missed
 TotalWindowMissed
 0
@@ -1293,9 +1312,9 @@ TotalWindowMissed
 
 MONITOR
 605
-435
+425
 662
-480
+470
 #open
 totalWindowOpen
 0
@@ -1304,9 +1323,9 @@ totalWindowOpen
 
 MONITOR
 535
-485
+475
 592
-530
+520
 #noSol
 totalNoSolution
 0
@@ -1315,9 +1334,9 @@ totalNoSolution
 
 MONITOR
 595
-485
+475
 652
-530
+520
 ready
 count orgs with [solution-ready?]
 0
@@ -1326,9 +1345,9 @@ count orgs with [solution-ready?]
 
 MONITOR
 665
-435
+425
 727
-480
+470
 #declare
 totalDisasterWindows
 0
@@ -1337,9 +1356,9 @@ totalDisasterWindows
 
 MONITOR
 655
-485
+475
 712
-530
+520
 #used
 totalUtilizedWindows
 0
@@ -1348,9 +1367,9 @@ totalUtilizedWindows
 
 MONITOR
 720
-485
+475
 782
-530
+520
 #Needed
 totalNeededWidows
 0
@@ -1359,9 +1378,9 @@ totalNeededWidows
 
 MONITOR
 730
-435
+425
 785
-480
+470
 notNeed
 sufficientCap
 0
@@ -1370,22 +1389,11 @@ sufficientCap
 
 MONITOR
 785
-485
+475
 867
-530
+520
 usedDisaster
 totalUtilizedDisasterWindows
-0
-1
-11
-
-MONITOR
-790
-435
-852
-480
-#disWind
-count orgs with [used-disasterWindow?]
 0
 1
 11
@@ -1449,7 +1457,7 @@ b1
 b1
 0
 1
-0.73
+0.35
 0.01
 1
 NIL
@@ -1504,7 +1512,7 @@ memory
 memory
 0
 96
-48.0
+50.0
 1
 1
 NIL
@@ -1519,16 +1527,16 @@ disasterUti
 disasterUti
 0
 1
-0.5
+0.31
 0.01
 1
 NIL
 HORIZONTAL
 
 SWITCH
-955
+945
 255
-1112
+1102
 288
 change-aspiration?
 change-aspiration?
@@ -1545,22 +1553,48 @@ simTicks
 simTicks
 0
 3000
-1000.0
+0.0
 10
 1
 NIL
 HORIZONTAL
 
 SWITCH
-955
+945
 295
-1072
+1062
 328
 officeRole?
 officeRole?
 0
 1
 -1000
+
+SWITCH
+945
+340
+1117
+373
+random-orgWindows?
+random-orgWindows?
+1
+1
+-1000
+
+SLIDER
+155
+365
+327
+398
+magChance
+magChance
+0
+10
+4.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -1970,7 +2004,7 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="Baseline" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="baseline" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
@@ -2159,6 +2193,79 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="officeRole?">
       <value value="true"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="nonRandomWindows" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>ticks &gt; 1000</exitCondition>
+    <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalInsufBoost</metric>
+    <metric>totalDisasterWindows</metric>
+    <metric>totalwindowMissed</metric>
+    <metric>totalWindowOpen</metric>
+    <metric>totalNoSolution</metric>
+    <metric>totalUtilizedWindows</metric>
+    <metric>totalNeededWidows</metric>
+    <metric>sufficientCap</metric>
+    <metric>totalUtilizedDisasterWindows</metric>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="badImpact">
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="numWindows">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="6.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="memory">
+      <value value="48"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b1">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="disasterUti">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.03"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="magChance" first="0" step="2" last="10"/>
+    <enumeratedValueSet variable="open-windows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="change-aspiration?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="trigger-network?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
