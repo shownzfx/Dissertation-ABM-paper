@@ -2155,7 +2155,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="3" last="36"/>
+    <steppedValueSet variable="numWindows" first="0" step="3" last="24"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
@@ -2251,7 +2251,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="magChance" first="0" step="2" last="20"/>
+    <steppedValueSet variable="increaseChance" first="0" step="2" last="20"/>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
     </enumeratedValueSet>
