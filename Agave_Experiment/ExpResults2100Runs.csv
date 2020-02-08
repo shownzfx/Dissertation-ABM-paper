@@ -1,7 +1,7 @@
 "BehaviorSpace results (NetLogo 6.0.2)"
 "Dissertation_ABM_update2020_cleaner.nlogo"
 "nonRandomWindows"
-"02/07/2020 23:55:25:853 -0700"
+"02/07/2020 23:54:36:464 -0700"
 "min-pxcor","max-pxcor","min-pycor","max-pycor"
 "-16","16","-16","16"
 "[run number]","meanRiskThreshold","scanningRange","badImpact","numWindows","impactReductionRate","maxCopingReduction","adaptationCost","capBoost","simTicks","minNeighbor","memory","b1","disasterUti","EWProbDecay","magChance","open-windows?","change-aspiration?","trigger-network?","officeRole?","random-orgWindows?","[step]","count orgs with [adaptation-change?]","totalInsufBoost","totalDisasterWindows","totalwindowMissed","totalWindowOpen","totalNoSolution","totalUtilizedWindows","totalNeededWidows","sufficientCap","totalUtilizedDisasterWindows"
