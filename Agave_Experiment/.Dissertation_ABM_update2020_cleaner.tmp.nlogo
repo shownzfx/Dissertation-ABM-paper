@@ -1964,7 +1964,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="3" last="30"/>
+    <steppedValueSet variable="numWindows" first="0" step="3" last="24"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
@@ -2155,7 +2155,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="3" last="24"/>
+    <steppedValueSet variable="numWindows" first="0" step="3" last="36"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
