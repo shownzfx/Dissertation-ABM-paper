@@ -1134,7 +1134,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.41
+0.4
 0.01
 1
 NIL
@@ -1164,7 +1164,7 @@ adaptationCost
 adaptationCost
 0
 7
-6.6
+6.5
 0.1
 1
 NIL
@@ -1457,7 +1457,7 @@ b1
 b1
 0
 1
-0.35
+0.5
 0.01
 1
 NIL
@@ -1512,7 +1512,7 @@ memory
 memory
 0
 96
-50.0
+48.0
 1
 1
 NIL
@@ -1527,7 +1527,7 @@ disasterUti
 disasterUti
 0
 1
-0.31
+0.3
 0.01
 1
 NIL
@@ -1540,7 +1540,7 @@ SWITCH
 288
 change-aspiration?
 change-aspiration?
-0
+1
 1
 -1000
 
@@ -1553,7 +1553,7 @@ simTicks
 simTicks
 0
 3000
-0.0
+1000.0
 10
 1
 NIL
@@ -1590,7 +1590,7 @@ increaseChance
 increaseChance
 0
 10
-4.0
+0.0
 1
 1
 NIL
@@ -2028,7 +2028,7 @@ NetLogo 6.0.2
       <value value="0.08"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="numWindows">
-      <value value="10"/>
+      <value value="8"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
@@ -2052,7 +2052,7 @@ NetLogo 6.0.2
       <value value="48"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="b1">
-      <value value="0.5"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
