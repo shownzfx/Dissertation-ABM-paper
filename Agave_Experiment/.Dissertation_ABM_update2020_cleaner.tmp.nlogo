@@ -2195,7 +2195,7 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="nonRandomWindows" repetitions="1" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="nonRandomWindows" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
@@ -2268,7 +2268,7 @@ NetLogo 6.0.2
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="testWindows" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="numWindows" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
