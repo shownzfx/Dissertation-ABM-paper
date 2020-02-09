@@ -592,10 +592,11 @@ end
 
 to windows-byDeclaration
   ask orgs [
-      if declared? [
+      ifelse declared? [
       set disasterWindows fput ticks disasterWindows
       set windows remove-duplicates (sentence disasterWindows orgwindows)
     ]
+    [set windows orgWindows]
   ]
 end
 
@@ -1589,7 +1590,7 @@ increaseChance
 increaseChance
 0
 100
-10.0
+34.0
 1
 1
 NIL
