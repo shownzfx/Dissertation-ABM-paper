@@ -582,8 +582,7 @@ end
 to generate-orgWindows
   ask orgs [
     let randomChance  numWindows / 1000
-    let filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)  and (item 1 i < disasterthreshold)] pastWeather) ; find weahter intensity bigger than EW but smaller than disasterThreshold
-;    print word "filter results: "  member? true filterEW
+    let filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)] pastWeather) ; find weahter intensity bigger than EW but smaller than disasterThreshold
     ifelse member? true filterEW
       [if random-float 1 < randomChance * increaseChance [set orgWindows sentence ticks orgWindows]]
       [if random-float 1 < randomChance  [set orgWindows sentence ticks orgWindows]]
@@ -1201,7 +1200,7 @@ numWindows
 numWindows
 0
 20
-30.0
+10.0
 1
 1
 NIL
@@ -1589,8 +1588,8 @@ SLIDER
 increaseChance
 increaseChance
 0
-10
-0.0
+100
+10.0
 1
 1
 NIL
@@ -2251,7 +2250,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0" step="2" last="20"/>
+    <steppedValueSet variable="increaseChance" first="0" step="10" last="100"/>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
     </enumeratedValueSet>
@@ -2265,6 +2264,7 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
