@@ -2239,9 +2239,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="memory">
-      <value value="48"/>
-    </enumeratedValueSet>
+    <steppedValueSet variable="memory" first="24" step="24" last="96"/>
     <enumeratedValueSet variable="b1">
       <value value="0.5"/>
     </enumeratedValueSet>
@@ -2251,7 +2249,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0" step="1" last="10"/>
+    <steppedValueSet variable="increaseChance" first="0" step="2" last="10"/>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
     </enumeratedValueSet>
