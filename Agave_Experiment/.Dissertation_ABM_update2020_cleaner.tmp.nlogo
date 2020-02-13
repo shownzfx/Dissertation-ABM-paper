@@ -1133,7 +1133,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.0
+0.4
 0.01
 1
 NIL
@@ -1200,7 +1200,7 @@ numWindows
 numWindows
 0
 20
-10.0
+8.0
 1
 1
 NIL
@@ -1456,7 +1456,7 @@ b1
 b1
 0
 1
-0.5
+0.3
 0.01
 1
 NIL
@@ -1565,7 +1565,7 @@ SWITCH
 328
 officeRole?
 officeRole?
-1
+0
 1
 -1000
 
@@ -2468,7 +2468,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="officeRole?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="random-riskThresh">
+    <enumeratedValueSet variable="random-riskThresh?">
       <value value="true"/>
       <value value="false"/>
     </enumeratedValueSet>
