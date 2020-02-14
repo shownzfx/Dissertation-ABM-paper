@@ -681,6 +681,7 @@ end
 
 to check-window
   if open-windows?[
+
     ask orgs with [not adaptation-change?]
     [
       ifelse not member? ticks windows
@@ -1213,7 +1214,7 @@ SWITCH
 128
 open-windows?
 open-windows?
-0
+1
 1
 -1000
 
