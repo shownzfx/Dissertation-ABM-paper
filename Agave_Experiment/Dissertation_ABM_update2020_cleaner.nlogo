@@ -1133,7 +1133,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.4
+0.2
 0.01
 1
 NIL
@@ -1200,7 +1200,7 @@ numWindows
 numWindows
 0
 20
-0.0
+8.0
 1
 1
 NIL
