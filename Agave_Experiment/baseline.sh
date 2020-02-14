@@ -16,7 +16,7 @@
 bash /home/fzhang59/NetLogo\ 6.0.2/netlogo-headless.sh \
 --model Dissertation_ABM_update2020_cleaner.nlogo \
 --experiment Baseline \
---table ExpResults100Runs.csv \
+--table baseline300Runs.csv \
 --threads 28
 
 
