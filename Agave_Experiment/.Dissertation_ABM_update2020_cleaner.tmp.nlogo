@@ -1133,7 +1133,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.2
+0.4
 0.01
 1
 NIL
@@ -1200,7 +1200,7 @@ numWindows
 numWindows
 0
 20
-8.0
+1.0
 1
 1
 NIL
@@ -1283,7 +1283,7 @@ SWITCH
 208
 random-riskThresh?
 random-riskThresh?
-0
+1
 1
 -1000
 
@@ -2018,9 +2018,7 @@ NetLogo 6.0.2
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.2"/>
       <value value="0.3"/>
-      <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2071,6 +2069,9 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-riskThresh?">
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
@@ -2350,7 +2351,7 @@ NetLogo 6.0.2
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.4"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2418,7 +2419,7 @@ NetLogo 6.0.2
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.4"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2472,7 +2473,6 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="random-riskThresh?">
-      <value value="true"/>
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
@@ -2491,7 +2491,7 @@ NetLogo 6.0.2
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.4"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
