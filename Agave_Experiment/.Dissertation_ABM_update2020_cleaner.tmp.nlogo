@@ -1200,7 +1200,7 @@ numWindows
 numWindows
 0
 20
-8.0
+0.0
 1
 1
 NIL
@@ -1283,7 +1283,7 @@ SWITCH
 208
 random-riskThresh?
 random-riskThresh?
-1
+0
 1
 -1000
 
@@ -2321,6 +2321,7 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
+      <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="change-aspiration?">
       <value value="false"/>
