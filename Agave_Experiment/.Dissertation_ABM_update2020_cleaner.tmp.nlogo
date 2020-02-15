@@ -72,8 +72,8 @@ orgs-own [
   extremeWeatherSeverity
   crossRiskThresholdTicks
   expectedEWProb
-  expectedImpact
-  riskPerceptionThreshold
+  riskPerception
+  riskTolerance
   windows
   window-open?
   window-missed?
@@ -98,8 +98,8 @@ orgs-own [
   previousImpact
   referenceGroup
   normalizedImpact
-  originalExpectedImpact
-  originalRiskPerceptionThreshold
+  originalRiskPerception
+  originalRiskTolerance
   allReference
   myReference
 ]
@@ -164,8 +164,8 @@ to import-orgs
       set expectedBadWeatherSeverity item 17 row
 ;
       set expectedEWprob extremeWeatherProb
-      set expectedImpact (expectedBadWeatherSeverity -  solEfficacy) * expectedEWprob
-      if expectedImpact < 0 [set expectedImpact 0.1]
+      set riskPerception (expectedBadWeatherSeverity -  solEfficacy) * expectedEWprob
+      if riskPerception < 0 [set riskPerception 0]
       set maxcopingefficacy 0
       set maxCopingEfficacy  maxCopingReduction * expectedBadWeatherSeverity  ; the maximum risk reduction coping measures can acheive,do not multiple ewprob
       If extremeWeatherProb < disasterProb [
@@ -276,12 +276,12 @@ to setup-regionalRiskThreshold
 
   ifelse random-riskThresh?
   [riskThreshold-byRegion]
-  [ask orgs [set riskPerceptionThreshold 0]]
+  [ask orgs [set riskTolerance 0]]
 
 
   ask orgs [
-    set currentAspiration riskPerceptionThreshold
-    set originalRiskPerceptionThreshold riskPerceptionThreshold
+    set currentAspiration riskTolerance
+    set originalRiskTolerance riskTolerance
   ]
 end
 
@@ -296,8 +296,8 @@ to riskThreshold-byRegion
     [
       [x meanThreshold] ->
       ask orgs with [region = x] [
-        set riskPerceptionThreshold random-normal meanThreshold 0.1
-        if riskPerceptionThreshold < 0 [set riskPerceptionThreshold 0.1]
+        set riskTolerance random-normal meanThreshold 0.1
+        if riskTolerance < 0 [set riskTolerance 0.1]
       ]
     ])
 end
@@ -366,9 +366,9 @@ to record-weather-norm ; only activated when not using the hard coded weather pa
       set disasterThreshold  item (ceiling simulateMonths * disasterProb) weatherSeverityExp
       set expectedEWprob extremeWeatherProb
       set expectedBadWeatherSeverity item (ceiling simulateMonths * badImpact) weatherImpactExp
-      set expectedImpact (expectedBadWeatherSeverity -  solEfficacy) * expectedEWprob
-      ;if expectedImpact < 0  [set expectedImpact 0.1]
-      if expectedImpact < originalExpectedImpact [set expectedImpact 0.1]
+      set riskPerception (expectedBadWeatherSeverity -  solEfficacy) * expectedEWprob
+      ;if riskPerception < 0  [set riskPerception 0.1]
+      if riskPerception < originalRiskPerception[set riskPerception 0.1]
       set maxCopingEfficacy  maxCopingReduction * expectedBadWeatherSeverity ; the maximum risk reduction coping measures can acheive
   ]
 end
@@ -466,11 +466,11 @@ to go
     set capacity originalCapacity
     set extremeWeatherProb extremeWeatherProb * (1 + random-float 0.0001); probability increases over time
 ;    set disasterProb disasterProb * (1 + random-float 0.0001)
-    if expectedBadWeatherSeverity < expectedImpact [
+    if expectedBadWeatherSeverity < riskPerception [
       print "warning: expected weather severity smaller than expected impact"
     ]
-    if expectedImpact < 0 [
-      print "warining: expectedImpact smaller than 0"
+    if riskPerception < 0 [
+      print "warining: riskPerception smaller than 0"
     ]
   ]
 
@@ -522,7 +522,7 @@ to update-aspiration  ; do not use org's performance in the function
      let referenceAspiration mean [previousAspiration] of myReference
      set currentAspiration (b1 * previousAspiration + (1 - b1) * referenceAspiration)
 ;     set currentAspiration (b1 * normalizedImpact + b2 * previousAspiration + b3 * referenceAspiration)
-     set riskPerceptionThreshold currentAspiration
+     set riskTolerance currentAspiration
       ]
    ]
  ]
@@ -604,8 +604,8 @@ to expect-impact
   ask orgs [
     set impactPerTick ifelse-value (weatherSeverity - solEfficacy < 0 ) [0] [weatherSeverity - solEfficacy]
 
-    set originalExpectedImpact (expectedBadWeatherSeverity - solEfficacy ) * expectedEWProb
-    set expectedImpact originalExpectedImpact
+    set originalRiskPerception (expectedBadWeatherSeverity - solEfficacy ) * expectedEWProb
+    set riskPerception originalRiskPerception
 
     if resilience-decay_.[
       if impactPerTick > 0 [ ; if impacted by weather, resilience goes down
@@ -620,7 +620,7 @@ end
 
 to determine-satisfaction
   ask orgs [;only orgs with no alternative solution are looking
-    ifelse expectedImpact > riskPerceptionThreshold
+    ifelse riskPerception > riskTolerance
     [set satisfied? false]
     [set satisfied? true]
   ]
@@ -629,7 +629,7 @@ end
 to search-solution
   ask orgs with [not satisfied? and not adaptation-change?][
     if not solution-ready? [ ; coping
-      let currentExpectedImpact expectedBadWeatherSeverity -  solEfficacy  ; note here it does not multiply the expectedEWProb
+      let currentRiskPerception expectedBadWeatherSeverity -  solEfficacy  ; note here it does not multiply the expectedEWProb
       let targetSolEfficacy calculate-target-efficacy solEfficacy impactPerTick expectedBadWeatherSeverity  (random-float impactReductionRate + 0.10)
       ifelse (targetSolEfficacy < maxCopingEfficacy) and (copingLimit < 1) ; limit coping to once only to speed up
     [
@@ -696,7 +696,7 @@ to check-window
        if member? ticks disasterWindows
        [set totalDisasterWindows totalDisasterWindows + 1]
 
-      ifelse expectedImpact <= riskPerceptionThreshold
+      ifelse riskPerception <= riskTolerance
       [
         set window-missed? true
         set TotalWindowMissed TotalWindowMissed + 1
@@ -971,8 +971,8 @@ true
 true
 "" ""
 PENS
-"originalTh" 1.0 0 -15040220 true "" "plot mean [originalRiskPerceptionThreshold] of orgs"
-"currentTh" 1.0 0 -5298144 true "" "plot mean [riskPerceptionThreshold] of orgs"
+"originalTh" 1.0 0 -15040220 true "" "plot mean [originalRiskTolerance] of orgs"
+"currentTh" 1.0 0 -5298144 true "" "plot mean [riskTolerance] of orgs"
 
 SLIDER
 165
@@ -1039,8 +1039,8 @@ true
 false
 "" ""
 PENS
-"NE" 1.0 0 -15040220 true "" "plot  [expectedImpact] of one-of orgs with-max [originalEfficacy]"
-"threshold" 1.0 0 -8053223 true "" "plot  [originalRiskperceptionthreshold] of one-of orgs with-max [originalEfficacy]"
+"NE" 1.0 0 -15040220 true "" "plot  [riskPerception] of one-of orgs with-max [originalEfficacy]"
+"threshold" 1.0 0 -8053223 true "" "plot  [originalRiskTolerance] of one-of orgs with-max [originalEfficacy]"
 "asp" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs with-max [originalEfficacy]"
 
 SWITCH
@@ -1070,8 +1070,8 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -14439633 true "" "plot sum [expectedImpact] of orgs with-min [extremeweatherprob]"
-"percept" 1.0 0 -8053223 true "" "plot sum [originalRiskPerceptionThreshold] of orgs with-min [extremeweatherprob]"
+"default" 1.0 0 -14439633 true "" "plot sum [riskPerception] of orgs with-min [extremeweatherprob]"
+"percept" 1.0 0 -8053223 true "" "plot sum [originalRiskTolerance] of orgs with-min [extremeweatherprob]"
 "asp" 1.0 0 -14737633 true "" "plot sum [currentAspiration] of orgs with-min [extremeweatherprob]"
 
 PLOT
@@ -1090,8 +1090,8 @@ true
 false
 "" ""
 PENS
-"riskPer" 1.0 0 -14439633 true "" "plot sum [expectedImpact] of orgs with-min [originalEfficacy]"
-"Thresh" 1.0 0 -8053223 true "" "plot sum [originalRiskperceptionthreshold] of orgs with-min [originalEfficacy]"
+"riskPer" 1.0 0 -14439633 true "" "plot sum [riskPerception] of orgs with-min [originalEfficacy]"
+"Thresh" 1.0 0 -8053223 true "" "plot sum [originalRiskTolerance] of orgs with-min [originalEfficacy]"
 "pen-2" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs  with-min [originalEfficacy]"
 
 SLIDER
@@ -1213,7 +1213,7 @@ SWITCH
 128
 open-windows?
 open-windows?
-1
+0
 1
 -1000
 
@@ -1283,7 +1283,7 @@ SWITCH
 208
 random-riskThresh?
 random-riskThresh?
-0
+1
 1
 -1000
 
@@ -1428,8 +1428,8 @@ true
 true
 "" ""
 PENS
-"RiskPer" 1.0 0 -14439633 true "" "plot sum [expectedImpact] of  orgs with-max [extremeWeatherProb]"
-"originThres" 1.0 0 -5298144 true "" "plot sum  [originalRiskperceptionthreshold] of orgs with-max [extremeWeatherProb]"
+"RiskPer" 1.0 0 -14439633 true "" "plot sum [riskPerception] of  orgs with-max [extremeWeatherProb]"
+"originThres" 1.0 0 -5298144 true "" "plot sum  [originalRiskTolerance] of orgs with-max [extremeWeatherProb]"
 "riskThresh" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs with-max [extremeWeatherProb]"
 
 SLIDER
