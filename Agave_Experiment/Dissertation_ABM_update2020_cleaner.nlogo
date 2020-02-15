@@ -712,8 +712,12 @@ to check-window
 end
 
 to boost-capacity
-   set capacity capacity * (1  + random-float capBoost)
-   ifelse declared? ; limitations about how to use fund from declaration
+  ifelse randomBoost?
+
+  [set capacity capacity * (1  + random-float capBoost)]
+  [set capacity capacity * (1 + capBoost)]
+
+  ifelse declared? ; limitations about how to use fund from declaration
   [if random-float 1 < disasterUti [adaptation-discretion]]
 ;  [adaptation-discretion]
   [adaptation-discretion]
@@ -1283,7 +1287,7 @@ SWITCH
 208
 random-riskThresh?
 random-riskThresh?
-1
+0
 1
 -1000
 
@@ -1493,10 +1497,10 @@ NIL
 HORIZONTAL
 
 CHOOSER
-935
-400
-1082
-445
+950
+430
+1097
+475
 reference
 reference
 "sameRegion" "betterPerformer"
@@ -1594,6 +1598,17 @@ increaseChance
 1
 NIL
 HORIZONTAL
+
+SWITCH
+945
+375
+1077
+408
+randomBoost?
+randomBoost?
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
