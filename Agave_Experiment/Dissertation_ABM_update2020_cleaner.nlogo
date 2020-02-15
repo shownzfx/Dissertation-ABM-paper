@@ -1213,7 +1213,7 @@ SWITCH
 128
 open-windows?
 open-windows?
-0
+1
 1
 -1000
 
@@ -2324,7 +2324,6 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
-      <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="change-aspiration?">
       <value value="false"/>
