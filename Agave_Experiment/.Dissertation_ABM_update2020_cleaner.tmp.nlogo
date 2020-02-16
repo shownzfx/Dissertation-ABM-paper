@@ -1245,7 +1245,7 @@ capBoost
 capBoost
 0
 10
-1.7
+2.0
 0.1
 1
 NIL
@@ -1613,7 +1613,7 @@ startingFund
 startingFund
 0
 2000
-1000.0
+1500.0
 1
 1
 NIL
@@ -2639,6 +2639,12 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="limitedFund?">
       <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-riskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="limitedFund" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
