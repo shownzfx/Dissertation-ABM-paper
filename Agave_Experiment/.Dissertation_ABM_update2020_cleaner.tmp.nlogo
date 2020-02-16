@@ -1628,7 +1628,7 @@ SWITCH
 408
 limitedFund?
 limitedFund?
-0
+1
 1
 -1000
 
@@ -2701,9 +2701,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="startingFund">
-      <value value="1500"/>
-    </enumeratedValueSet>
+    <steppedValueSet variable="startingFund" first="1500" step="100" last="2000"/>
     <steppedValueSet variable="increaseChance" first="0.01" step="0.5" last="6"/>
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
@@ -2733,6 +2731,10 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
       <value value="false"/>
     </enumeratedValueSet>
