@@ -1582,7 +1582,7 @@ SWITCH
 373
 random-orgWindows?
 random-orgWindows?
-1
+0
 1
 -1000
 
@@ -1595,7 +1595,7 @@ increaseChance
 increaseChance
 1
 10
-0.51
+0.01
 1
 1
 NIL
@@ -1973,8 +1973,9 @@ NetLogo 6.0.2
   <experiment name="increaseChance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;=1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
@@ -2056,6 +2057,7 @@ NetLogo 6.0.2
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
@@ -2127,6 +2129,7 @@ NetLogo 6.0.2
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
@@ -2194,6 +2197,7 @@ NetLogo 6.0.2
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
@@ -2262,6 +2266,7 @@ NetLogo 6.0.2
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
@@ -2334,6 +2339,7 @@ NetLogo 6.0.2
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
@@ -2404,6 +2410,7 @@ NetLogo 6.0.2
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
@@ -2553,6 +2560,7 @@ NetLogo 6.0.2
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>

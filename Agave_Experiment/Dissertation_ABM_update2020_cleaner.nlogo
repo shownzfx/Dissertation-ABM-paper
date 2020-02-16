@@ -1973,8 +1973,9 @@ NetLogo 6.0.2
   <experiment name="increaseChance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;=1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
@@ -2054,8 +2055,9 @@ NetLogo 6.0.2
   <experiment name="nonRandomWindows" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
@@ -2125,8 +2127,9 @@ NetLogo 6.0.2
   <experiment name="numWindows" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
@@ -2192,8 +2195,9 @@ NetLogo 6.0.2
   <experiment name="network" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
@@ -2260,8 +2264,9 @@ NetLogo 6.0.2
   <experiment name="zeroTolerance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
@@ -2332,8 +2337,9 @@ NetLogo 6.0.2
   <experiment name="lowerDecay" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
@@ -2402,8 +2408,9 @@ NetLogo 6.0.2
   <experiment name="noWindow" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
@@ -2474,7 +2481,7 @@ NetLogo 6.0.2
   <experiment name="randomBoost" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
@@ -2551,8 +2558,9 @@ NetLogo 6.0.2
   <experiment name="baseline" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
