@@ -1595,7 +1595,7 @@ increaseChance
 increaseChance
 1
 10
-0.1
+0.51
 1
 1
 NIL
@@ -2044,6 +2044,10 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
