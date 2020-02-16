@@ -108,8 +108,6 @@ orgs-own [
 to setup
   ca
 ;  profiler:start
-  if random-seed_.
-  [random-seed 100]
 
 ;  set logFile (word "log" (random 100000) ".txt")
 
@@ -585,7 +583,7 @@ to generate-orgWindows
     let filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)] pastWeather) ; find weahter intensity bigger than EW but smaller than disasterThreshold
     ifelse member? true filterEW
       [if random-float 1 < randomChance * (1 + increaseChance) [set orgWindows sentence ticks orgWindows]]
-      [if random-float 1 < randomChance / increaseChance [set orgWindows sentence ticks orgWindows]]
+      [if random-float 1 < randomChance  [set orgWindows sentence ticks orgWindows]]
   ]
 end
 
@@ -704,7 +702,6 @@ to check-window
       ]
       [
         boost-capacity
-
         ifelse postponed?
         [use-funding]
         [set totalNoSolution totalNoSolution + 1 ]
@@ -715,10 +712,20 @@ to check-window
 end
 
 to boost-capacity
-  ifelse randomBoost?
+  ifelse limitedFund?
+  [
+    if fundAvailable >= capacity * capBoost
+    [
+      set capacity capacity * (1 + capBoost)
+      set fundAvailable fundAvailable - capacity * capBoost
+    ]
+  ]
 
+ [
+  ifelse randomBoost?
   [set capacity capacity * (1  + random-float capBoost)]
   [set capacity capacity * (1 + capBoost)]
+ ]
 
   set totalFunding capacity * capBoost  + totalFunding
 end
@@ -1054,17 +1061,6 @@ PENS
 "threshold" 1.0 0 -8053223 true "" "plot  [originalRiskTolerance] of one-of orgs with-max [originalEfficacy]"
 "asp" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs with-max [originalEfficacy]"
 
-SWITCH
-945
-15
-1082
-48
-random-seed_.
-random-seed_.
-1
-1
--1000
-
 PLOT
 1120
 165
@@ -1218,10 +1214,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-945
-95
-1092
-128
+940
+50
+1087
+83
 open-windows?
 open-windows?
 0
@@ -1255,10 +1251,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-945
-60
-1097
-93
+940
+15
+1092
+48
 resilience-decay_.
 resilience-decay_.
 1
@@ -1266,10 +1262,10 @@ resilience-decay_.
 -1000
 
 SWITCH
-945
-135
-1097
-168
+940
+90
+1092
+123
 trigger-network?
 trigger-network?
 0
@@ -1288,10 +1284,10 @@ count orgs with [not-found?]
 11
 
 SWITCH
-945
-175
-1112
-208
+940
+130
+1107
+163
 random-riskThresh?
 random-riskThresh?
 0
@@ -1299,10 +1295,10 @@ random-riskThresh?
 -1000
 
 SWITCH
-945
-215
-1055
-248
+940
+170
+1050
+203
 othersInf?
 othersInf?
 1
@@ -1492,16 +1488,6 @@ b3
 NIL
 HORIZONTAL
 
-CHOOSER
-945
-420
-1092
-465
-reference
-reference
-"sameRegion" "betterPerformer"
-1
-
 SLIDER
 155
 290
@@ -1533,10 +1519,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-945
-255
-1102
-288
+940
+210
+1097
+243
 change-aspiration?
 change-aspiration?
 1
@@ -1559,10 +1545,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-945
-295
-1062
-328
+940
+250
+1057
+283
 officeRole?
 officeRole?
 0
@@ -1570,10 +1556,10 @@ officeRole?
 -1000
 
 SWITCH
-945
-340
-1117
-373
+940
+295
+1112
+328
 random-orgWindows?
 random-orgWindows?
 0
@@ -1596,10 +1582,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-945
-375
-1077
-408
+940
+330
+1072
+363
 randomBoost?
 randomBoost?
 1
@@ -1611,8 +1597,8 @@ MONITOR
 475
 467
 520
-fund
-totalFunding
+fundAv
+fundAvailable
 1
 1
 11
@@ -1626,11 +1612,22 @@ fundAvailable
 fundAvailable
 0
 5000
-2500.0
+-1.4167942893201486
 1
 1
 NIL
 HORIZONTAL
+
+SWITCH
+990
+375
+1112
+408
+limitedFund?
+limitedFund?
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
