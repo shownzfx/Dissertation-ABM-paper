@@ -1626,7 +1626,7 @@ SWITCH
 408
 limitedFund?
 limitedFund?
-0
+1
 1
 -1000
 
@@ -2653,6 +2653,7 @@ NetLogo 6.0.2
     <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
+    <metric>fundAvailable</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
