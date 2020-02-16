@@ -691,6 +691,7 @@ to check-window
 
       [
        set window-open? true
+       boost-capacity
        set totalWindowOpen totalWindowOpen + 1
 
        if member? ticks disasterWindows
@@ -702,7 +703,7 @@ to check-window
         set TotalWindowMissed TotalWindowMissed + 1
       ]
       [
-        boost-capacity
+
         ifelse postponed?
         [use-funding]
         [set totalNoSolution totalNoSolution + 1 ]
@@ -726,9 +727,10 @@ to boost-capacity
   ifelse randomBoost?
   [set capacity originalCapacity * (1  + random-float capBoost)]
   [set capacity originalCapacity * (1 + capBoost)]
+  set totalFunding originalCapacity * capBoost  + totalFunding
  ]
 
-  set totalFunding originalCapacity * capBoost  + totalFunding
+
 end
 
 to use-funding
