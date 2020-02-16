@@ -718,7 +718,7 @@ to boost-capacity
   [set capacity capacity * (1  + random-float capBoost)]
   [set capacity capacity * (1 + capBoost)]
 
-  set totalFunding capacity * capBoost
+  set totalFunding capacity * capBoost  + totalFunding
 
   ifelse declared? ; limitations about how to use fund from declaration
   [if random-float 1 < disasterUti [adaptation-discretion]]
@@ -1243,7 +1243,7 @@ capBoost
 capBoost
 0
 10
-0.0
+0.7
 0.1
 1
 NIL
@@ -1611,6 +1611,17 @@ randomBoost?
 1
 1
 -1000
+
+MONITOR
+380
+475
+437
+520
+fund
+totalFunding
+1
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -2486,7 +2497,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="adaptationCost">
       <value value="6.5"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="capBoost" first="0" step="0.5" last="3"/>
+    <steppedValueSet variable="capBoost" first="1.5" step="0.1" last="2.3"/>
     <enumeratedValueSet variable="simTicks">
       <value value="1000"/>
     </enumeratedValueSet>
