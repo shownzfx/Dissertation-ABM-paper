@@ -13,7 +13,7 @@ undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalWindowMissed
          totalWindowOpen totalInsufBoost totalNoSolution totalDisasterWindows
           totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows logFile
-         BS-output]
+         BS-output totalFunding]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost adaptation? ]; solutions include both non-adaptation and adaptation measures
@@ -124,6 +124,7 @@ to setup
   set totalNeededWidows 0
   set totalUtilizedDisasterWindows 0
   set sufficientCap 0
+  set totalFunding 0
   import-orgs
   setup-orgs
   if random-orgWindows?
@@ -717,9 +718,10 @@ to boost-capacity
   [set capacity capacity * (1  + random-float capBoost)]
   [set capacity capacity * (1 + capBoost)]
 
+  set totalFunding capacity * capBoost
+
   ifelse declared? ; limitations about how to use fund from declaration
   [if random-float 1 < disasterUti [adaptation-discretion]]
-;  [adaptation-discretion]
   [adaptation-discretion]
 end
 
