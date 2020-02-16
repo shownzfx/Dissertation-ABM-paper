@@ -1243,7 +1243,7 @@ capBoost
 capBoost
 0
 10
-0.7
+1.7
 0.1
 1
 NIL
@@ -1499,10 +1499,10 @@ NIL
 HORIZONTAL
 
 CHOOSER
-950
-430
-1097
-475
+945
+420
+1092
+465
 reference
 reference
 "sameRegion" "betterPerformer"
@@ -2467,6 +2467,7 @@ NetLogo 6.0.2
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
@@ -2497,7 +2498,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="adaptationCost">
       <value value="6.5"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="capBoost" first="1.5" step="0.1" last="2.3"/>
+    <enumeratedValueSet variable="capBoost">
+      <value value="1.7"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="simTicks">
       <value value="1000"/>
     </enumeratedValueSet>
@@ -2530,6 +2533,10 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="random-riskThresh?">
       <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
+      <value value="true"/>
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
