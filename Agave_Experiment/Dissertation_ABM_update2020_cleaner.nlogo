@@ -13,7 +13,7 @@ undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalWindowMissed
          totalWindowOpen totalInsufBoost totalNoSolution totalDisasterWindows
           totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows logFile
-         BS-output totalFunding ]
+         BS-output totalFunding fundAvailable ]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost adaptation? ]; solutions include both non-adaptation and adaptation measures
@@ -113,6 +113,7 @@ to setup
 
   set strategies ["routine" "adaptation"]
   set-default-shape solutions "box"
+  set fundAvailable startingFund
   set totalWindowMissed 0
   set totalInsufBoost 0
   set totalWindowOpen 0
@@ -714,20 +715,20 @@ end
 to boost-capacity
   ifelse limitedFund?
   [
-    if fundAvailable >= capacity * capBoost
+    if fundAvailable >= originalCapacity * capBoost
     [
-      set capacity capacity * (1 + capBoost)
-      set fundAvailable fundAvailable - capacity * capBoost
+      set capacity originalCapacity * (1 + capBoost)
+      set fundAvailable fundAvailable - originalCapacity * capBoost
     ]
   ]
 
  [
   ifelse randomBoost?
-  [set capacity capacity * (1  + random-float capBoost)]
-  [set capacity capacity * (1 + capBoost)]
+  [set capacity originalCapacity * (1  + random-float capBoost)]
+  [set capacity originalCapacity * (1 + capBoost)]
  ]
 
-  set totalFunding capacity * capBoost  + totalFunding
+  set totalFunding originalCapacity * capBoost  + totalFunding
 end
 
 to use-funding
@@ -1244,7 +1245,7 @@ capBoost
 capBoost
 0
 10
-1.7
+2.0
 0.1
 1
 NIL
@@ -1608,11 +1609,11 @@ SLIDER
 400
 327
 433
-fundAvailable
-fundAvailable
+startingFund
+startingFund
 0
-5000
--1.4167942893201486
+2000
+1500.0
 1
 1
 NIL
@@ -2634,6 +2635,96 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="limitedFund" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
+    <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
+    <metric>totalInsufBoost</metric>
+    <metric>totalDisasterWindows</metric>
+    <metric>totalwindowMissed</metric>
+    <metric>totalWindowOpen</metric>
+    <metric>totalNoSolution</metric>
+    <metric>totalUtilizedWindows</metric>
+    <metric>totalNeededWidows</metric>
+    <metric>sufficientCap</metric>
+    <metric>totalUtilizedDisasterWindows</metric>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="badImpact">
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="numWindows">
+      <value value="8"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="6.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="memory">
+      <value value="48"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b1">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="startingFund">
+      <value value="1500"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="increaseChance" first="0.01" step="0.5" last="6"/>
+    <enumeratedValueSet variable="disasterUti">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.03"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="open-windows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="change-aspiration?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="trigger-network?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-riskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
