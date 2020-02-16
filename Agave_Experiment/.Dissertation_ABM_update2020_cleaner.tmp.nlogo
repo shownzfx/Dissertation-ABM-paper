@@ -2462,7 +2462,7 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="capBoost" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="randomBoost" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt; 1000</exitCondition>
