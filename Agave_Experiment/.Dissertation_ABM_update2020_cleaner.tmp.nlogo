@@ -1243,7 +1243,7 @@ capBoost
 capBoost
 0
 10
-0.7
+1.7
 0.1
 1
 NIL
