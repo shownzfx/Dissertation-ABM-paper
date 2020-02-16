@@ -13,7 +13,7 @@ undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalWindowMissed
          totalWindowOpen totalInsufBoost totalNoSolution totalDisasterWindows
           totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows logFile
-         BS-output totalFunding]
+         BS-output totalFunding ]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost adaptation? ]; solutions include both non-adaptation and adaptation measures
@@ -703,9 +703,10 @@ to check-window
         set TotalWindowMissed TotalWindowMissed + 1
       ]
       [
+        boost-capacity
         ifelse postponed?
-        [ boost-capacity]
-        [set totalNoSolution totalNoSolution + 1 ]
+        [use-funding]
+         [set totalNoSolution totalNoSolution + 1 ]
       ]
     ]
    ]
@@ -719,6 +720,10 @@ to boost-capacity
   [set capacity capacity * (1 + capBoost)]
 
   set totalFunding capacity * capBoost  + totalFunding
+end
+
+to use-funding
+
 
   ifelse declared? ; limitations about how to use fund from declaration
   [if random-float 1 < disasterUti [adaptation-discretion]]
@@ -1176,10 +1181,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-365
-425
-422
-470
+415
+430
+472
+475
 adapted
 count orgs with [adaptation-change?]
 0
@@ -1187,10 +1192,10 @@ count orgs with [adaptation-change?]
 11
 
 MONITOR
-295
-420
-357
-465
+475
+475
+537
+520
 postpone
 count orgs with [postponed?]
 0
@@ -1272,10 +1277,10 @@ trigger-network?
 -1000
 
 MONITOR
-425
-425
-487
-470
+475
+430
+537
+475
 notFound
 count orgs with [not-found?]
 0
@@ -1333,17 +1338,6 @@ MONITOR
 520
 #noSol
 totalNoSolution
-0
-1
-11
-
-MONITOR
-595
-475
-652
-520
-ready
-count orgs with [solution-ready?]
 0
 1
 11
@@ -1613,15 +1607,30 @@ randomBoost?
 -1000
 
 MONITOR
-380
+410
 475
-437
+467
 520
 fund
 totalFunding
 1
 1
 11
+
+SLIDER
+155
+400
+327
+433
+fundAvailable
+fundAvailable
+0
+5000
+2500.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -2055,7 +2064,7 @@ NetLogo 6.0.2
   <experiment name="nonRandomWindows" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
@@ -2127,7 +2136,7 @@ NetLogo 6.0.2
   <experiment name="numWindows" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
@@ -2195,7 +2204,7 @@ NetLogo 6.0.2
   <experiment name="network" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
@@ -2264,7 +2273,7 @@ NetLogo 6.0.2
   <experiment name="zeroTolerance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
@@ -2337,7 +2346,7 @@ NetLogo 6.0.2
   <experiment name="lowerDecay" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
@@ -2408,7 +2417,7 @@ NetLogo 6.0.2
   <experiment name="noWindow" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
@@ -2481,7 +2490,7 @@ NetLogo 6.0.2
   <experiment name="randomBoost" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
@@ -2558,7 +2567,7 @@ NetLogo 6.0.2
   <experiment name="baseline" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt; 1000</exitCondition>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
     <metric>totalInsufBoost</metric>
