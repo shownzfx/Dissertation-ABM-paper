@@ -1582,7 +1582,7 @@ SWITCH
 373
 random-orgWindows?
 random-orgWindows?
-1
+0
 1
 -1000
 
@@ -2044,6 +2044,10 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
