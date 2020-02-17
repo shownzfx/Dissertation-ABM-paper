@@ -1153,7 +1153,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.3
+0.2
 0.01
 1
 NIL
@@ -1575,7 +1575,7 @@ SWITCH
 328
 random-orgWindows?
 random-orgWindows?
-1
+0
 1
 -1000
 

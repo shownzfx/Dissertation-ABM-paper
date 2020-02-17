@@ -1153,7 +1153,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.3
+0.2
 0.01
 1
 NIL
@@ -1575,7 +1575,7 @@ SWITCH
 328
 random-orgWindows?
 random-orgWindows?
-1
+0
 1
 -1000
 
@@ -1638,7 +1638,7 @@ SWITCH
 403
 limitedFund?
 limitedFund?
-0
+1
 1
 -1000
 
@@ -2665,10 +2665,10 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="random-orgWindows?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="limitedFund">
+    <enumeratedValueSet variable="limitedFund?">
       <value value="false"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="randomBoost">
+    <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
