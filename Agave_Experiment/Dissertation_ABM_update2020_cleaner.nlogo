@@ -1153,7 +1153,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.2
+0.3
 0.01
 1
 NIL
@@ -2611,12 +2611,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="numWindows">
-      <value value="8"/>
-      <value value="10"/>
-      <value value="12"/>
-      <value value="14"/>
-    </enumeratedValueSet>
+    <steppedValueSet variable="numWindows" first="8" step="2" last="16"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
@@ -2628,6 +2623,8 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="2"/>
+      <value value="3"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="simTicks">
       <value value="1000"/>

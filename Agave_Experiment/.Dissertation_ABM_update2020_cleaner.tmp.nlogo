@@ -1638,7 +1638,7 @@ SWITCH
 403
 limitedFund?
 limitedFund?
-0
+1
 1
 -1000
 
@@ -2628,6 +2628,8 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="2"/>
+      <value value="3"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="simTicks">
       <value value="1000"/>
@@ -2665,10 +2667,10 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="random-orgWindows?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="limitedFund">
+    <enumeratedValueSet variable="limitedFund?">
       <value value="false"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="randomBoost">
+    <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
