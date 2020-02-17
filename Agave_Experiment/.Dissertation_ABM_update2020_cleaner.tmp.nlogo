@@ -2316,7 +2316,7 @@ NetLogo 6.0.2
       <value value="0.08"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="numWindows">
-      <value value="8"/>
+      <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
@@ -2325,10 +2325,10 @@ NetLogo 6.0.2
       <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="6.5"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
-      <value value="2"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="simTicks">
       <value value="1000"/>
@@ -2363,6 +2363,15 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="random-riskThresh?">
       <value value="false"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
+      <value value="true"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="lowerDecay" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -2389,7 +2398,7 @@ NetLogo 6.0.2
       <value value="0.08"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="numWindows">
-      <value value="8"/>
+      <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
@@ -2398,10 +2407,10 @@ NetLogo 6.0.2
       <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="6.5"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
-      <value value="2"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="simTicks">
       <value value="1000"/>
@@ -2418,7 +2427,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.05"/>
+    <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
     </enumeratedValueSet>
@@ -2432,6 +2441,15 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="random-riskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
@@ -2460,7 +2478,7 @@ NetLogo 6.0.2
       <value value="0.08"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="numWindows">
-      <value value="8"/>
+      <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
@@ -2469,10 +2487,10 @@ NetLogo 6.0.2
       <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="6.5"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
-      <value value="2"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="simTicks">
       <value value="1000"/>
@@ -2505,6 +2523,15 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="random-riskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
@@ -2642,6 +2669,30 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="open-windows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="change-aspiration?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="trigger-network?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-riskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
+      <value value="true"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="limitedFund" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -2669,7 +2720,7 @@ NetLogo 6.0.2
       <value value="0.08"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="numWindows">
-      <value value="8"/>
+      <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
@@ -2678,10 +2729,10 @@ NetLogo 6.0.2
       <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="6.5"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
-      <value value="2"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="simTicks">
       <value value="1000"/>
