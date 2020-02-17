@@ -1153,7 +1153,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.2
+0.3
 0.01
 1
 NIL
@@ -1220,7 +1220,7 @@ numWindows
 numWindows
 0
 20
-8.0
+10.0
 1
 1
 NIL
@@ -2612,10 +2612,7 @@ NetLogo 6.0.2
       <value value="0.08"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="numWindows">
-      <value value="8"/>
       <value value="10"/>
-      <value value="12"/>
-      <value value="14"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
