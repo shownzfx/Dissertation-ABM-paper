@@ -2585,7 +2585,7 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="baseline" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="baseline" repetitions="200" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
@@ -2602,7 +2602,6 @@ NetLogo 6.0.2
     <metric>totalUtilizedDisasterWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
       <value value="0.3"/>
-      <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2619,10 +2618,10 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="maxCopingReduction">
       <value value="0.4"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="adaptationCost" first="4" step="0.5" last="6.5"/>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="4"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
-      <value value="2"/>
-      <value value="3"/>
       <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="simTicks">
@@ -2642,30 +2641,6 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="open-windows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="change-aspiration?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="trigger-network?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-riskThresh?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-orgWindows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="limitedFund?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomBoost?">
-      <value value="true"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="limitedFund" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
