@@ -1220,7 +1220,7 @@ numWindows
 numWindows
 0
 20
-8.0
+10.0
 1
 1
 NIL
@@ -2601,7 +2601,6 @@ NetLogo 6.0.2
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.2"/>
       <value value="0.3"/>
       <value value="0.4"/>
     </enumeratedValueSet>
@@ -2611,16 +2610,16 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="8" step="2" last="16"/>
+    <enumeratedValueSet variable="numWindows">
+      <value value="10"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="maxCopingReduction">
       <value value="0.4"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="adaptationCost">
-      <value value="6.5"/>
-    </enumeratedValueSet>
+    <steppedValueSet variable="adaptationCost" first="4" step="0.5" last="6.5"/>
     <enumeratedValueSet variable="capBoost">
       <value value="2"/>
       <value value="3"/>
