@@ -2614,6 +2614,7 @@ NetLogo 6.0.2
       <value value="8"/>
       <value value="10"/>
       <value value="12"/>
+      <value value="14"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
@@ -2661,13 +2662,10 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
-      <value value="false"/>
+      <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="limitedFund?">
       <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-riskThresh?">
-      <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="random-orgWindows?">
       <value value="true"/>
