@@ -2186,10 +2186,10 @@ NetLogo 6.0.2
       <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="6.5"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
-      <value value="2"/>
+      <value value="4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="simTicks">
       <value value="1000"/>
@@ -2219,6 +2219,18 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-riskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
