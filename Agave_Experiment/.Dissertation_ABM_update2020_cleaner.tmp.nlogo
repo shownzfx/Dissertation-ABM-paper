@@ -1632,10 +1632,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-990
-375
-1112
-408
+945
+370
+1067
+403
 limitedFund?
 limitedFund?
 0
@@ -2643,7 +2643,7 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="open-windows?">
-      <value value="false"/>
+      <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="change-aspiration?">
       <value value="false"/>
@@ -2656,6 +2656,12 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="random-riskThresh?">
       <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="limitedFund" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
