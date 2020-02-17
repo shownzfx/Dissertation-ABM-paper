@@ -1632,10 +1632,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-990
-375
-1112
-408
+945
+370
+1067
+403
 limitedFund?
 limitedFund?
 0
@@ -2601,7 +2601,9 @@ NetLogo 6.0.2
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.2"/>
       <value value="0.3"/>
+      <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2611,6 +2613,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="numWindows">
       <value value="8"/>
+      <value value="10"/>
+      <value value="12"/>
+      <value value="14"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
@@ -2655,6 +2660,15 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="random-riskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost">
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
