@@ -1183,7 +1183,7 @@ adaptationCost
 adaptationCost
 0
 7
-6.5
+4.0
 0.1
 1
 NIL
@@ -1257,7 +1257,7 @@ capBoost
 capBoost
 0
 10
-2.0
+4.0
 0.1
 1
 NIL
