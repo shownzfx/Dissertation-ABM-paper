@@ -1303,7 +1303,7 @@ SWITCH
 163
 random-riskThresh?
 random-riskThresh?
-0
+1
 1
 -1000
 
@@ -1450,7 +1450,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.0
+0.03
 0.001
 1
 NIL
