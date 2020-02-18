@@ -1303,7 +1303,7 @@ SWITCH
 163
 random-riskThresh?
 random-riskThresh?
-0
+1
 1
 -1000
 
@@ -1450,7 +1450,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.0
+0.03
 0.001
 1
 NIL
@@ -2178,7 +2178,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="1" last="30"/>
+    <steppedValueSet variable="numWindows" first="0" step="2" last="40"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.25"/>
     </enumeratedValueSet>
