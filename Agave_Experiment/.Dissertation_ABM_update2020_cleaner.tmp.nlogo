@@ -547,6 +547,7 @@ to check-weather
     set pastWeather fput (list ticks weatherSeverity) pastWeather
     if length pastWeather > memory
     [set pastWeather sublist pastWeather 0 min (list length pastWeather memory)] ; keep only the first n elements defined by length of memory
+
     ifelse weatherSeverity >= extremeWeatherThreshold ; here to adjust the influence from others on risk perception
     [
       set extremeWeather? true
@@ -1220,7 +1221,7 @@ numWindows
 numWindows
 0
 20
-1.0
+10.0
 1
 1
 NIL
@@ -1510,7 +1511,7 @@ memory
 memory
 0
 96
-48.0
+24.0
 1
 1
 NIL
@@ -1588,7 +1589,7 @@ increaseChance
 increaseChance
 1
 10
-0.01
+2.0
 1
 1
 NIL
@@ -1638,7 +1639,7 @@ SWITCH
 403
 limitedFund?
 limitedFund?
-1
+0
 1
 -1000
 
@@ -2556,6 +2557,7 @@ NetLogo 6.0.2
     <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
+    <metric>fundAvailable</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalDisasterWindows</metric>
     <metric>totalwindowMissed</metric>
