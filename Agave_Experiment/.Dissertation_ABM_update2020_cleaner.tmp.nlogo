@@ -2443,7 +2443,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
+    <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.04"/>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
     </enumeratedValueSet>
@@ -2799,6 +2799,7 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="random-orgWindows?">
       <value value="false"/>
+      <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="limitedFund?">
       <value value="true"/>
