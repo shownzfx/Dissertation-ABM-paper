@@ -1220,7 +1220,7 @@ numWindows
 numWindows
 0
 20
-0.0
+1.0
 1
 1
 NIL
@@ -2595,20 +2595,21 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="memory">
-      <value value="48"/>
-    </enumeratedValueSet>
+    <steppedValueSet variable="memory" first="24" step="24" last="72"/>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="startingFund">
-      <value value="5500"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="startingFund">
+      <value value="5500"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="increaseChance">
+      <value value="2"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
@@ -2629,14 +2630,11 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="limitedFund?">
-      <value value="false"/>
+      <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
       <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-orgWindows?">
-      <value value="true"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="baseline" repetitions="200" sequentialRunOrder="false" runMetricsEveryStep="false">
