@@ -1625,7 +1625,7 @@ startingFund
 startingFund
 0
 2000
-1500.0
+5500.0
 1
 1
 NIL
@@ -2232,6 +2232,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="network" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">

@@ -1220,7 +1220,7 @@ numWindows
 numWindows
 0
 20
-10.0
+1.0
 1
 1
 NIL
@@ -2232,6 +2232,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="network" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
