@@ -2814,6 +2814,7 @@ NetLogo 6.0.2
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="trigger-network?">
+      <value value="true"/>
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="officeRole?">
