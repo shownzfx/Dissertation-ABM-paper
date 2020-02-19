@@ -207,6 +207,7 @@ to setup-orgs
     set search-adaptation? false
     set adaptNum 0
     set used-disasterWindow? false
+    set used-orgWindow? false
     set leader? false
     set declared? false
     set coping-change? false
@@ -1191,7 +1192,7 @@ adaptationCost
 adaptationCost
 0
 7
-4.0
+6.5
 0.1
 1
 NIL
@@ -1228,7 +1229,7 @@ numWindows
 numWindows
 0
 20
-10.0
+8.0
 1
 1
 NIL
@@ -1265,7 +1266,7 @@ capBoost
 capBoost
 0
 10
-4.0
+2.0
 0.1
 1
 NIL
@@ -1289,7 +1290,7 @@ SWITCH
 123
 trigger-network?
 trigger-network?
-1
+0
 1
 -1000
 
@@ -1583,7 +1584,7 @@ SWITCH
 328
 random-orgWindows?
 random-orgWindows?
-0
+1
 1
 -1000
 
@@ -1596,7 +1597,7 @@ increaseChance
 increaseChance
 1
 10
-4.51
+2.0
 1
 1
 NIL
@@ -1633,7 +1634,7 @@ startingFund
 startingFund
 0
 2000
-5500.0
+1500.0
 1
 1
 NIL
@@ -1646,7 +1647,7 @@ SWITCH
 403
 limitedFund?
 limitedFund?
-1
+0
 1
 -1000
 
@@ -2820,6 +2821,16 @@ NetLogo 6.0.2
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
+    <metric>[window-missed?] of orgs</metric>
+    <metric>[insufBoost?] of orgs</metric>
+    <metric>[solution-ready?] of orgs</metric>
+    <metric>[utilizedWindow?] of orgs</metric>
+    <metric>[used-disasterWindow?] of orgs</metric>
+    <metric>[used-orgWindow?] of orgs</metric>
+    <metric>[riskTolerance] of orgs</metric>
+    <metric>[riskPerception] of orgs</metric>
+    <metric>[extremeWeatherProb] of orgs</metric>
+    <metric>[disasterProb] of orgs</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
       <value value="0.3"/>
     </enumeratedValueSet>
@@ -2859,7 +2870,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="startingFund">
       <value value="1500"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0" step="0.5" last="6"/>
+    <enumeratedValueSet variable="increaseChance">
+      <value value="2"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
     </enumeratedValueSet>

@@ -207,6 +207,7 @@ to setup-orgs
     set search-adaptation? false
     set adaptNum 0
     set used-disasterWindow? false
+    set used-orgWindow? false
     set leader? false
     set declared? false
     set coping-change? false
@@ -276,7 +277,7 @@ end
 
 to setup-regionalRiskThreshold
 
-  ifelse random-riskThresh?
+  ifelse random-riskThresh_.
   [riskThreshold-byRegion]
   [ask orgs [set riskTolerance 0]]
 
@@ -456,7 +457,7 @@ to go
   check-implementation
   check-window
   FTAcheck-adaptation ; this is the FTAoffice procedure;
-  if change-aspiration? [
+  if change-aspiration_. [
     update-aspiration
   ]
 
@@ -567,7 +568,7 @@ to check-weather
 
   if not extremeWeather?
   [
-    ifelse othersInf?
+    ifelse othersInf_.
     [
       if (any? org-sameReg-link-neighbors with [disaster?]) and (random-float 1 < 0.1)
       [set expectedEWProb expectedEWProb * (1 + random-float 0.005)]
@@ -665,7 +666,7 @@ end
 
 
 to search-adaptation
-  ifelse trigger-network? ; whether orgs can assess all solutions
+  ifelse trigger-network_.; whether orgs can assess all solutions
   [assess-thruNetwork]
   [assess-allSolutions]
 
@@ -692,7 +693,7 @@ end
 
 
 to check-window
-  if open-windows?[
+  if open-windows_.[
     ask orgs with [not adaptation-change?]
     [
       ifelse not member? ticks windows
@@ -1191,7 +1192,7 @@ adaptationCost
 adaptationCost
 0
 7
-4.0
+6.5
 0.1
 1
 NIL
@@ -1228,7 +1229,7 @@ numWindows
 numWindows
 0
 20
-10.0
+8.0
 1
 1
 NIL
@@ -1239,8 +1240,8 @@ SWITCH
 50
 1087
 83
-open-windows?
-open-windows?
+open-windows_.
+open-windows_.
 0
 1
 -1000
@@ -1265,7 +1266,7 @@ capBoost
 capBoost
 0
 10
-4.0
+2.0
 0.1
 1
 NIL
@@ -1287,9 +1288,9 @@ SWITCH
 90
 1092
 123
-trigger-network?
-trigger-network?
-1
+trigger-network_.
+trigger-network_.
+0
 1
 -1000
 
@@ -1309,8 +1310,8 @@ SWITCH
 130
 1107
 163
-random-riskThresh?
-random-riskThresh?
+random-riskThresh_.
+random-riskThresh_.
 0
 1
 -1000
@@ -1318,10 +1319,10 @@ random-riskThresh?
 SWITCH
 940
 170
-1050
+1057
 203
-othersInf?
-othersInf?
+othersInf_.
+othersInf_.
 1
 1
 -1000
@@ -1542,10 +1543,10 @@ HORIZONTAL
 SWITCH
 940
 210
-1097
+1102
 243
-change-aspiration?
-change-aspiration?
+change-aspiration_.
+change-aspiration_.
 1
 1
 -1000
@@ -1568,10 +1569,10 @@ HORIZONTAL
 SWITCH
 940
 250
-1057
+1062
 283
-officeRole?
-officeRole?
+officeRole_.
+officeRole_.
 0
 1
 -1000
@@ -1583,7 +1584,7 @@ SWITCH
 328
 random-orgWindows?
 random-orgWindows?
-0
+1
 1
 -1000
 
@@ -1596,7 +1597,7 @@ increaseChance
 increaseChance
 1
 10
-4.51
+2.0
 1
 1
 NIL
@@ -1633,7 +1634,7 @@ startingFund
 startingFund
 0
 2000
-5500.0
+1500.0
 1
 1
 NIL
@@ -1646,7 +1647,7 @@ SWITCH
 403
 limitedFund?
 limitedFund?
-1
+0
 1
 -1000
 
@@ -2820,6 +2821,16 @@ NetLogo 6.0.2
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
+    <metric>[window-missed?] of orgs</metric>
+    <metric>[insufBoost?] of orgs</metric>
+    <metric>[solution-ready?] of orgs</metric>
+    <metric>[utilizedWindow?] of orgs</metric>
+    <metric>[used-disasterWindow?] of orgs</metric>
+    <metric>[used-orgWindow?] of orgs</metric>
+    <metric>[riskTolerance] of orgs</metric>
+    <metric>[riskPerception] of orgs</metric>
+    <metric>[extremeWeatherProb] of orgs</metric>
+    <metric>[disasterProb] of orgs</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
       <value value="0.3"/>
     </enumeratedValueSet>
@@ -2859,7 +2870,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="startingFund">
       <value value="1500"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0" step="0.5" last="6"/>
+    <enumeratedValueSet variable="increaseChance">
+      <value value="2"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
     </enumeratedValueSet>
