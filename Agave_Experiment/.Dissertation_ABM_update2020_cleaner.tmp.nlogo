@@ -1646,7 +1646,7 @@ SWITCH
 403
 limitedFund?
 limitedFund?
-1
+0
 1
 -1000
 
@@ -1670,7 +1670,7 @@ reduceWindows
 reduceWindows
 0
 10
-5.0
+1.0
 1
 1
 NIL
@@ -2684,7 +2684,7 @@ NetLogo 6.0.2
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="network" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="network" repetitions="1000" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
@@ -2857,7 +2857,7 @@ NetLogo 6.0.2
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="reduceWindows" repetitions="200" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="reduceWindows" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
