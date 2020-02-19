@@ -1289,7 +1289,7 @@ SWITCH
 123
 trigger-network?
 trigger-network?
-0
+1
 1
 -1000
 
@@ -1583,7 +1583,7 @@ SWITCH
 328
 random-orgWindows?
 random-orgWindows?
-1
+0
 1
 -1000
 
@@ -1633,7 +1633,7 @@ startingFund
 startingFund
 0
 100000
-100000.0
+5300.0
 1
 1
 NIL
