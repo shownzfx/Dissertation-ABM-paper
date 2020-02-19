@@ -1511,7 +1511,7 @@ memory
 memory
 0
 96
-24.0
+48.0
 1
 1
 NIL
@@ -1576,7 +1576,7 @@ SWITCH
 328
 random-orgWindows?
 random-orgWindows?
-1
+0
 1
 -1000
 
@@ -1589,7 +1589,7 @@ increaseChance
 increaseChance
 1
 10
-0.01
+4.51
 1
 1
 NIL
