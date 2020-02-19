@@ -1670,7 +1670,7 @@ reduceWindows
 reduceWindows
 0
 10
-1.0
+9.0
 1
 1
 NIL
@@ -2583,6 +2583,9 @@ NetLogo 6.0.2
       <value value="5300"/>
     </enumeratedValueSet>
     <steppedValueSet variable="increaseChance" first="0" step="1" last="10"/>
+    <enumeratedValueSet variable="reduceWindows">
+      <value value="9"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
     </enumeratedValueSet>
