@@ -1633,7 +1633,7 @@ startingFund
 startingFund
 0
 2000
-5500.0
+1134.0
 1
 1
 NIL
@@ -1646,7 +1646,7 @@ SWITCH
 403
 limitedFund?
 limitedFund?
-1
+0
 1
 -1000
 

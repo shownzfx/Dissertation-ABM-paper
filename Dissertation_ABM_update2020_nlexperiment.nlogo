@@ -128,7 +128,7 @@ to setup
   set totalFunding 0
   import-orgs
   setup-orgs
-  if random-orgWindows?
+  if random-orgWindows_.
   [setup-orgWindows]
   distribute-orgs
   setup-regionalRiskThreshold
@@ -277,7 +277,7 @@ end
 
 to setup-regionalRiskThreshold
 
-  ifelse random-riskThresh?
+  ifelse random-riskThresh_.
   [riskThreshold-byRegion]
   [ask orgs [set riskTolerance 0]]
 
@@ -448,7 +448,7 @@ to go
 ;  profile:start
 
   set logFile (word "start " ticks)
-  if not random-orgWindows? [generate-orgWindows]
+  if not random-orgWindows_. [generate-orgWindows]
   check-weather  ;unless otherwise indicated, the go procedures apply to orgs
   expect-impact
   windows-byDeclaration
@@ -457,7 +457,7 @@ to go
   check-implementation
   check-window
   FTAcheck-adaptation ; this is the FTAoffice procedure;
-  if change-aspiration? [
+  if change-aspiration_. [
     update-aspiration
   ]
 
@@ -568,7 +568,7 @@ to check-weather
 
   if not extremeWeather?
   [
-    ifelse othersInf?
+    ifelse othersInf_.
     [
       if (any? org-sameReg-link-neighbors with [disaster?]) and (random-float 1 < 0.1)
       [set expectedEWProb expectedEWProb * (1 + random-float 0.005)]
@@ -666,7 +666,7 @@ end
 
 
 to search-adaptation
-  ifelse trigger-network? ; whether orgs can assess all solutions
+  ifelse trigger-network_.; whether orgs can assess all solutions
   [assess-thruNetwork]
   [assess-allSolutions]
 
@@ -693,7 +693,7 @@ end
 
 
 to check-window
-  if open-windows?[
+  if open-windows_.[
     ask orgs with [not adaptation-change?]
     [
       ifelse not member? ticks windows
@@ -734,7 +734,7 @@ to use-funding
 end
 
 to boost-capacity
-  ifelse limitedFund?
+  ifelse limitedFund_.
   [
     if fundAvailable >= originalCapacity * capBoost
     [
@@ -745,7 +745,7 @@ to boost-capacity
   ]
 
  [
-  ifelse randomBoost?
+  ifelse randomBoost_.
   [set capacity originalCapacity * (1  + random-float capBoost)]
   [set capacity originalCapacity * (1 + capBoost)]
   set totalFunding originalCapacity * capBoost  + totalFunding
@@ -804,7 +804,7 @@ to assess-thruNetwork
   let knownSolutions2 (turtle-set [current-solution] of org-sameReg-link-neighbors) with [adaptation?]
   let knownSolutions3  (turtle-set [current-solution] of org-diffReg-link-neighbors) with [adaptation?]
 
-  ifelse officeRole?
+  ifelse officeRole_.
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3 knownSolFromOffice)]
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3)]
 
@@ -1240,8 +1240,8 @@ SWITCH
 50
 1087
 83
-open-windows?
-open-windows?
+open-windows_.
+open-windows_.
 0
 1
 -1000
@@ -1288,8 +1288,8 @@ SWITCH
 90
 1092
 123
-trigger-network?
-trigger-network?
+trigger-network_.
+trigger-network_.
 0
 1
 -1000
@@ -1310,8 +1310,8 @@ SWITCH
 130
 1107
 163
-random-riskThresh?
-random-riskThresh?
+random-riskThresh_.
+random-riskThresh_.
 0
 1
 -1000
@@ -1319,10 +1319,10 @@ random-riskThresh?
 SWITCH
 940
 170
-1050
+1057
 203
-othersInf?
-othersInf?
+othersInf_.
+othersInf_.
 1
 1
 -1000
@@ -1543,10 +1543,10 @@ HORIZONTAL
 SWITCH
 940
 210
-1097
+1102
 243
-change-aspiration?
-change-aspiration?
+change-aspiration_.
+change-aspiration_.
 1
 1
 -1000
@@ -1569,10 +1569,10 @@ HORIZONTAL
 SWITCH
 940
 250
-1057
+1062
 283
-officeRole?
-officeRole?
+officeRole_.
+officeRole_.
 0
 1
 -1000
@@ -1580,10 +1580,10 @@ officeRole?
 SWITCH
 940
 295
-1112
+1117
 328
-random-orgWindows?
-random-orgWindows?
+random-orgWindows_.
+random-orgWindows_.
 1
 1
 -1000
@@ -1606,10 +1606,10 @@ HORIZONTAL
 SWITCH
 940
 330
-1072
+1077
 363
-randomBoost?
-randomBoost?
+randomBoost_.
+randomBoost_.
 0
 1
 -1000
@@ -1643,10 +1643,10 @@ HORIZONTAL
 SWITCH
 945
 370
-1067
+1072
 403
-limitedFund?
-limitedFund?
+limitedFund_.
+limitedFund_.
 0
 1
 -1000
@@ -2776,7 +2776,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="memory" first="24" step="24" last="72"/>
+    <enumeratedValueSet variable="memory">
+      <value value="48"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
     </enumeratedValueSet>
@@ -2787,11 +2789,9 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="4500"/>
-      <value value="5000"/>
       <value value="5500"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0.01" step="1" last="10"/>
+    <steppedValueSet variable="increaseChance" first="0" step="1" last="10"/>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
     </enumeratedValueSet>

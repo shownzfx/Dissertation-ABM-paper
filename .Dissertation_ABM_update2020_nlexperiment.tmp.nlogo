@@ -128,7 +128,7 @@ to setup
   set totalFunding 0
   import-orgs
   setup-orgs
-  if random-orgWindows?
+  if random-orgWindows_.
   [setup-orgWindows]
   distribute-orgs
   setup-regionalRiskThreshold
@@ -448,7 +448,7 @@ to go
 ;  profile:start
 
   set logFile (word "start " ticks)
-  if not random-orgWindows? [generate-orgWindows]
+  if not random-orgWindows_. [generate-orgWindows]
   check-weather  ;unless otherwise indicated, the go procedures apply to orgs
   expect-impact
   windows-byDeclaration
@@ -734,7 +734,7 @@ to use-funding
 end
 
 to boost-capacity
-  ifelse limitedFund?
+  ifelse limitedFund_.
   [
     if fundAvailable >= originalCapacity * capBoost
     [
@@ -745,7 +745,7 @@ to boost-capacity
   ]
 
  [
-  ifelse randomBoost?
+  ifelse randomBoost_.
   [set capacity originalCapacity * (1  + random-float capBoost)]
   [set capacity originalCapacity * (1 + capBoost)]
   set totalFunding originalCapacity * capBoost  + totalFunding
@@ -804,7 +804,7 @@ to assess-thruNetwork
   let knownSolutions2 (turtle-set [current-solution] of org-sameReg-link-neighbors) with [adaptation?]
   let knownSolutions3  (turtle-set [current-solution] of org-diffReg-link-neighbors) with [adaptation?]
 
-  ifelse officeRole?
+  ifelse officeRole_.
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3 knownSolFromOffice)]
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3)]
 
@@ -1580,10 +1580,10 @@ officeRole_.
 SWITCH
 940
 295
-1112
+1117
 328
-random-orgWindows?
-random-orgWindows?
+random-orgWindows_.
+random-orgWindows_.
 1
 1
 -1000
@@ -1606,10 +1606,10 @@ HORIZONTAL
 SWITCH
 940
 330
-1072
+1077
 363
-randomBoost?
-randomBoost?
+randomBoost_.
+randomBoost_.
 0
 1
 -1000
@@ -1643,10 +1643,10 @@ HORIZONTAL
 SWITCH
 945
 370
-1067
+1072
 403
-limitedFund?
-limitedFund?
+limitedFund_.
+limitedFund_.
 0
 1
 -1000
