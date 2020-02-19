@@ -2776,7 +2776,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="memory" first="24" step="24" last="72"/>
+    <enumeratedValueSet variable="memory">
+      <value value="48"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
     </enumeratedValueSet>
@@ -2787,11 +2789,9 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="4500"/>
-      <value value="5000"/>
       <value value="5500"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0.01" step="1" last="10"/>
+    <steppedValueSet variable="increaseChance" first="0" step="1" last="10"/>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
     </enumeratedValueSet>

@@ -489,7 +489,7 @@ to go
 ;  ]
 ; ]
 
-; if ticks >= simTicks [stop]
+ if ticks >= simTicks [stop]
 end
 
 to write-logFile
@@ -1596,7 +1596,7 @@ increaseChance
 increaseChance
 1
 10
-0.0
+3.0
 1
 1
 NIL
@@ -1632,8 +1632,8 @@ SLIDER
 startingFund
 startingFund
 0
-2000
-5300.0
+100000
+100000.0
 1
 1
 NIL
@@ -2590,6 +2590,7 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
+      <value value="true"/>
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
