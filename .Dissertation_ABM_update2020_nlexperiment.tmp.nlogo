@@ -277,7 +277,7 @@ end
 
 to setup-regionalRiskThreshold
 
-  ifelse random-riskThresh?
+  ifelse random-riskThresh_.
   [riskThreshold-byRegion]
   [ask orgs [set riskTolerance 0]]
 
@@ -457,7 +457,7 @@ to go
   check-implementation
   check-window
   FTAcheck-adaptation ; this is the FTAoffice procedure;
-  if change-aspiration? [
+  if change-aspiration_. [
     update-aspiration
   ]
 
@@ -568,7 +568,7 @@ to check-weather
 
   if not extremeWeather?
   [
-    ifelse othersInf?
+    ifelse othersInf_.
     [
       if (any? org-sameReg-link-neighbors with [disaster?]) and (random-float 1 < 0.1)
       [set expectedEWProb expectedEWProb * (1 + random-float 0.005)]
@@ -666,7 +666,7 @@ end
 
 
 to search-adaptation
-  ifelse trigger-network? ; whether orgs can assess all solutions
+  ifelse trigger-network_.; whether orgs can assess all solutions
   [assess-thruNetwork]
   [assess-allSolutions]
 
@@ -693,7 +693,7 @@ end
 
 
 to check-window
-  if open-windows?[
+  if open-windows_.[
     ask orgs with [not adaptation-change?]
     [
       ifelse not member? ticks windows
@@ -1240,8 +1240,8 @@ SWITCH
 50
 1087
 83
-open-windows?
-open-windows?
+open-windows_.
+open-windows_.
 0
 1
 -1000
@@ -1288,8 +1288,8 @@ SWITCH
 90
 1092
 123
-trigger-network?
-trigger-network?
+trigger-network_.
+trigger-network_.
 0
 1
 -1000
@@ -1310,8 +1310,8 @@ SWITCH
 130
 1107
 163
-random-riskThresh?
-random-riskThresh?
+random-riskThresh_.
+random-riskThresh_.
 0
 1
 -1000
@@ -1319,10 +1319,10 @@ random-riskThresh?
 SWITCH
 940
 170
-1050
+1057
 203
-othersInf?
-othersInf?
+othersInf_.
+othersInf_.
 1
 1
 -1000
@@ -1543,10 +1543,10 @@ HORIZONTAL
 SWITCH
 940
 210
-1097
+1102
 243
-change-aspiration?
-change-aspiration?
+change-aspiration_.
+change-aspiration_.
 1
 1
 -1000
@@ -1569,10 +1569,10 @@ HORIZONTAL
 SWITCH
 940
 250
-1057
+1062
 283
-officeRole?
-officeRole?
+officeRole_.
+officeRole_.
 0
 1
 -1000
