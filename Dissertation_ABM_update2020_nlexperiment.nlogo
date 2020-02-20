@@ -104,6 +104,7 @@ orgs-own [
   myReference
   open-orgWindow?
   used-orgWindow?
+  open-disasterWindow?
 ]
 
 
@@ -128,7 +129,7 @@ to setup
   set totalFunding 0
   import-orgs
   setup-orgs
-  if random-orgWindows_.
+  if randomOrgWindows?
   [setup-orgWindows]
   distribute-orgs
   setup-regionalRiskThreshold
@@ -223,6 +224,7 @@ to setup-orgs
     set allReference []
     set pastWeather []
     set open-orgWindow? false
+    set  open-disasterWindow?  false
   ]
 
   ask FTAoffices [
@@ -277,7 +279,8 @@ end
 
 to setup-regionalRiskThreshold
 
-  ifelse random-riskThresh_.
+  ifelse randomRiskThresh?
+
   [riskThreshold-byRegion]
   [ask orgs [set riskTolerance 0]]
 
@@ -371,7 +374,7 @@ to record-weather-norm ; only activated when not using the hard coded weather pa
       set expectedBadWeatherSeverity item (ceiling simulateMonths * badImpact) weatherImpactExp
       set riskPerception (expectedBadWeatherSeverity -  solEfficacy) * expectedEWprob
       ;if riskPerception < 0  [set riskPerception 0.1]
-      if riskPerception < originalRiskPerception[set riskPerception 0.1]
+      if riskPerception < originalRiskPerception[set riskPerception 0]
       set maxCopingEfficacy  maxCopingReduction * expectedBadWeatherSeverity ; the maximum risk reduction coping measures can acheive
   ]
 end
@@ -448,7 +451,7 @@ to go
 ;  profile:start
 
   set logFile (word "start " ticks)
-  if not random-orgWindows_. [generate-orgWindows]
+  if not randomOrgWindows? [generate-orgWindows]
   check-weather  ;unless otherwise indicated, the go procedures apply to orgs
   expect-impact
   windows-byDeclaration
@@ -457,7 +460,7 @@ to go
   check-implementation
   check-window
   FTAcheck-adaptation ; this is the FTAoffice procedure;
-  if change-aspiration_. [
+  if changeAspiration? [
     update-aspiration
   ]
 
@@ -584,7 +587,7 @@ end
 
 to generate-orgWindows
   ask orgs [
-    let randomChance  numWindows / 1000
+    let randomChance  (numWindows - reduceWindows) / 1000
     let filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)] pastWeather) ; find weahter intensity bigger than EW but smaller than disasterThreshold
     ifelse member? true filterEW
       [ifelse random-float 1 < randomChance * (1 + increaseChance)
@@ -666,7 +669,7 @@ end
 
 
 to search-adaptation
-  ifelse trigger-network_.; whether orgs can assess all solutions
+  ifelse triggerNetwork?; whether orgs can assess all solutions
   [assess-thruNetwork]
   [assess-allSolutions]
 
@@ -693,7 +696,7 @@ end
 
 
 to check-window
-  if open-windows_.[
+  if openWindows?[
     ask orgs with [not adaptation-change?]
     [
       ifelse not member? ticks windows
@@ -707,8 +710,10 @@ to check-window
        boost-capacity
        set totalWindowOpen totalWindowOpen + 1
 
-       if member? ticks disasterWindows
-       [set totalDisasterWindows totalDisasterWindows + 1]
+       ifelse member? ticks disasterWindows
+       [set totalDisasterWindows totalDisasterWindows + 1
+          set open-disasterWindow? true]
+        [set open-disasterWindow? false]
 
       ifelse riskPerception <= riskTolerance
       [
@@ -734,7 +739,7 @@ to use-funding
 end
 
 to boost-capacity
-  ifelse limitedFund_.
+  ifelse limitedFund?
   [
     if fundAvailable >= originalCapacity * capBoost
     [
@@ -745,7 +750,7 @@ to boost-capacity
   ]
 
  [
-  ifelse randomBoost_.
+  ifelse randomBoost?
   [set capacity originalCapacity * (1  + random-float capBoost)]
   [set capacity originalCapacity * (1 + capBoost)]
   set totalFunding originalCapacity * capBoost  + totalFunding
@@ -772,6 +777,7 @@ to adaptation-discretion
       ifelse member? ticks disasterWindows [
         set totalUtilizedDisasterWindows totalUtilizedDisasterWindows + 1
         set used-disasterWindow? true
+
       ][
         set used-disasterWindow? false
       ]
@@ -804,7 +810,7 @@ to assess-thruNetwork
   let knownSolutions2 (turtle-set [current-solution] of org-sameReg-link-neighbors) with [adaptation?]
   let knownSolutions3  (turtle-set [current-solution] of org-diffReg-link-neighbors) with [adaptation?]
 
-  ifelse officeRole_.
+  ifelse officeRole?
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3 knownSolFromOffice)]
   [set knownSolutions (turtle-set knownSolutions1 knownSolutions2 knownSolutions3)]
 
@@ -1101,7 +1107,7 @@ false
 PENS
 "default" 1.0 0 -14439633 true "" "plot sum [riskPerception] of orgs with-min [extremeweatherprob]"
 "percept" 1.0 0 -8053223 true "" "plot sum [originalRiskTolerance] of orgs with-min [extremeweatherprob]"
-"asp" 1.0 0 -14737633 true "" "plot sum [currentAspiration] of orgs with-min [extremeweatherprob]"
+"pen-3" 1.0 0 -14454117 true "" "plot sum [originalRiskPerception] of orgs with-min [extremeweatherprob]"
 
 PLOT
 1120
@@ -1192,7 +1198,7 @@ adaptationCost
 adaptationCost
 0
 7
-6.5
+4.0
 0.1
 1
 NIL
@@ -1229,7 +1235,7 @@ numWindows
 numWindows
 0
 20
-8.0
+10.0
 1
 1
 NIL
@@ -1240,8 +1246,8 @@ SWITCH
 50
 1087
 83
-open-windows_.
-open-windows_.
+openWindows?
+openWindows?
 0
 1
 -1000
@@ -1266,7 +1272,7 @@ capBoost
 capBoost
 0
 10
-2.0
+4.0
 0.1
 1
 NIL
@@ -1288,8 +1294,8 @@ SWITCH
 90
 1092
 123
-trigger-network_.
-trigger-network_.
+triggerNetwork?
+triggerNetwork?
 0
 1
 -1000
@@ -1310,8 +1316,8 @@ SWITCH
 130
 1107
 163
-random-riskThresh_.
-random-riskThresh_.
+randomRiskThresh?
+randomRiskThresh?
 0
 1
 -1000
@@ -1545,8 +1551,8 @@ SWITCH
 210
 1102
 243
-change-aspiration_.
-change-aspiration_.
+changeAspiration?
+changeAspiration?
 1
 1
 -1000
@@ -1571,8 +1577,8 @@ SWITCH
 250
 1062
 283
-officeRole_.
-officeRole_.
+officeRole?
+officeRole?
 0
 1
 -1000
@@ -1582,8 +1588,8 @@ SWITCH
 295
 1117
 328
-random-orgWindows_.
-random-orgWindows_.
+randomOrgWindows?
+randomOrgWindows?
 1
 1
 -1000
@@ -1608,8 +1614,8 @@ SWITCH
 330
 1077
 363
-randomBoost_.
-randomBoost_.
+randomBoost?
+randomBoost?
 0
 1
 -1000
@@ -1645,22 +1651,26 @@ SWITCH
 370
 1072
 403
-limitedFund_.
-limitedFund_.
+limitedFund?
+limitedFund?
 0
 1
 -1000
 
-MONITOR
-185
-455
-257
-500
-orgWindow
-[open-orgWindow?] of org 10
-17
+SLIDER
+0
+405
+120
+438
+reduceWindows
+reduceWindows
+0
+10
+8.0
 1
-11
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?

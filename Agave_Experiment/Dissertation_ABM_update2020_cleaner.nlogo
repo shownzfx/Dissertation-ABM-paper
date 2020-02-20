@@ -104,6 +104,7 @@ orgs-own [
   myReference
   open-orgWindow?
   used-orgWindow?
+  open-disasterWindow?
 ]
 
 
@@ -222,6 +223,7 @@ to setup-orgs
     set allReference []
     set pastWeather []
     set open-orgWindow? false
+    set  open-disasterWindow?  false
   ]
 
   ask FTAoffices [
@@ -706,8 +708,10 @@ to check-window
        boost-capacity
        set totalWindowOpen totalWindowOpen + 1
 
-       if member? ticks disasterWindows
-       [set totalDisasterWindows totalDisasterWindows + 1]
+       ifelse member? ticks disasterWindows
+       [ set open-disasterWindow? true
+         set totalDisasterWindows totalDisasterWindows + 1]
+       [ set open-disasterWindow? false]
 
       ifelse riskPerception <= riskTolerance
       [
@@ -1596,7 +1600,7 @@ increaseChance
 increaseChance
 0
 10
-1.0
+10.0
 1
 1
 NIL
@@ -1633,7 +1637,7 @@ startingFund
 startingFund
 0
 100000
-5300.0
+5321.0
 1
 1
 NIL
@@ -2582,7 +2586,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="startingFund">
       <value value="5300"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0" step="1" last="10"/>
+    <steppedValueSet variable="increaseChance" first="0" step="1" last="20"/>
     <enumeratedValueSet variable="reduceWindows">
       <value value="9"/>
     </enumeratedValueSet>
@@ -2609,7 +2613,6 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
-      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="limitedFundStep" repetitions="1" sequentialRunOrder="false" runMetricsEveryStep="true">
@@ -2832,7 +2835,10 @@ NetLogo 6.0.2
       <value value="5321"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="increaseChance">
-      <value value="1"/>
+      <value value="10"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="reduceWindows">
+      <value value="9"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="open-windows?">
       <value value="true"/>
@@ -2857,7 +2863,7 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
-      <value value="false"/>
+      <value value="true"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="reduceWindows" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">

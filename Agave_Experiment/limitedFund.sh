@@ -16,7 +16,7 @@
 bash /home/fzhang59/NetLogo\ 6.0.2/netlogo-headless.sh \
 --model Dissertation_ABM_update2020_cleaner.nlogo \
 --experiment limitedFund \
---table limitedFund2200Runs.csv \
+--table limitedFund2100Runs.csv \
 --threads 28
 
 
