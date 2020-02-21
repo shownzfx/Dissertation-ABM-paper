@@ -1026,7 +1026,7 @@ scanningRange
 scanningRange
 0
 10
-1.0
+2.0
 1
 1
 NIL
@@ -1427,7 +1427,7 @@ minNeighbor
 minNeighbor
 0
 10
-1.0
+3.0
 1
 1
 NIL
@@ -1576,7 +1576,7 @@ SWITCH
 283
 officeRole?
 officeRole?
-1
+0
 1
 -1000
 
@@ -3060,7 +3060,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="meanRiskThreshold">
       <value value="0.3"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="scanningRange" first="1" step="1" last="5"/>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="4"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="badImpact">
       <value value="0.08"/>
     </enumeratedValueSet>
@@ -3082,7 +3084,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="simTicks">
       <value value="1000"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="minNeighbor" first="1" step="1" last="4"/>
+    <steppedValueSet variable="minNeighbor" first="1" step="1" last="10"/>
     <enumeratedValueSet variable="memory">
       <value value="48"/>
     </enumeratedValueSet>
