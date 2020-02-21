@@ -571,8 +571,8 @@ to check-weather
   [
     ifelse othersInf?
     [
-      if (any? org-sameReg-link-neighbors with [disaster?]) and (random-float 1 < 0.1)
-      [set expectedEWProb expectedEWProb * (1 + random-float 0.005)]
+      if (any? org-sameReg-link-neighbors with [disaster?]) and (random-float 1 < 0.001)
+      [set expectedEWProb expectedEWProb * (1 + random-float 0.0001)]
     ]
     [set expectedEWProb expectedEWProb * (1 - (EWProbDecay + random-float 0.001))] ; extremeweatherevent did not happen, then expectedprob decrease
   ]
@@ -1026,7 +1026,7 @@ scanningRange
 scanningRange
 0
 10
-4.0
+1.0
 1
 1
 NIL
@@ -1576,7 +1576,7 @@ SWITCH
 283
 officeRole?
 officeRole?
-0
+1
 1
 -1000
 
@@ -1587,7 +1587,7 @@ SWITCH
 328
 random-orgWindows?
 random-orgWindows?
-1
+0
 1
 -1000
 
@@ -1650,7 +1650,7 @@ SWITCH
 403
 limitedFund?
 limitedFund?
-0
+1
 1
 -1000
 
@@ -2690,7 +2690,7 @@ NetLogo 6.0.2
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="network" repetitions="1000" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="network" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
@@ -2754,7 +2754,6 @@ NetLogo 6.0.2
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="trigger-network?">
-      <value value="true"/>
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="officeRole?">
@@ -2771,6 +2770,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="othersInf?">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="nonRandomWindow" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
@@ -3023,6 +3025,90 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="officeRole?">
       <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-riskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="othersInf?">
+      <value value="true"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="officeRole" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
+    <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
+    <metric>totalInsufBoost</metric>
+    <metric>totalDisasterWindows</metric>
+    <metric>totalwindowMissed</metric>
+    <metric>totalWindowOpen</metric>
+    <metric>totalNoSolution</metric>
+    <metric>totalUtilizedWindows</metric>
+    <metric>totalNeededWidows</metric>
+    <metric>sufficientCap</metric>
+    <metric>totalUtilizedDisasterWindows</metric>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="scanningRange" first="1" step="1" last="5"/>
+    <enumeratedValueSet variable="badImpact">
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="numWindows">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="memory">
+      <value value="48"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b1">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="disasterUti">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.03"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="open-windows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="change-aspiration?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="trigger-network?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+      <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="random-riskThresh?">
       <value value="true"/>
