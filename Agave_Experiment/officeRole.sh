@@ -16,7 +16,7 @@
 bash /home/fzhang59/NetLogo\ 6.0.2/netlogo-headless.sh \
 --model Dissertation_ABM_update2020_cleaner.nlogo \
 --experiment officeRole \
---table officeRole2000Runs.csv \
+--table officeRole2200Runs.csv \
 --threads 28
 
 

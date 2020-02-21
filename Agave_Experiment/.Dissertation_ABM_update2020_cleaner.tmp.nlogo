@@ -3084,7 +3084,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="simTicks">
       <value value="1000"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="minNeighbor" first="1" step="1" last="10"/>
+    <steppedValueSet variable="minNeighbor" first="0" step="1" last="10"/>
     <enumeratedValueSet variable="memory">
       <value value="48"/>
     </enumeratedValueSet>
