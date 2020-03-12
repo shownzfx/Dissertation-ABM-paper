@@ -13,7 +13,7 @@ undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalWindowMissed
          totalWindowOpen totalInsufBoost totalNoSolution totalDisasterWindows
           totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows logFile
-  BS-output totalFunding fundAvailable  totalOrgWindows]
+         BS-output totalFunding fundAvailable totalOrgWindows]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost adaptation? ]; solutions include both non-adaptation and adaptation measures
@@ -48,6 +48,7 @@ orgs-own [
   declared?
   postponed?
   knownSolutions
+  targetSolCost
   search-adaptation?
   missedWindows
   utilizedWindow?
@@ -76,12 +77,13 @@ orgs-own [
   riskTolerance
   windows
   window-open?
-  lack-motivation?
+  lack-motivation??
   used-disasterWindow?
   orgWindows
   disasterWindows
   current-solution
   targetSolution
+  targetSolCost
   not-found?
   coping-change?
   adaptation-change?
@@ -105,6 +107,7 @@ orgs-own [
   open-orgWindow?
   used-orgWindow?
   open-disasterWindow?
+  lack-motivation?
 ]
 
 
@@ -129,7 +132,7 @@ to setup
   set totalFunding 0
   import-orgs
   setup-orgs
-  if random-orgWindows?
+  if randomOrgWindows?
   [setup-orgWindows]
   distribute-orgs
   setup-regionalRiskThreshold
@@ -207,7 +210,9 @@ to setup-orgs
     set utilizedWindow? false
     set search-adaptation? false
     set adaptNum 0
+    set targetSolCost 0
     set used-disasterWindow? false
+    set used-orgWindow? false
     set leader? false
     set declared? false
     set coping-change? false
@@ -278,7 +283,8 @@ end
 
 to setup-regionalRiskThreshold
 
-  ifelse random-riskThresh?
+  ifelse randomRiskThresh?
+
   [riskThreshold-byRegion]
   [ask orgs [set riskTolerance 0]]
 
@@ -372,7 +378,7 @@ to record-weather-norm ; only activated when not using the hard coded weather pa
       set expectedBadWeatherSeverity item (ceiling simulateMonths * badImpact) weatherImpactExp
       set riskPerception (expectedBadWeatherSeverity -  solEfficacy) * expectedEWprob
       ;if riskPerception < 0  [set riskPerception 0.1]
-      if riskPerception < originalRiskPerception[set riskPerception 0.1]
+      if riskPerception < originalRiskPerception[set riskPerception 0]
       set maxCopingEfficacy  maxCopingReduction * expectedBadWeatherSeverity ; the maximum risk reduction coping measures can acheive
   ]
 end
@@ -449,7 +455,7 @@ to go
 ;  profile:start
 
   set logFile (word "start " ticks)
-  if not random-orgWindows? [generate-orgWindows]
+  if not randomOrgWindows? [generate-orgWindows]
   check-weather  ;unless otherwise indicated, the go procedures apply to orgs
   expect-impact
   windows-byDeclaration
@@ -458,7 +464,7 @@ to go
   check-implementation
   check-window
   FTAcheck-adaptation ; this is the FTAoffice procedure;
-  if change-aspiration? [
+  if changeAspiration? [
     update-aspiration
   ]
 
@@ -467,7 +473,7 @@ to go
     set extremeWeather? false
     set disaster? false
     set declared? false
-    set capacity originalCapacity
+   ; set capacity originalCapacity
     set extremeWeatherProb extremeWeatherProb * (1 + random-float 0.0001); probability increases over time
 ;    set disasterProb disasterProb * (1 + random-float 0.0001)
     if expectedBadWeatherSeverity < riskPerception [
@@ -571,8 +577,8 @@ to check-weather
   [
     ifelse othersInf?
     [
-      if (any? org-sameReg-link-neighbors with [disaster?]) and (random-float 1 < 0.001)
-      [set expectedEWProb expectedEWProb * (1 + random-float 0.0001)]
+      if (any? org-sameReg-link-neighbors with [disaster?]) and (random-float 1 < 0.1)
+      [set expectedEWProb expectedEWProb * (1 + random-float 0.005)]
     ]
     [set expectedEWProb expectedEWProb * (1 - (EWProbDecay + random-float 0.001))] ; extremeweatherevent did not happen, then expectedprob decrease
   ]
@@ -667,12 +673,13 @@ end
 
 
 to search-adaptation
-  ifelse trigger-network? ; whether orgs can assess all solutions
+  ifelse triggerNetwork?; whether orgs can assess all solutions
   [assess-thruNetwork]
   [assess-allSolutions]
 
   if targetSolution != nobody
-  [set solution-ready? true]
+  [set solution-ready? true
+    set targetSolCost [cost] of targetSolution]
 
 end
 
@@ -692,8 +699,9 @@ to check-implementation
 
 end
 
+
 to check-window
-  if open-Windows? [
+  if openWindows? [
     ask orgs [
       ifelse not member? ticks windows
       [
@@ -743,13 +751,13 @@ to use-window
     ]
 end
 
+
 to use-funding
 
   ifelse declared? ; limitations about how to use fund from declaration
   [if random-float 1 < disasterUti [adaptation-discretion]]
   [adaptation-discretion]
 end
-
 
 to boost-capacity
   ifelse limitedFund?
@@ -790,6 +798,7 @@ to adaptation-discretion
       ifelse member? ticks disasterWindows [
         set totalUtilizedDisasterWindows totalUtilizedDisasterWindows + 1
         set used-disasterWindow? true
+
       ][
         set used-disasterWindow? false
       ]
@@ -1258,8 +1267,8 @@ SWITCH
 50
 1087
 83
-open-windows?
-open-windows?
+openWindows?
+openWindows?
 0
 1
 -1000
@@ -1306,8 +1315,8 @@ SWITCH
 90
 1092
 123
-trigger-network?
-trigger-network?
+triggerNetwork?
+triggerNetwork?
 0
 1
 -1000
@@ -1328,8 +1337,8 @@ SWITCH
 130
 1107
 163
-random-riskThresh?
-random-riskThresh?
+randomRiskThresh?
+randomRiskThresh?
 0
 1
 -1000
@@ -1563,8 +1572,8 @@ SWITCH
 210
 1097
 243
-change-aspiration?
-change-aspiration?
+changeAspiration?
+changeAspiration?
 1
 1
 -1000
@@ -1600,8 +1609,8 @@ SWITCH
 295
 1112
 328
-random-orgWindows?
-random-orgWindows?
+randomOrgWindows?
+randomOrgWindows?
 0
 1
 -1000
@@ -1674,8 +1683,8 @@ MONITOR
 455
 257
 500
-orgWindow
-[open-orgWindow?] of org 10
+#orgWins
+totalOrgWindows
 17
 1
 11
@@ -2516,22 +2525,22 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="open-windows?">
+    <enumeratedValueSet variable="openWindows?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="change-aspiration?">
+    <enumeratedValueSet variable="changeAspiration?">
       <value value="false"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="trigger-network?">
+    <enumeratedValueSet variable="triggerNetwork?">
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="officeRole?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="random-riskThresh?">
+    <enumeratedValueSet variable="randomRiskThresh?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="random-orgWindows?">
+    <enumeratedValueSet variable="randomOrgWindows?">
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="limitedFund?">
@@ -2946,22 +2955,22 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="startingFund">
       <value value="5300"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="open-windows?">
+    <enumeratedValueSet variable="openWindows?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="change-aspiration?">
+    <enumeratedValueSet variable="changeAspiration?">
       <value value="false"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="trigger-network?">
+    <enumeratedValueSet variable="triggerNetwork?">
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="officeRole?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="random-riskThresh?">
+    <enumeratedValueSet variable="randomRiskThresh?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="random-orgWindows?">
+    <enumeratedValueSet variable="randomOrgWindows?">
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="limitedFund?">
