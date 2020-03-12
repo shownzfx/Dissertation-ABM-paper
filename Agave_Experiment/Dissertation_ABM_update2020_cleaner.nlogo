@@ -591,7 +591,6 @@ end
 
 to generate-orgWindows
   ask orgs [
-    let randomChance  (numWindows - reduceWindows) / 1000
     let filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)] pastWeather) ; find weahter intensity bigger than EW but smaller than disasterThreshold
     ifelse member? true filterEW
       [ifelse random-float 1 < randomChance * (1 + increaseChance)
@@ -1679,9 +1678,9 @@ limitedFund?
 -1000
 
 MONITOR
-185
+270
 455
-257
+342
 500
 #orgWins
 totalOrgWindows
@@ -1700,6 +1699,21 @@ reduceWindows
 10
 9.0
 1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+5
+460
+135
+493
+randomChance
+randomChance
+0
+0.001
+5.0E-4
+0.00001
 1
 NIL
 HORIZONTAL
@@ -2951,7 +2965,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="reduceWindows" first="1" step="1" last="10"/>
+    <steppedValueSet variable="randomChance" first="0" step="1.0E-5" last="1.0E-4"/>
     <enumeratedValueSet variable="startingFund">
       <value value="5300"/>
     </enumeratedValueSet>
