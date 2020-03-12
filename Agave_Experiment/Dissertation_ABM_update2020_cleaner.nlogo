@@ -491,7 +491,7 @@ to go
 ;  ]
 ; ]
 
- if ticks >= simTicks [stop]
+; if ticks >= simTicks [stop]
 end
 
 to write-logFile
@@ -1427,7 +1427,7 @@ minNeighbor
 minNeighbor
 0
 10
-0.0
+1.0
 1
 1
 NIL

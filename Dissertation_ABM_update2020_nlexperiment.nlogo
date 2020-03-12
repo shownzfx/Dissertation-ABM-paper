@@ -48,6 +48,7 @@ orgs-own [
   declared?
   postponed?
   knownSolutions
+  targetSolCost
   search-adaptation?
   missedWindows
   utilizedWindow?
@@ -76,12 +77,13 @@ orgs-own [
   riskTolerance
   windows
   window-open?
-  window-missed?
+  lack-motivation??
   used-disasterWindow?
   orgWindows
   disasterWindows
   current-solution
   targetSolution
+  targetSolCost
   not-found?
   coping-change?
   adaptation-change?
@@ -105,6 +107,7 @@ orgs-own [
   open-orgWindow?
   used-orgWindow?
   open-disasterWindow?
+  lack-motivation?
 ]
 
 
@@ -200,13 +203,14 @@ to setup-orgs
     set crossRiskThresholdTicks []
     set missedWindows []
     set window-open? false
-    set window-missed? false
+    set lack-motivation? false
     set adaptTicks []
     set knownSolFromOffice []
     set satisfied? true
     set utilizedWindow? false
     set search-adaptation? false
     set adaptNum 0
+    set targetSolCost 0
     set used-disasterWindow? false
     set used-orgWindow? false
     set leader? false
@@ -469,7 +473,7 @@ to go
     set extremeWeather? false
     set disaster? false
     set declared? false
-    set capacity originalCapacity
+   ; set capacity originalCapacity
     set extremeWeatherProb extremeWeatherProb * (1 + random-float 0.0001); probability increases over time
 ;    set disasterProb disasterProb * (1 + random-float 0.0001)
     if expectedBadWeatherSeverity < riskPerception [
@@ -674,7 +678,8 @@ to search-adaptation
   [assess-allSolutions]
 
   if targetSolution != nobody
-  [set solution-ready? true]
+  [set solution-ready? true
+    set targetSolCost [cost] of targetSolution]
 
 end
 
@@ -696,40 +701,53 @@ end
 
 
 to check-window
-  if openWindows?[
-    ask orgs with [not adaptation-change?]
-    [
+  if openWindows? [
+    ask orgs [
       ifelse not member? ticks windows
       [
+        set capacity originalCapacity
         set window-open? false
-        set window-missed? false
+
       ]
 
       [
-       set window-open? true
-       boost-capacity
-       set totalWindowOpen totalWindowOpen + 1
+        set window-open? true
+        boost-capacity
+        set totalWindowOpen totalWindowOpen + 1
 
-       ifelse member? ticks disasterWindows
-       [set totalDisasterWindows totalDisasterWindows + 1
-          set open-disasterWindow? true]
-        [set open-disasterWindow? false]
-
-      ifelse riskPerception <= riskTolerance
-      [
-        set window-missed? true
-        set TotalWindowMissed TotalWindowMissed + 1
-      ]
-      [
-
-        ifelse postponed?
-        [use-funding]
-        [set totalNoSolution totalNoSolution + 1 ]
+         ifelse member? ticks disasterWindows
+        [
+          set open-disasterWindow? true
+          set totalDisasterWindows totalDisasterWindows + 1
+        ]
+        [ set open-disasterWindow? false]
       ]
     ]
-   ]
- ]
+  ]
 end
+
+
+to use-window
+  ask orgs with [not adaptation-change?]
+  [
+    if member? ticks windows
+    [
+
+         ifelse riskPerception <= riskTolerance
+        [
+          set lack-motivation? true
+          set totalWindowMissed totalWindowMissed + 1
+        ]
+        [
+          set lack-motivation? false
+          ifelse postponed?
+          [use-funding]
+          [set totalNoSolution totalNoSolution + 1 ]
+        ]
+      ]
+    ]
+end
+
 
 to use-funding
 
@@ -1671,6 +1689,17 @@ reduceWindows
 1
 NIL
 HORIZONTAL
+
+MONITOR
+820
+395
+877
+440
+cap20
+[capacity] of org 20
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
