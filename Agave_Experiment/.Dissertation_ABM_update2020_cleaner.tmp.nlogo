@@ -2965,7 +2965,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="randomChance" first="0" step="1.0E-5" last="1.0E-4"/>
+    <steppedValueSet variable="randomChance" first="0" step="1.0E-4" last="0.001"/>
     <enumeratedValueSet variable="startingFund">
       <value value="5300"/>
     </enumeratedValueSet>
