@@ -3215,7 +3215,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="10" step="10" last="100"/>
+    <steppedValueSet variable="increaseChance" first="2" step="2" last="10"/>
     <enumeratedValueSet variable="memory">
       <value value="48"/>
     </enumeratedValueSet>
@@ -3521,7 +3521,7 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="increaseChance" repetitions="25" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="increaseChance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
@@ -3577,7 +3577,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="EWProbDecay" first="0" step="0.006" last="0.03"/>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.03"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="randomChance">
       <value value="4.0E-4"/>
     </enumeratedValueSet>
