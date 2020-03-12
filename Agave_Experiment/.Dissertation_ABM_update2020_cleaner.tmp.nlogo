@@ -3215,6 +3215,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
+    <steppedValueSet variable="increaseChance" first="10" step="10" last="100"/>
     <enumeratedValueSet variable="memory">
       <value value="48"/>
     </enumeratedValueSet>
@@ -3224,14 +3225,12 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="EWProbDecay">
-      <value value="0.03"/>
-    </enumeratedValueSet>
+    <steppedValueSet variable="EWProbDecay" first="0" step="0.006" last="0.03"/>
     <enumeratedValueSet variable="randomChance">
-      <value value="0.0045"/>
+      <value value="4.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="5300"/>
+      <value value="7490"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openWindows?">
       <value value="true"/>
