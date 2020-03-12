@@ -2687,7 +2687,7 @@ NetLogo 6.0.2
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="baseline" repetitions="200" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="baseline" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
@@ -2702,6 +2702,7 @@ NetLogo 6.0.2
     <metric>totalNeededWidows</metric>
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
+    <metric>totalOrgWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
       <value value="0.3"/>
     </enumeratedValueSet>
