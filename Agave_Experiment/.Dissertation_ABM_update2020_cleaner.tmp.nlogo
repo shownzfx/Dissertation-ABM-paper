@@ -3169,7 +3169,7 @@ NetLogo 6.0.2
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="increaseChance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="increaseChance1" repetitions="50" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
