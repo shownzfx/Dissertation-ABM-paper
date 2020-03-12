@@ -3169,7 +3169,7 @@ NetLogo 6.0.2
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="increaseChance1" repetitions="25" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="increaseChance1" repetitions="50" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
@@ -3217,7 +3217,7 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <steppedValueSet variable="increaseChance" first="2" step="2" last="10"/>
     <enumeratedValueSet variable="memory">
-      <value value="48"/>
+      <value value="72"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
@@ -3257,7 +3257,7 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="increaseChance2" repetitions="25" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="increaseChance2" repetitions="50" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
@@ -3303,7 +3303,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="10" step="10" last="100"/>
+    <steppedValueSet variable="increaseChance" first="2" step="2" last="10"/>
     <enumeratedValueSet variable="memory">
       <value value="48"/>
     </enumeratedValueSet>

@@ -3217,7 +3217,7 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <steppedValueSet variable="increaseChance" first="2" step="2" last="10"/>
     <enumeratedValueSet variable="memory">
-      <value value="48"/>
+      <value value="72"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
@@ -3305,7 +3305,7 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <steppedValueSet variable="increaseChance" first="2" step="2" last="10"/>
     <enumeratedValueSet variable="memory">
-      <value value="48"/>
+      <value value="72"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
