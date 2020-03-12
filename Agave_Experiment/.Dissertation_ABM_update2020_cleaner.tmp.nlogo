@@ -2104,7 +2104,7 @@ NetLogo 6.0.2
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.3"/>
+      <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2521,9 +2521,7 @@ NetLogo 6.0.2
     <metric>totalUtilizedDisasterWindows</metric>
     <metric>totalOrgWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.3"/>
       <value value="0.4"/>
-      <value value="0.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -3564,7 +3562,7 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="decayAndWindow1" repetitions="50" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="decayAndWindow1" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
