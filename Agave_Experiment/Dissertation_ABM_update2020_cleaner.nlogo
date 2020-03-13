@@ -1739,7 +1739,7 @@ CHOOSER
 orgWindowGen
 orgWindowGen
 "allRandom" "diffused" "concentrated"
-1
+2
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -2875,7 +2875,7 @@ NetLogo 6.0.2
     <metric>totalUtilizedDisasterWindows</metric>
     <metric>totalOrgWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.3"/>
+      <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -3489,7 +3489,7 @@ NetLogo 6.0.2
     <metric>totalUtilizedDisasterWindows</metric>
     <metric>totalOrgWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.3"/>
+      <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -3518,7 +3518,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="1" step="1" last="20"/>
+    <steppedValueSet variable="increaseChance" first="1" step="1" last="10"/>
     <enumeratedValueSet variable="memory">
       <value value="48"/>
     </enumeratedValueSet>
@@ -3535,7 +3535,7 @@ NetLogo 6.0.2
       <value value="4.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="7490"/>
+      <value value="7463"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openWindows?">
       <value value="true"/>
