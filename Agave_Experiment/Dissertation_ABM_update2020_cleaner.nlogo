@@ -1212,7 +1212,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.3
+0.4
 0.01
 1
 NIL
@@ -1636,7 +1636,7 @@ increaseChance
 increaseChance
 0
 1
-1.0
+5.0E-4
 0.01
 1
 NIL
@@ -1673,7 +1673,7 @@ startingFund
 startingFund
 0
 100000
-5321.0
+7463.0
 1
 1
 NIL
@@ -1686,7 +1686,7 @@ SWITCH
 373
 limitedFund?
 limitedFund?
-1
+0
 1
 -1000
 
@@ -1725,7 +1725,7 @@ randomChance
 randomChance
 0
 0.001
-5.0E-4
+4.0E-4
 0.00001
 1
 NIL
@@ -2905,7 +2905,7 @@ NetLogo 6.0.2
       <value value="1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="increaseChance">
-      <value value="10"/>
+      <value value="0.1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="memory">
       <value value="48"/>
