@@ -1,0 +1,7 @@
+Exception in thread "main" java.lang.IllegalArgumentException: Invalid run, specify experiment name or setup file
+	at org.nlogo.headless.Main$.runExperiment(Main.scala:32)
+	at org.nlogo.headless.Main$.$anonfun$main$1(Main.scala:12)
+	at org.nlogo.headless.Main$.$anonfun$main$1$adapted(Main.scala:12)
+	at scala.Option.foreach(Option.scala:257)
+	at org.nlogo.headless.Main$.main(Main.scala:12)
+	at org.nlogo.headless.Main.main(Main.scala)
