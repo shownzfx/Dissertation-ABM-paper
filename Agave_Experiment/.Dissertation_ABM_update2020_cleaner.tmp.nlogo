@@ -623,7 +623,7 @@ to generate-orgWindows
   ask orgs [
     let filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)] pastWeather) ; find weahter intensity bigger than EW but smaller than disasterThreshold
     ifelse member? true filterEW
-      [ifelse random-float 1 < randomChance *  increaseChance
+      [ifelse random-float 1 < increaseChance
          [open-orgWindow]
          [set open-orgWindow? false]]
       [ifelse random-float 1 < randomChance
@@ -1623,7 +1623,7 @@ SWITCH
 298
 randomOrgWindows?
 randomOrgWindows?
-0
+1
 1
 -1000
 
@@ -1635,9 +1635,9 @@ SLIDER
 increaseChance
 increaseChance
 0
-10
-10.0
 1
+1.0
+0.01
 1
 NIL
 HORIZONTAL
@@ -3518,7 +3518,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="1" step="1" last="20"/>
+    <steppedValueSet variable="increaseChance" first="0" step="0.1" last="1"/>
     <enumeratedValueSet variable="memory">
       <value value="48"/>
     </enumeratedValueSet>
