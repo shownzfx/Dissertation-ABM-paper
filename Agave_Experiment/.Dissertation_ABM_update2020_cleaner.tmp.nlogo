@@ -3518,7 +3518,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="1" step="1" last="10"/>
+    <steppedValueSet variable="increaseChance" first="1" step="1" last="20"/>
     <enumeratedValueSet variable="memory">
       <value value="48"/>
     </enumeratedValueSet>
