@@ -505,6 +505,7 @@ to go
   search-solution
   check-implementation
   check-window
+  use-window
   FTAcheck-adaptation ; this is the FTAoffice procedure;
   if changeAspiration? [
     update-aspiration
@@ -1635,7 +1636,7 @@ SWITCH
 298
 randomOrgWindows?
 randomOrgWindows?
-1
+0
 1
 -1000
 
@@ -1698,7 +1699,7 @@ SWITCH
 373
 limitedFund?
 limitedFund?
-0
+1
 1
 -1000
 
@@ -1751,7 +1752,7 @@ CHOOSER
 orgWindowGen
 orgWindowGen
 "allRandom" "diffused" "concentrated" "controlNum"
-3
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -2533,7 +2534,9 @@ NetLogo 6.0.2
     <metric>totalUtilizedDisasterWindows</metric>
     <metric>totalOrgWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.3"/>
       <value value="0.4"/>
+      <value value="0.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
