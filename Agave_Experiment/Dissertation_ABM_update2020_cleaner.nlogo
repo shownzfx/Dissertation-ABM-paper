@@ -288,6 +288,10 @@ to setup-orgWindows
         ]
      ]
   ]
+
+  if orgWindowGen = "twoWindows"
+
+
 end
 
 
@@ -1751,7 +1755,7 @@ CHOOSER
 440
 orgWindowGen
 orgWindowGen
-"allRandom" "diffused" "concentrated" "controlNum"
+"allRandom" "diffused" "concentrated" "controlNum" "twoWindows"
 0
 
 @#$#@#$#@
