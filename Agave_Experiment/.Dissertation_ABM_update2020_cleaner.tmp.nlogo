@@ -655,12 +655,12 @@ end
 
 to generate-orgWindows
   ask orgs [
-    let filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)] pastWeather) ; find weahter intensity bigger than EW but smaller than disasterThreshold
+    let filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)] pastWeather) ; find weahter intensity bigger than EW
     ifelse member? true filterEW
-      [ifelse random-float 1 < increaseChance
+      [ifelse random-float 1 < increaseChance ;prob of opportunities after events
          [open-orgWindow]
          [set open-orgWindow? false]]
-      [ifelse random-float 1 < randomChance
+      [ifelse random-float 1 < randomChance  ; prob of opportunities far away from events
        [open-orgWindow]
       [set open-orgWindow? false]]
   ]
@@ -1246,7 +1246,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 2
-0.4
+0.9
 0.01
 1
 NIL
@@ -1532,7 +1532,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.03
+0.012
 0.001
 1
 NIL
@@ -1592,7 +1592,7 @@ memory
 memory
 0
 96
-1000.0
+48.0
 1
 1
 NIL
@@ -1657,7 +1657,7 @@ SWITCH
 298
 randomOrgWindows?
 randomOrgWindows?
-1
+0
 1
 -1000
 
@@ -1720,7 +1720,7 @@ SWITCH
 373
 limitedFund?
 limitedFund?
-0
+1
 1
 -1000
 
@@ -3803,10 +3803,12 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0" step="0.02" last="0.06"/>
+    <steppedValueSet variable="increaseChance" first="0.02" step="0.02" last="0.06"/>
     <enumeratedValueSet variable="memory">
-      <value value="500"/>
-      <value value="1000"/>
+      <value value="0"/>
+      <value value="2"/>
+      <value value="5"/>
+      <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
