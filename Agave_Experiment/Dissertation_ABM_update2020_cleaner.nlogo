@@ -1246,7 +1246,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 2
-0.4
+0.9
 0.01
 1
 NIL
@@ -1532,7 +1532,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.03
+0.012
 0.001
 1
 NIL
@@ -1592,7 +1592,7 @@ memory
 memory
 0
 96
-1000.0
+48.0
 1
 1
 NIL
@@ -1657,7 +1657,7 @@ SWITCH
 298
 randomOrgWindows?
 randomOrgWindows?
-1
+0
 1
 -1000
 
@@ -1720,7 +1720,7 @@ SWITCH
 373
 limitedFund?
 limitedFund?
-0
+1
 1
 -1000
 
