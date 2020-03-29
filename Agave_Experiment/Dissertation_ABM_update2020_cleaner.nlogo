@@ -3804,9 +3804,9 @@ NetLogo 6.0.2
       <value value="1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="increaseChance">
-      <value value="0.01"/>
+      <value value="0.001"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="memory" first="0" step="2" last="24"/>
+    <steppedValueSet variable="memory" first="0" step="1" last="10"/>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
     </enumeratedValueSet>
