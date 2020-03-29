@@ -1245,8 +1245,8 @@ SLIDER
 meanRiskThreshold
 meanRiskThreshold
 0
-1
-2.0
+2
+1.1
 0.01
 1
 NIL
@@ -3691,7 +3691,7 @@ NetLogo 6.0.2
     <metric>sufficientCap</metric>
     <metric>totalUtilizedDisasterWindows</metric>
     <metric>totalOrgWindows</metric>
-    <steppedValueSet variable="meanRiskThreshold" first="1" step="0.5" last="2"/>
+    <steppedValueSet variable="meanRiskThreshold" first="0.8" step="0.2" last="1.4"/>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
@@ -3728,10 +3728,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="EWProbDecay">
-      <value value="0"/>
-      <value value="0.03"/>
-    </enumeratedValueSet>
+    <steppedValueSet variable="EWProbDecay" first="0" step="0.01" last="0.03"/>
     <enumeratedValueSet variable="openWindows?">
       <value value="true"/>
     </enumeratedValueSet>
