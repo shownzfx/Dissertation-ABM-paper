@@ -3803,13 +3803,10 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0.02" step="0.02" last="0.06"/>
-    <enumeratedValueSet variable="memory">
-      <value value="0"/>
-      <value value="2"/>
-      <value value="5"/>
-      <value value="10"/>
+    <enumeratedValueSet variable="increaseChance">
+      <value value="0.02"/>
     </enumeratedValueSet>
+    <steppedValueSet variable="memory" first="1" step="4" last="25"/>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
     </enumeratedValueSet>
