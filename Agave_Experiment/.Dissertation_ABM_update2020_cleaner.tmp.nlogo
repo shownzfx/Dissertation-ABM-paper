@@ -1246,7 +1246,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 1
-0.4
+1.0
 0.01
 1
 NIL
@@ -1773,7 +1773,7 @@ CHOOSER
 orgWindowGen
 orgWindowGen
 "allRandom" "diffused" "concentrated" "controlNum" "twoWindows" "oneWindow"
-4
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -2367,95 +2367,6 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
-    </enumeratedValueSet>
-  </experiment>
-  <experiment name="randomBoost" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
-    <setup>setup</setup>
-    <go>go</go>
-    <exitCondition>ticks &gt;= 1000</exitCondition>
-    <metric>count orgs with [adaptation-change?]</metric>
-    <metric>totalFunding</metric>
-    <metric>fundAvailable</metric>
-    <metric>totalInsufBoost</metric>
-    <metric>totalDisasterWindows</metric>
-    <metric>totalwindowMissed</metric>
-    <metric>totalWindowOpen</metric>
-    <metric>totalNoSolution</metric>
-    <metric>totalUtilizedWindows</metric>
-    <metric>totalNeededWidows</metric>
-    <metric>sufficientCap</metric>
-    <metric>totalUtilizedDisasterWindows</metric>
-    <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="scanningRange">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="badImpact">
-      <value value="0.08"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="numWindows">
-      <value value="10"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="impactReductionRate">
-      <value value="0.25"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="maxCopingReduction">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="capBoost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="simTicks">
-      <value value="1000"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="minNeighbor">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <steppedValueSet variable="memory" first="24" step="24" last="72"/>
-    <enumeratedValueSet variable="b1">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="disasterUti">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="EWProbDecay">
-      <value value="0.03"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="startingFund">
-      <value value="4800"/>
-      <value value="5500"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="increaseChance">
-      <value value="2"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="open-windows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="change-aspiration?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="trigger-network?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-riskThresh?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-orgWindows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="limitedFund?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomBoost?">
-      <value value="true"/>
-      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="baseline" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
@@ -3074,182 +2985,6 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="othersInf?">
       <value value="false"/>
-    </enumeratedValueSet>
-  </experiment>
-  <experiment name="increaseChance1" repetitions="50" sequentialRunOrder="false" runMetricsEveryStep="false">
-    <setup>setup</setup>
-    <go>go</go>
-    <exitCondition>ticks &gt;= 1000</exitCondition>
-    <metric>count orgs with [adaptation-change?]</metric>
-    <metric>totalFunding</metric>
-    <metric>totalInsufBoost</metric>
-    <metric>totalDisasterWindows</metric>
-    <metric>totalwindowMissed</metric>
-    <metric>totalWindowOpen</metric>
-    <metric>totalNoSolution</metric>
-    <metric>totalUtilizedWindows</metric>
-    <metric>totalNeededWidows</metric>
-    <metric>sufficientCap</metric>
-    <metric>totalUtilizedDisasterWindows</metric>
-    <metric>totalOrgWindows</metric>
-    <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="scanningRange">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="badImpact">
-      <value value="0.08"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="numWindows">
-      <value value="10"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="impactReductionRate">
-      <value value="0.25"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="maxCopingReduction">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="capBoost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="simTicks">
-      <value value="1000"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="minNeighbor">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="2" step="2" last="10"/>
-    <enumeratedValueSet variable="memory">
-      <value value="72"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="b1">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="disasterUti">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <steppedValueSet variable="EWProbDecay" first="0" step="0.006" last="0.03"/>
-    <enumeratedValueSet variable="randomChance">
-      <value value="4.0E-4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="startingFund">
-      <value value="7490"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="openWindows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="changeAspiration?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="triggerNetwork?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomRiskThresh?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomOrgWindows?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="limitedFund?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomBoost?">
-      <value value="true"/>
-    </enumeratedValueSet>
-  </experiment>
-  <experiment name="increaseChance2" repetitions="50" sequentialRunOrder="false" runMetricsEveryStep="false">
-    <setup>setup</setup>
-    <go>go</go>
-    <exitCondition>ticks &gt;= 1000</exitCondition>
-    <metric>count orgs with [adaptation-change?]</metric>
-    <metric>totalFunding</metric>
-    <metric>totalInsufBoost</metric>
-    <metric>totalDisasterWindows</metric>
-    <metric>totalwindowMissed</metric>
-    <metric>totalWindowOpen</metric>
-    <metric>totalNoSolution</metric>
-    <metric>totalUtilizedWindows</metric>
-    <metric>totalNeededWidows</metric>
-    <metric>sufficientCap</metric>
-    <metric>totalUtilizedDisasterWindows</metric>
-    <metric>totalOrgWindows</metric>
-    <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="scanningRange">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="badImpact">
-      <value value="0.08"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="numWindows">
-      <value value="10"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="impactReductionRate">
-      <value value="0.25"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="maxCopingReduction">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="capBoost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="simTicks">
-      <value value="1000"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="minNeighbor">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="2" step="2" last="10"/>
-    <enumeratedValueSet variable="memory">
-      <value value="72"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="b1">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="disasterUti">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <steppedValueSet variable="EWProbDecay" first="0" step="0.006" last="0.03"/>
-    <enumeratedValueSet variable="randomChance">
-      <value value="4.0E-4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="startingFund">
-      <value value="7490"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="openWindows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="changeAspiration?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="triggerNetwork?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomRiskThresh?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomOrgWindows?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="limitedFund?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomBoost?">
-      <value value="true"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="increaseChance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
@@ -3912,6 +3647,91 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.005" last="0.03"/>
+    <enumeratedValueSet variable="openWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="changeAspiration?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="triggerNetwork?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomRiskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomOrgWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="orgWindowGen">
+      <value value="&quot;allRandom&quot;"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="highTolerance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
+    <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
+    <metric>totalInsufBoost</metric>
+    <metric>totalDisasterWindows</metric>
+    <metric>totalwindowMissed</metric>
+    <metric>totalWindowOpen</metric>
+    <metric>totalNoSolution</metric>
+    <metric>totalUtilizedWindows</metric>
+    <metric>totalNeededWidows</metric>
+    <metric>sufficientCap</metric>
+    <metric>totalUtilizedDisasterWindows</metric>
+    <metric>totalOrgWindows</metric>
+    <steppedValueSet variable="meanRiskThreshold" first="1" step="0.5" last="2"/>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="badImpact">
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="numWindows">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="memory">
+      <value value="48"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b1">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="disasterUti">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0"/>
+      <value value="0.03"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="openWindows?">
       <value value="true"/>
     </enumeratedValueSet>
