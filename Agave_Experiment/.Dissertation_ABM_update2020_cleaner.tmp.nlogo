@@ -1246,7 +1246,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 2
-1.1
+0.4
 0.01
 1
 NIL
@@ -1532,7 +1532,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.0
+0.03
 0.001
 1
 NIL
@@ -1592,7 +1592,7 @@ memory
 memory
 0
 96
-48.0
+1000.0
 1
 1
 NIL
@@ -1657,7 +1657,7 @@ SWITCH
 298
 randomOrgWindows?
 randomOrgWindows?
-0
+1
 1
 -1000
 
@@ -1670,7 +1670,7 @@ increaseChance
 increaseChance
 0
 1
-5.0E-4
+0.06
 0.01
 1
 NIL
@@ -1720,7 +1720,7 @@ SWITCH
 373
 limitedFund?
 limitedFund?
-1
+0
 1
 -1000
 
@@ -3757,7 +3757,7 @@ NetLogo 6.0.2
       <value value="&quot;allRandom&quot;"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="InceaseChanceMemory" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="inceaseChanceMemory" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>

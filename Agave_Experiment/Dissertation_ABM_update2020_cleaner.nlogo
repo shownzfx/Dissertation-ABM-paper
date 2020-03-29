@@ -3757,7 +3757,7 @@ NetLogo 6.0.2
       <value value="&quot;allRandom&quot;"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="InceaseChanceMemory" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="inceaseChanceMemory" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
