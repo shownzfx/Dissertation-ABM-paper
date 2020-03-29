@@ -1599,7 +1599,7 @@ disasterUti
 disasterUti
 0
 1
-0.025
+0.015
 0.01
 1
 NIL
@@ -3812,10 +3812,10 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="disasterUti" first="0" step="0.005" last="0.03"/>
-    <enumeratedValueSet variable="EWProbDecay">
+    <enumeratedValueSet variable="disasterUti">
       <value value="0.03"/>
     </enumeratedValueSet>
+    <steppedValueSet variable="EWProbDecay" first="0" step="0.005" last="0.03"/>
     <enumeratedValueSet variable="openWindows?">
       <value value="true"/>
     </enumeratedValueSet>
