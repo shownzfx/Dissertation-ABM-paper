@@ -3810,7 +3810,7 @@ NetLogo 6.0.2
       <value value="0.005"/>
       <value value="0.01"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="memory" first="1" step="3" last="24"/>
+    <steppedValueSet variable="memory" first="1" step="3" last="25"/>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
     </enumeratedValueSet>
