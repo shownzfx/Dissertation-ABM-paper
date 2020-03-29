@@ -3805,8 +3805,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="increaseChance">
       <value value="0.02"/>
+      <value value="0.001"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="memory" first="1" step="4" last="25"/>
+    <steppedValueSet variable="memory" first="1" step="10" last="30"/>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
     </enumeratedValueSet>
@@ -3817,7 +3818,7 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomChance">
-      <value value="4.0E-4"/>
+      <value value="5.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
       <value value="7463"/>
