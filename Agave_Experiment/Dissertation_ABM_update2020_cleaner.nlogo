@@ -299,6 +299,14 @@ to setup-orgWindows
     ]
   ]
 
+    if orgWindowGen = "oneWindow"
+  [
+     ask orgs [
+      let n random 1000
+      set orgWindows sentence n orgWindows
+    ]
+  ]
+
 
 
 end
@@ -1524,7 +1532,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.03
+0.025
 0.001
 1
 NIL
@@ -1599,7 +1607,7 @@ disasterUti
 disasterUti
 0
 1
-0.025
+0.03
 0.01
 1
 NIL
@@ -1764,7 +1772,7 @@ CHOOSER
 440
 orgWindowGen
 orgWindowGen
-"allRandom" "diffused" "concentrated" "controlNum" "twoWindows"
+"allRandom" "diffused" "concentrated" "controlNum" "twoWindows" "oneWindow"
 4
 
 @#$#@#$#@
@@ -3812,10 +3820,10 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="disasterUti" first="0" step="0.005" last="0.03"/>
-    <enumeratedValueSet variable="EWProbDecay">
+    <enumeratedValueSet variable="disasterUti">
       <value value="0.03"/>
     </enumeratedValueSet>
+    <steppedValueSet variable="EWProbDecay" first="0" step="0.005" last="0.03"/>
     <enumeratedValueSet variable="openWindows?">
       <value value="true"/>
     </enumeratedValueSet>
@@ -3842,6 +3850,90 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="orgWindowGen">
       <value value="&quot;twoWindows&quot;"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="oneWindow" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
+    <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
+    <metric>totalInsufBoost</metric>
+    <metric>totalDisasterWindows</metric>
+    <metric>totalwindowMissed</metric>
+    <metric>totalWindowOpen</metric>
+    <metric>totalNoSolution</metric>
+    <metric>totalUtilizedWindows</metric>
+    <metric>totalNeededWidows</metric>
+    <metric>sufficientCap</metric>
+    <metric>totalUtilizedDisasterWindows</metric>
+    <metric>totalOrgWindows</metric>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="badImpact">
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="numWindows">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="memory">
+      <value value="48"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b1">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="disasterUti">
+      <value value="0.03"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="EWProbDecay" first="0" step="0.005" last="0.03"/>
+    <enumeratedValueSet variable="openWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="changeAspiration?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="triggerNetwork?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomRiskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomOrgWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="orgWindowGen">
+      <value value="&quot;oneWindow&quot;"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
