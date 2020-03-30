@@ -3809,8 +3809,16 @@ NetLogo 6.0.2
       <value value="0.0025"/>
       <value value="0.005"/>
       <value value="0.01"/>
+      <value value="0.02"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="memory" first="1" step="3" last="25"/>
+    <enumeratedValueSet variable="memory">
+      <value value="1"/>
+      <value value="2"/>
+      <value value="6"/>
+      <value value="12"/>
+      <value value="24"/>
+      <value value="48"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="b1">
       <value value="0.3"/>
     </enumeratedValueSet>
