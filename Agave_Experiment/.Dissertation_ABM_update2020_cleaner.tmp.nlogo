@@ -811,7 +811,7 @@ end
 
 to use-funding
 
-  ifelse declared? ; limitations about how to use fund from declaration
+  ifelse member? ticks disasterWindows ; limitations about how to use fund from declaration
   [if random-float 1 < disasterUti [adaptation-discretion]]
   [adaptation-discretion]
 end
@@ -1313,7 +1313,7 @@ numWindows
 numWindows
 0
 20
-10.0
+0.0
 1
 1
 NIL
@@ -1532,7 +1532,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.012
+0.0
 0.001
 1
 NIL
@@ -1773,7 +1773,7 @@ CHOOSER
 orgWindowGen
 orgWindowGen
 "allRandom" "diffused" "concentrated" "controlNum" "twoWindows" "oneWindow"
-0
+5
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -3647,6 +3647,7 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
+      <value value="0"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.005" last="0.03"/>
     <enumeratedValueSet variable="openWindows?">
