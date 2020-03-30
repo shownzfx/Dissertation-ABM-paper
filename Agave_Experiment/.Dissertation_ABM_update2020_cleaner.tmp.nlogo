@@ -3813,6 +3813,7 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="memory">
       <value value="1"/>
+      <value value="2"/>
       <value value="6"/>
       <value value="12"/>
       <value value="24"/>
