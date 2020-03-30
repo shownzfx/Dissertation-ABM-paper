@@ -3476,7 +3476,8 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="disasterUti">
-      <value value="0.03"/>
+      <value value="0.3"/>
+      <value value="0"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.005" last="0.03"/>
     <enumeratedValueSet variable="openWindows?">
@@ -3560,7 +3561,8 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="disasterUti">
-      <value value="0.03"/>
+      <value value="0.3"/>
+      <value value="0"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.005" last="0.03"/>
     <enumeratedValueSet variable="openWindows?">
@@ -3644,7 +3646,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="disasterUti">
-      <value value="0.03"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.005" last="0.03"/>
     <enumeratedValueSet variable="openWindows?">
