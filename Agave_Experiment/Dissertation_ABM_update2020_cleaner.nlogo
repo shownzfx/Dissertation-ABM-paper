@@ -3870,11 +3870,12 @@ NetLogo 6.0.2
       <value value="1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="increaseChance">
-      <value value="5.0E-4"/>
       <value value="0.01"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="memory">
       <value value="1"/>
+      <value value="2"/>
+      <value value="4"/>
       <value value="6"/>
       <value value="12"/>
       <value value="24"/>
