@@ -141,6 +141,8 @@ to setup
 ;  record-weather-norm
   setup-network
 
+
+
     reset-ticks
 
 
@@ -158,6 +160,8 @@ to import-orgs
       set agencyID item 0 row
       set capacity item 2 row
       set capacity capacity - (- 1.57) ; -1.57 is the min capacity
+      if enoughCap?
+      [set capacity capacity + 10]
       set originalCapacity capacity
       set region item 3 row
       set disasterProb item 6 row + random-float 0.02
@@ -190,9 +194,6 @@ to setup-orgs
     set shape "circle"
     set size 0.6
     set extremeWeatherFreq 0
-
-;    set resilience 2 + random-float 1 ;resilience is the ax magnitude of disturbances that can be tolerated before incurring impacts, can be negative
-;    set initialResilience resilience
     set not-found? false
     set copingLimit 0
     set windows []
@@ -554,12 +555,6 @@ to go
 ;  print profiler:report
 
 
-;  if ticks mod simTicks = 0 [
-;  ask orgs [
-;    set orgWindows update-windows
-;    set windows orgWindows
-;  ]
-; ]
 
 ; if ticks >= simTicks [stop]
 end
@@ -1246,7 +1241,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 2
-0.9
+0.4
 0.01
 1
 NIL
@@ -1275,7 +1270,7 @@ SLIDER
 adaptationCost
 adaptationCost
 0
-7
+10
 4.0
 0.1
 1
@@ -1313,7 +1308,7 @@ numWindows
 numWindows
 0
 20
-0.0
+10.0
 1
 1
 NIL
@@ -1532,7 +1527,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.0
+0.03
 0.001
 1
 NIL
@@ -1766,14 +1761,25 @@ NIL
 HORIZONTAL
 
 CHOOSER
-940
-395
-1078
-440
+950
+450
+1088
+495
 orgWindowGen
 orgWindowGen
 "allRandom" "diffused" "concentrated" "controlNum" "twoWindows" "oneWindow"
-5
+0
+
+SWITCH
+945
+385
+1067
+418
+enoughCap?
+enoughCap?
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -2204,6 +2210,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="limitedFund?">
       <value value="false"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="zeroTolerance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -2286,6 +2295,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="noWindow" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -2367,6 +2379,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="baseline" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
@@ -2455,6 +2470,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="orgWindowGen">
       <value value="&quot;allRandom&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="limitedFund" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
@@ -2546,6 +2564,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="network" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -2629,6 +2650,9 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="othersInf?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
@@ -2724,6 +2748,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="reduceWindows" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -2814,6 +2841,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="otherInf" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -2902,6 +2932,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="othersInf?">
       <value value="true"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="officeRole" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -2986,6 +3019,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="othersInf?">
       <value value="false"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="increaseChance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -3075,6 +3111,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="decayAndWindow1" repetitions="50" sequentialRunOrder="false" runMetricsEveryStep="false">
@@ -3158,6 +3197,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="orgWindowGen">
       <value value="&quot;allRandom&quot;"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="decayAndWindow2" repetitions="50" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -3239,6 +3281,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="orgWindowGen">
       <value value="&quot;allRandom&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="increaseChance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
@@ -3329,6 +3374,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="increaseChanceBase" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
@@ -3422,6 +3470,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="twoWindows" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -3506,6 +3557,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="orgWindowGen">
       <value value="&quot;twoWindows&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="oneWindow" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
@@ -3592,6 +3646,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="orgWindowGen">
       <value value="&quot;oneWindow&quot;"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="zeroOrgWindow" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -3677,6 +3734,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="orgWindowGen">
       <value value="&quot;allRandom&quot;"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="highTolerance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
@@ -3759,8 +3819,11 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="orgWindowGen">
       <value value="&quot;allRandom&quot;"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
+    </enumeratedValueSet>
   </experiment>
-  <experiment name="inceaseChanceMemory" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="decayMemory" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
@@ -3808,15 +3871,10 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="increaseChance">
       <value value="5.0E-4"/>
-      <value value="0.001"/>
-      <value value="0.0025"/>
-      <value value="0.005"/>
       <value value="0.01"/>
-      <value value="0.02"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="memory">
       <value value="1"/>
-      <value value="2"/>
       <value value="6"/>
       <value value="12"/>
       <value value="24"/>
@@ -3828,9 +3886,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="EWProbDecay">
-      <value value="0.03"/>
-    </enumeratedValueSet>
+    <steppedValueSet variable="EWProbDecay" first="0" step="0.006" last="0.03"/>
     <enumeratedValueSet variable="randomChance">
       <value value="5.0E-4"/>
     </enumeratedValueSet>
@@ -3859,6 +3915,99 @@ NetLogo 6.0.2
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap?">
+      <value value="false"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="bigCap" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
+    <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
+    <metric>totalInsufBoost</metric>
+    <metric>totalDisasterWindows</metric>
+    <metric>totalwindowMissed</metric>
+    <metric>totalWindowOpen</metric>
+    <metric>totalNoSolution</metric>
+    <metric>totalUtilizedWindows</metric>
+    <metric>totalNeededWidows</metric>
+    <metric>sufficientCap</metric>
+    <metric>totalUtilizedDisasterWindows</metric>
+    <metric>totalOrgWindows</metric>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="badImpact">
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="numWindows">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="memory">
+      <value value="48"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b1">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="disasterUti">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.03"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="openWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="changeAspiration?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="triggerNetwork?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomRiskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomOrgWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="orgWindowGen">
+      <value value="&quot;allRandom&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap?">
+      <value value="false"/>
       <value value="true"/>
     </enumeratedValueSet>
   </experiment>
