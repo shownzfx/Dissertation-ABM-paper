@@ -3875,9 +3875,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="memory">
       <value value="1"/>
       <value value="2"/>
-      <value value="4"/>
       <value value="6"/>
-      <value value="12"/>
       <value value="24"/>
       <value value="48"/>
     </enumeratedValueSet>
@@ -3887,7 +3885,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="EWProbDecay" first="0" step="0.006" last="0.03"/>
+    <steppedValueSet variable="EWProbDecay" first="0" step="0.006" last="0.06"/>
     <enumeratedValueSet variable="randomChance">
       <value value="5.0E-4"/>
     </enumeratedValueSet>
