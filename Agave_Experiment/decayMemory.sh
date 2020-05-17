@@ -16,7 +16,7 @@
 bash /home/fzhang59/NetLogo\ 6.0.2/netlogo-headless.sh \
 --model Dissertation_ABM_update2020_cleaner.nlogo \
 --experiment decayMemory \
---table decayMemory5500Runs_05152020.csv \
+--table decayMemory8800Runs_05152020.csv \
 --threads 28
 
 

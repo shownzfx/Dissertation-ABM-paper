@@ -3871,12 +3871,12 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="increaseChance">
       <value value="0.01"/>
+      <value value="0.1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="memory">
       <value value="1"/>
       <value value="2"/>
       <value value="6"/>
-      <value value="24"/>
       <value value="48"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="b1">
