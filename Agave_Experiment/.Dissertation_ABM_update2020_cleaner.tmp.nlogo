@@ -2384,7 +2384,7 @@ NetLogo 6.0.2
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="baseline" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="noDecay" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks &gt;= 1000</exitCondition>
@@ -2401,9 +2401,7 @@ NetLogo 6.0.2
     <metric>totalUtilizedDisasterWindows</metric>
     <metric>totalOrgWindows</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.3"/>
       <value value="0.4"/>
-      <value value="0.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2442,7 +2440,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="EWProbDecay">
-      <value value="0.03"/>
+      <value value="0"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openWindows?">
       <value value="true"/>
@@ -2471,7 +2469,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="orgWindowGen">
       <value value="&quot;allRandom&quot;"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="enoughCap">
+    <enumeratedValueSet variable="enoughCap?">
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
