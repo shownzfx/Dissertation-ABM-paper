@@ -550,14 +550,8 @@ to check-weather
 
 
   if not extremeWeather?
-  [
-    ifelse othersInf?
-    [
-      if (any? org-sameReg-link-neighbors with [disaster?]) and (random-float 1 < 0.1)
-      [set expectedEWProb expectedEWProb * (1 + random-float 0.005)]
-    ]
-    [set expectedEWProb expectedEWProb * (1 - (EWProbDecay ))] ; extremeweatherevent did not happen, then expectedprob decrease
-  ]
+  [ set expectedEWProb expectedEWProb * (1 - (EWProbDecay ))] ; extremeweatherevent did not happen, then expectedprob decrease
+
 
      if expectedEWProb >= 0.25 [set expectedEWProb  0.25] ; upper limit of expected prob
      if expectedEWProb <= 0.01 [set expectedEWProb 0.01] ; bottom limit of expected prob
@@ -1119,21 +1113,6 @@ meanRiskThreshold
 meanRiskThreshold
 0
 2
-0.58
-0.01
-1
-NIL
-HORIZONTAL
-
-SLIDER
-0
-140
-150
-173
-maxCopingReduction
-maxCopingReduction
-0
-0.5
 0.4
 0.01
 1
@@ -1259,17 +1238,6 @@ SWITCH
 randomRiskThresh?
 randomRiskThresh?
 0
-1
--1000
-
-SWITCH
-865
-130
-975
-163
-othersInf?
-othersInf?
-1
 1
 -1000
 
@@ -2179,6 +2147,16 @@ NetLogo 6.0.2
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
     <metric>fundAvailable</metric>
+    <metric>totalOpportunitiesMissed</metric>
+    <metric>totalOptOpen</metric>
+    <metric>totalInsufBoost</metric>
+    <metric>totalNoSolution</metric>
+    <metric>totalDisasterOpportunities</metric>
+    <metric>totalUtilizedDisasterOpportunities</metric>
+    <metric>totalUtilizedOpportunities</metric>
+    <metric>totalNeededOpportunities</metric>
+    <metric>sufficientCap</metric>
+    <metric>totalUtilized</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
       <value value="0.4"/>
       <value value="0.5"/>
@@ -2192,9 +2170,6 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="maxCopingReduction">
-      <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
       <value value="4"/>
@@ -2223,26 +2198,26 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="triggerNetwork?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole?">
-      <value value="true"/>
-    </enumeratedValueSet>
     <enumeratedValueSet variable="randomRiskThresh?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="randomOrgWindows?">
+    <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomOrgOpt?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="limitedFund?">
       <value value="false"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="randomBoost?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="orgWindowGen">
-      <value value="&quot;allRandom&quot;"/>
-    </enumeratedValueSet>
     <enumeratedValueSet variable="enoughCap?">
       <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="orgOptCap">
+      <value value="&quot;allRandom&quot;"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="limitedFund" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
