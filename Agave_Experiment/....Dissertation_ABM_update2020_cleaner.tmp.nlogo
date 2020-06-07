@@ -10,10 +10,10 @@ undirected-link-breed [org-sameReg-links org-sameReg-link]
 undirected-link-breed [org-diffReg-links org-diffReg-link]
 undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 
-globals [strategies regionDiv tempXcor tempYcor tempXcorList tempYcorList totalWindowMissed
-         totalWindowOpen totalInsufBoost totalNoSolution totalDisasterWindows
-          totalUtilizedWindows totalNeededWidows sufficientCap totalUtilizedDisasterWindows logFile
-         BS-output totalFunding fundAvailable totalOrgWindows]
+globals [regionDiv totalOpportunitiesMissed
+         totalOptOpen totalInsufBoost totalNoSolution totalDisasterOpportunities totalUtilizedDisasterOpportunities
+          totalUtilizedOpportunities totalNeededOpportunities sufficientCap totalUtilized  logFile
+         BS-output totalFunding fundAvailable totalOrgOpportunities]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost adaptation? ]; solutions include both non-adaptation and adaptation measures
@@ -24,163 +24,128 @@ FTAoffices-own [projectInventory]
 orgs-own [
   agencyID
   region
-  leader?
   diffRegionNeighbors
   partner
   insufBoost?
   target-patches
   extremeWeatherProb
-  disasterFreq
   disasterProb
   extremeWeatherThreshold
   disasterThreshold
   extremeWeather? ; boolean whether the weather is extreme
-  severityMax
-  weatherSeverityExp ; document an org's weatherSeverity over 200 years to find the norm and extremes
+  weatherIntensityExp ; document an org's weatherIntensity over 200 years to find the norm and extremes
   diaster?
-  weatherSeverity
+  weatherIntensity
   solEfficacy
-  originalEfficacy
-  maxCopingEfficacy
+  anticipatedMitigation
   FTARegion
-  passRate
   declarationRate
   declared?
   postponed?
   knownSolutions
   targetSolCost
   search-adaptation?
-  missedWindows
-  utilizedWindow?
+  missedOpportunities
+  utilizedOpportunity?
   insufBoost?
-  insufBoostTicks
+  not-found?
   knownSolFromOffice
   regionalNeighbors
-  resilience  ; higher resilience means lower impact on agencies in extreme weather
   capacity ;used to decide if orgs have sufficient capacity to implement solutions
   originalCapacity
-  extremeWeatherFreq
+  regionIntensityMean
   impactPerTick
   impactExp
   copingLimit
-;  freqImpactExp ; cumulative
-  weatherSeverityImpactExp
-  pastWeather
-  weatherImpactExp
-  expectedBadWeatherSeverity
-  innovation-ready?
-  copingChangeTicks
-  extremeWeatherSeverity
-  crossRiskThresholdTicks
+  pastWeatherIntensity
+  worstWeatherIntensity
   expectedEWProb
   riskPerception
   riskTolerance
-  windows
-  window-open?
-  lack-motivation??
-  used-disasterWindow?
-  orgWindows
-  disasterWindows
+  opportunities
+  opportunity-open?
+  used-disasterOpt?
+  orgOpportunities
+  disasterOpportunities
   current-solution
   targetSolution
   targetSolCost
-  not-found?
   coping-change?
   adaptation-change?
-  adaptTicks
-  adaptNum
   disaster? ; whether happened disater or not
   satisfied?
   solution-ready?
-  no-solAttached?
-  currentAspiration
-  previousAspiration
-  currentAspiration
-  currentImpact
   previousImpact
-  referenceGroup
-  normalizedImpact
-  originalRiskPerception
-  originalRiskTolerance
-  allReference
-  myReference
-  open-orgWindow?
-  used-orgWindow?
-  open-disasterWindow?
+  open-orgOpportunity?
+  used-orgOpportunity?
+  used-disasterOpportunity?
+  open-disasterOpportunity?
   lack-motivation?
+  regionEWProbMean
+  regionDisaterProbMean
+  filterEW
 ]
 
 
 to setup
   ca
 ;  profiler:start
-
 ;  set logFile (word "log" (random 100000) ".txt")
 
-  set strategies ["routine" "adaptation"]
   set-default-shape solutions "box"
   set fundAvailable startingFund
-  set totalWindowMissed 0
+  set totalOpportunitiesMissed 0
   set totalInsufBoost 0
-  set totalWindowOpen 0
+  set totalOptOpen 0
   set totalNoSolution 0
-  set totalDisasterWindows 0
-  set totalUtilizedWindows 0
-  set totalNeededWidows 0
-  set totalUtilizedDisasterWindows 0
+  set totalDisasterOpportunities 0
+  set totalUtilizedOpportunities 0
+  set totalNeededOpportunities 0
+  set totalUtilizedDisasterOpportunities 0
   set sufficientCap 0
   set totalFunding 0
   import-orgs
   setup-orgs
-  if randomOrgWindows?  ; whether to set up orgwindows at the model setup, otherwise windows need to be generated based on EW
-  [setup-orgWindows]
+
+  if randomOrgOpt?  ; whether to set up orgOpportunities at the model setup, otherwise Opportunities need to be generated based on EW
+  [setup-orgOpportunities]
   distribute-orgs
   setup-regionalRiskThreshold
   setup-FTARegion
   setup-solutions
-;  record-weather-norm
+ ;record-weather-norm  ; only use it when not using hard coded threshold values for weather intensity
   setup-network
 
 
-
     reset-ticks
-
-
 
 end
 
 
 
 to import-orgs
-  file-open "Transit agencies ABM_noHeader.csv"
+  file-open "Transit agencies ABM clean noHeader_062020.csv"
   while [not file-at-end?]
   [
     let row csv:from-row file-read-line
     create-orgs  1 [
       set agencyID item 0 row
-      set capacity item 2 row
-      set capacity capacity - (- 1.57) ; -1.57 is the min capacity
+      set capacity item 1 row + 1.57 ; -1.57 is the min capacity
       if enoughCap?
       [set capacity capacity + 10]
       set originalCapacity capacity
-      set region item 3 row
-      set disasterProb item 6 row + random-float 0.02
-      set passRate (item 7 row + random-float 0.02 ) * (1 / 24)
-      set declarationRate item 14 row
-      set FTARegion item 10 row
-      set extremeWeatherProb item 12 row + random-float 0.05
-      set extremeWeatherThreshold item 15 row
-      set disasterThreshold item 16 row
-      set expectedBadWeatherSeverity item 17 row
-;
+      set region item 2 row
+      set FTARegion item 4 row
+      set declarationRate (item 5 row + random-float 0.02 ) * (1 / 24) ;
+      set extremeWeatherProb item 6 row
       set expectedEWprob extremeWeatherProb
-      set riskPerception (expectedBadWeatherSeverity -  solEfficacy) * expectedEWprob
-      if riskPerception < 0 [set riskPerception 0]
-      set maxcopingefficacy 0
-      set maxCopingEfficacy  maxCopingReduction * expectedBadWeatherSeverity  ; the maximum risk reduction coping measures can acheive,do not multiple ewprob
+      set disasterProb item 7 row
+      set extremeWeatherThreshold item 8 row
+      set disasterThreshold item 9 row
+      set worstWeatherIntensity item 10 row
+
       If extremeWeatherProb < disasterProb [
          print "extremeWeatherProb is smaller than disasterProb"
-         set extremeWeatherProb disasterProb + 0.01
       ]
     ]
  ]
@@ -188,33 +153,30 @@ to import-orgs
   file-close
 end
 
+
+
+
 to setup-orgs
   ask orgs [
     set color white
     set shape "circle"
     set size 0.6
-    set extremeWeatherFreq 0
     set not-found? false
     set copingLimit 0
-    set windows []
-    set orgWindows []
-    set disasterWindows []
-    set insufBoostTicks []
+    set anticipatedMitigation 0
+    set Opportunities []
+    set orgOpportunities []
+    set disasterOpportunities []
     set insufBoost? false
-    set crossRiskThresholdTicks []
-    set missedWindows []
-    set window-open? false
+    set missedOpportunities []
+    set opportunity-open? false
     set lack-motivation? false
-    set adaptTicks []
     set knownSolFromOffice []
     set satisfied? true
-    set utilizedWindow? false
+    set utilizedOpportunity? false
     set search-adaptation? false
-    set adaptNum 0
     set targetSolCost 0
-    set used-disasterWindow? false
-    set used-orgWindow? false
-    set leader? false
+    set used-disasterOpt? false
     set declared? false
     set coping-change? false
     set adaptation-change? false
@@ -222,14 +184,15 @@ to setup-orgs
     set disaster? false
     set postponed? false
     set solution-ready? false
-    set innovation-ready? false
     set targetSolution nobody
-    set no-solAttached? true
-    set copingChangeTicks []
-    set allReference []
-    set pastWeather []
-    set open-orgWindow? false
-    set  open-disasterWindow?  false
+    set pastWeatherIntensity []
+    set open-orgOpportunity? false
+    set  open-disasterOpportunity?  false
+    set filterEW [] ;
+
+    set riskPerception (worstWeatherIntensity -  solEfficacy) * expectedEWprob
+    if riskPerception < 0 [print "risk perception <0 "  set riskPerception 0]
+
   ]
 
   ask FTAoffices [
@@ -238,73 +201,73 @@ to setup-orgs
 end
 
 
-to setup-orgWindows
-  if orgWindowGen = "allRandom"
+to setup-orgOpportunities
+  if orgOptGen = "allRandom"
   [
      ask orgs [
-       repeat random numWindows [
+       repeat random numOpt [
          let n random 1000 ; 1000 ticks
-         set orgWindows sentence n orgWindows
-         set windows remove-duplicates orgwindows
+         set orgOpportunities sentence n orgOpportunities
+         set Opportunities remove-duplicates orgOpportunities
        ]
      ]
   ]
 
-    if orgWindowGen = "controlNum"
+    if orgOptGen = "controlNum"
   [
      ask orgs [
-       repeat numWindows [
+       repeat numOpt[
          let n random 1000 ; 1000 ticks
-         set orgWindows sentence n orgWindows
-         set windows remove-duplicates orgwindows
+         set orgOpportunities sentence n orgOpportunities
+         set Opportunities remove-duplicates orgOpportunities
        ]
      ]
   ]
 
 
-  if orgWindowGen = "diffused"
+  if orgOptGen = "diffused"
   [
     ask orgs [
     let n 0
     while [n <= 1000] [
-       let windowTick random  100 + n
-       if windowTick <= 1000
-       [set orgWindows remove-duplicates (sentence orgWindows windowTick)]
-       set windows remove-duplicates orgWindows
+       let OpportunityTick random  100 + n
+       if OpportunityTick <= 1000
+       [set orgOpportunities remove-duplicates (sentence orgOpportunities OpportunityTick)]
+       set Opportunities remove-duplicates orgOpportunities
        set n n + 100
     ]
    ]
   ]
 
 
-  if orgWindowGen = "concentrated"
+  if orgOptGen = "concentrated"
   [
     ask orgs [
        let n random 700
        let x 0
        while [ x <= 270][
-        let windowTick n +  x + random 10
-        set orgWindows remove-duplicates (sentence orgWindows windowTick)
+        let OpportunityTick n +  x + random 10
+        set orgOpportunities remove-duplicates (sentence orgOpportunities OpportunityTick)
         set x x + 30
         ]
      ]
   ]
 
-  if orgWindowGen = "twoWindows"
+  if orgOptGen = "twoOpportunities"
   [
      ask orgs [
       let n random 100
-      set orgWindows sentence n orgWindows
+      set orgOpportunities sentence n orgOpportunities
       let m random 100 + 900
-      set orgWindows sentence m orgWindows
+      set orgOpportunities sentence m orgOpportunities
     ]
   ]
 
-    if orgWindowGen = "oneWindow"
+    if orgOptGen = "oneOpportunity"
   [
      ask orgs [
       let n random 1000
-      set orgWindows sentence n orgWindows
+      set orgOpportunities sentence n orgOpportunities
     ]
   ]
 
@@ -353,10 +316,6 @@ to setup-regionalRiskThreshold
   [ask orgs [set riskTolerance 0]]
 
 
-  ask orgs [
-    set currentAspiration riskTolerance
-    set originalRiskTolerance riskTolerance
-  ]
 end
 
 
@@ -364,9 +323,9 @@ to riskThreshold-byRegion
 
   let regionalMean1 sentence (meanRiskThreshold + 0.10) (meanRiskThreshold + 0.2)  ; threshold for northeast and midwest
   let regionalMean2 sentence (meanRiskThreshold + 0) (meanRiskThreshold + 0.3) ; threshold for south and west, south has the lowest and west has highest
-  let regionalMean sentence regionalMean1 regionalMean2
+  let regionalMeanTolerance sentence regionalMean1 regionalMean2
 
-  (foreach ["northeast" "midwest" "south" "west"] regionalMean
+  (foreach ["northeast" "midwest" "south" "west"] regionalMeanTolerance
     [
       [x meanThreshold] ->
       ask orgs with [region = x] [
@@ -404,8 +363,8 @@ to setup-solutions ; every turtle begins with a solution
       [
          set color green
          set adaptation? false  ; the default solutions are routine ones, not adaptation-based
-         set efficacy 0.05 + random-float 0.95; for coping solutions
-         set size efficacy
+         set efficacy 0.5 + random-float 0.5; for coping solutions
+         set size efficacy / 2.5
          set adaptation? false
          let my-org orgs-here
          create-org-sol-links-with my-org [hide-link]
@@ -416,13 +375,13 @@ to setup-solutions ; every turtle begins with a solution
       ]
     ]
     set solEfficacy [efficacy] of current-solution
-    set originalEfficacy solEfficacy
+
   ]
 
   ask n-of 30 patches with [not any? turtles-here and pcolor != grey][
     sprout-solutions 1 [
       set color green ; adaptation are set blue
-      set efficacy 1.5 + random-float 2 ;weatherseverity ranges from approximately  3 to 6
+      set efficacy 2 + random-float 2 ;weatherIntensity ranges from approximately  2 to 5
       set cost random-float adaptationCost + 2
       set size efficacy / 2.5
       set adaptation? true
@@ -433,37 +392,50 @@ end
 
 to record-weather-norm ; only activated when not using the hard coded weather parameters on the following attributes
   ask orgs [
-      set weatherSeverityImpactExp record-severity-experience extremeWeatherProb  solEfficacy; determine weather severity norm based on 200 years timeline, functions are put at the end
-      set weatherSeverityExp item 0  weatherSeverityImpactExp ; record of weather severity
-      set weatherImpactExp item 1 weatherSeverityImpactExp ; record of impact on orgs based on weather severity, org resiience and solution efficacy
-      set extremeWeatherThreshold  item (ceiling simulateMonths * extremeWeatherProb) weatherSeverityExp
-      set disasterThreshold  item (ceiling simulateMonths * disasterProb) weatherSeverityExp
+      set weatherIntensityExp record-severity-experience
+      set disasterProb regionDisaterProbMean
+      set extremeWeatherProb regionEWProbMean
       set expectedEWprob extremeWeatherProb
-      set expectedBadWeatherSeverity item (ceiling simulateMonths * badImpact) weatherImpactExp
-      set riskPerception (expectedBadWeatherSeverity -  solEfficacy) * expectedEWprob
-      ;if riskPerception < 0  [set riskPerception 0.1]
-      if riskPerception < originalRiskPerception[set riskPerception 0]
-      set maxCopingEfficacy  maxCopingReduction * expectedBadWeatherSeverity ; the maximum risk reduction coping measures can acheive
+      set extremeWeatherThreshold  item (ceiling simulateMonths * regionEWProbMean) weatherIntensityExp
+      set disasterThreshold  item (ceiling simulateMonths * regionDisaterProbMean) weatherIntensityExp
+      set worstWeatherIntensity item (ceiling simulateMonths * (0.05 + random-float 0.03)) weatherIntensityExp ; typically plan for 92% of the weather risks
+      if disasterThreshold  < worstWeatherIntensity [print "disasterThreshold  < worstWeatherIntensity"]
+      if extremeWeatherThreshold  > worstWeatherIntensity [print "extremeWeatherThreshold  < worstWeatherIntensity"]
+
   ]
 end
 
-to-report record-severity-experience [ewProb org-solEfficacy ]
+
+
+to-report record-severity-experience
   let time 0
   let severity []
   let impactRecord[]
-  let severityImpactExp []
+  set-weatherIntensityMean-byRegion
   while [time < simulateMonths][  ; base weather pattern on 200 year experience
-    let severityPerTick log-normal 5 ewProb ;
+    let severityPerTick log-normal regionIntensityMean  0.2;
     set severity sentence severity severityPerTick
-    let myImpact SeverityPerTick -  org-solEfficacy
-    if myImpact < 0 [ set myImpact 0]
-    set impactRecord sentence myImpact impactRecord
     set time time + 1
   ]
   set severity sort-by > severity
-  set impactRecord sort-by > impactRecord
-  set severityImpactExp list severity ImpactRecord
-  report severityImpactExp
+  report severity
+end
+
+
+to set-weatherIntensityMean-byRegion ; four log-normal distribution, four cutoffs for EW, four cutoffs for disasters
+  let regionIntensityMeanList sentence (sentence (5 + 0.5) (5 ))  (sentence (5 + 1) (5 - 0.5)) ; northest midwest south west
+  let regionEWProbMeanlist sentence (sentence (0.120) (0.107 ))  (sentence (0.125) (0.080))
+  let regionDisasterProbMeanList sentence (sentence (0.045) (0.035 ))  (sentence (0.050) (0.025))
+
+ (foreach ["northeast" "midwest" "south" "west"]  regionIntensityMeanList regionEWProbMeanlist  regionDisasterProbMeanList
+    [
+      [a b c d ] ->
+      ask orgs with [region = a] [
+        set regionIntensityMean b
+        set regionEWProbMean  c
+        set regionDisaterProbMean d
+    ]
+  ])
 end
 
 
@@ -473,24 +445,16 @@ to setup-network
     set regionalNeighbors other orgs with [region = [region] of myself]
     set diffRegionNeighbors other orgs with [region != [region] of myself]
 
-    repeat minNeighbor [ ; all orgs have at least one regional partners
-      let candidate1 lottery-winner  ; candidate is a list of orgs from the same region
-      if item 0 candidate1 != nobody [
-        create-org-sameReg-link-with item 0 candidate1 [hide-link]
-        ]
-      ]
+    let sameRegCandidates n-of 2 regionalNeighbors
+    create-org-sameReg-links-with sameRegCandidates [hide-link]
 
-    repeat minNeighbor [  ;candidate is a list of orgs from different regions
-      let candidate2 lottery-winner
-      if item 1 candidate2 != nobody [
-         create-org-diffReg-link-with item 1 candidate2 [hide-link]
-      ]
-    ]
+    let diffRegCandidates n-of 1 diffRegionNeighbors
+    create-org-diffReg-links-with diffRegCandidates [hide-link]
   ]
 
 end
 
-to-report lottery-winner
+to-report lottery-winner  ; not used in this model; but can use it when creating networks using preferential attachment
   let pick1 random-float sum [capacity] of regionalNeighbors
   let pick2 random-float sum [capacity] of diffRegionNeighbors
   let winner1 nobody
@@ -519,29 +483,22 @@ to go
 ;  profile:start
 
   set logFile (word "start " ticks)
-  if not randomOrgWindows? [generate-orgWindows]
+  if not randomOrgOpt? [generate-orgOpportunities] ; alternative ways to distribute opportunities
   check-weather  ;unless otherwise indicated, the go procedures apply to orgs
   update-riskPerception
-  windows-byDeclaration
+  Opportunities-byDeclaration
   determine-satisfaction
   search-solution
-  check-implementation
-  check-window
-  use-window
+  check-capacity
+  check-Opportunity
+  use-Opportunity
   FTAcheck-adaptation ; this is the FTAoffice procedure;
-  if changeAspiration? [
-    update-aspiration
-  ]
-
 
   ask orgs [
     set extremeWeather? false
     set disaster? false
     set declared? false
-   ; set capacity originalCapacity
-    set extremeWeatherProb extremeWeatherProb * (1 + random-float 0.0001); probability increases over time
-;    set disasterProb disasterProb * (1 + random-float 0.0001)
-    if expectedBadWeatherSeverity < riskPerception [
+    if worstWeatherIntensity < riskPerception [
       print "warning: expected weather severity smaller than expected impact"
     ]
     if riskPerception < 0 [
@@ -549,84 +506,44 @@ to go
     ]
   ]
 
- ; write-logFile
   tick
 ;  profiler:start
 ;  print profiler:report
-
-
-
 ; if ticks >= simTicks [stop]
 end
 
-to write-logFile
-  file-open "test logfile.txt"
-  file-write word "end ticks " ticks
-  file-close
-end
-
-to update-aspiration  ; do not use org's performance in the function
-;  let minImpactPerTick min [impactPerTick] of orgs
-;  let maxImpactPerTick max [impactPerTick] of orgs
-;  ask orgs[
-;    set normalizedImpact (impactPertick - minImpactPerTick) / maxImpactPerTick
-;    set previousImpact normalizedImpact
-;    set previousAspiration currentAspiration
-;  ]
-
-  ask orgs [
-    set previousAspiration currentAspiration
-    if impactPerTick > 0 [
-     set referenceGroup orgs with [(extremeWeather?) and (region = [region] of myself) and (impactPerTick < [impactPerTick] of myself)]
-     set allReference fput (list ticks referenceGroup) allReference
-     set myReference []
-     (
-        foreach allReference [x ->
-        if ticks - item 0 x < memory
-        [set myReference (turtle-set myReference (item 1 x)) ]
-     ])
 
 
-     if any? myReference [
-     let referenceAspiration mean [previousAspiration] of myReference
-     set currentAspiration (b1 * previousAspiration + (1 - b1) * referenceAspiration)
-;     set currentAspiration (b1 * normalizedImpact + b2 * previousAspiration + b3 * referenceAspiration)
-     set riskTolerance currentAspiration
-      ]
-   ]
- ]
-end
-
-
-
-to-report update-windows
-  let udpatedWindows [] ;spelling
-  repeat random numWindows [
-    let updatedWindow random (simTicks + ticks)
-    set udpatedWindows remove-duplicates (sentence updatedWindow windows)
+to-report update-Opportunities
+  let udpatedOpportunities [] ;spelling
+  repeat random numOpt [
+    let updatedOpportunity random (simTicks + ticks)
+    set udpatedOpportunities remove-duplicates (sentence updatedOpportunity Opportunities)
   ]
-  report udpatedWindows
+  report udpatedOpportunities
 end
 
 
 to check-weather
   ask orgs [
-    set weatherSeverity log-normal 5 extremeWeatherProb ; did not rescale
-    set pastWeather fput (list ticks weatherSeverity) pastWeather
-    if length pastWeather > memory
-    [set pastWeather sublist pastWeather 0 min (list length pastWeather memory)] ; keep only the first n elements defined by length of memory
+    set weatherIntensity log-normal 5 0.2 ; did not rescale
+    set pastWeatherIntensity fput (list ticks weatherIntensity) pastWeatherIntensity
+    if length pastWeatherIntensity > memory
+    [set pastWeatherIntensity sublist pastWeatherIntensity 0 min (list length pastWeatherIntensity memory)] ; keep only the first n elements defined by length of memory
 
-    ifelse weatherSeverity >= extremeWeatherThreshold ; here to adjust the influence from others on risk perception
+    ifelse weatherIntensity >= extremeWeatherThreshold ; here to adjust the influence from others on risk perception
     [
       set extremeWeather? true
-      ifelse weatherSeverity < disasterThreshold
+      ifelse weatherIntensity < disasterThreshold
       [ set disaster? false
-        set expectedEWProb expectedEWProb * (1 + 0.05 + random-float 0.05 )] ;for EW
+        set expectedEWProb expectedEWProb + 0.01
+        set expectedEWProb expectedEWProb * (1 + 0.05 + random-float 0.05 )
+      ]
       [
         set expectedEWProb expectedEWProb * (1 + 0.25 + random-float 0.05)  ;for disaster
+        set expectedEWProb expectedEWProb + 0.03
         set disaster? true
-        set disasterFreq disasterFreq + 1
-        if random-float 1 < passRate [set declared? true]
+        if random-float 1 < declarationRate [set declared? true]
       ]
     ]
     [set extremeWeather? false]
@@ -639,7 +556,7 @@ to check-weather
       if (any? org-sameReg-link-neighbors with [disaster?]) and (random-float 1 < 0.1)
       [set expectedEWProb expectedEWProb * (1 + random-float 0.005)]
     ]
-    [set expectedEWProb expectedEWProb * (1 - (EWProbDecay + random-float 0.001))] ; extremeweatherevent did not happen, then expectedprob decrease
+    [set expectedEWProb expectedEWProb * (1 - (EWProbDecay ))] ; extremeweatherevent did not happen, then expectedprob decrease
   ]
 
      if expectedEWProb >= 0.25 [set expectedEWProb  0.25] ; upper limit of expected prob
@@ -648,42 +565,41 @@ to check-weather
 end
 
 
-to generate-orgWindows
+to generate-orgOpportunities
   ask orgs [
-    let filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)] pastWeather) ; find weahter intensity bigger than EW
+    set filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)] pastWeatherIntensity) ; find weahter intensity bigger than EW
     ifelse member? true filterEW
       [ifelse random-float 1 < increaseChance ;prob of opportunities after events
-         [open-orgWindow]
-         [set open-orgWindow? false]]
+         [open-orgOpportunity]
+         [set open-orgOpportunity? false]]
       [ifelse random-float 1 < randomChance  ; prob of opportunities far away from events
-       [open-orgWindow]
-      [set open-orgWindow? false]]
+       [open-orgOpportunity]
+      [set open-orgOpportunity? false]]
   ]
 end
 
-to open-orgWindow
-  set orgWindows sentence ticks orgWindows
-  set open-orgWindow? true
+to open-orgOpportunity
+  set orgOpportunities sentence ticks orgOpportunities
+  set open-orgOpportunity? true
 end
 
 
-to windows-byDeclaration
+to Opportunities-byDeclaration
   ask orgs [
       ifelse declared? [
-      set disasterWindows fput ticks disasterWindows
-      set windows remove-duplicates (sentence disasterWindows orgwindows)
+      set disasterOpportunities fput ticks disasterOpportunities
+      set Opportunities remove-duplicates (sentence disasterOpportunities orgOpportunities)
     ]
-    [set windows orgWindows]
+    [set Opportunities orgOpportunities]
   ]
 end
 
 
 to update-riskPerception
   ask orgs [
-    set impactPerTick ifelse-value (weatherSeverity - solEfficacy < 0 ) [0] [weatherSeverity - solEfficacy]
+    set impactPerTick ifelse-value (weatherIntensity - solEfficacy < 0 ) [0] [weatherIntensity - solEfficacy]
 
-    set originalRiskPerception (expectedBadWeatherSeverity - solEfficacy ) * expectedEWProb
-    set riskPerception originalRiskPerception
+    set riskPerception (worstWeatherIntensity - solEfficacy ) * expectedEWProb
   ]
 
 end
@@ -701,26 +617,25 @@ end
 to search-solution
   ask orgs with [not satisfied? and not adaptation-change?][
     if not solution-ready? [ ; coping
-      let currentRiskPerception expectedBadWeatherSeverity -  solEfficacy  ; note here it does not multiply the expectedEWProb
-      let targetSolEfficacy calculate-target-efficacy solEfficacy impactPerTick expectedBadWeatherSeverity  (random-float impactReductionRate + 0.10)
-      ifelse (targetSolEfficacy < maxCopingEfficacy) and (copingLimit < 1) ; limit coping to once only to speed up
-    [
-         ask current-solution [set efficacy targetSolEfficacy]
-         set solEfficacy [efficacy] of current-solution
-         set copingChangeTicks fput ticks copingChangeTicks
-         set coping-change? true
-         set copingLimit 1 + copingLimit
-   ][
-         set search-adaptation? true
-         search-adaptation
+      let currentRiskPerception worstWeatherIntensity -  solEfficacy  ; note here it does not multiply the expectedEWProb
+      let targetSolEfficacy (random-float impactReductionRate + 0.1) * worstWeatherIntensity
+      set anticipatedMitigation anticipatedMitigation + targetSolEfficacy
+
+      ifelse anticipatedMitigation  <= (0.5 * worstWeatherIntensity)   [
+        ask current-solution [set efficacy targetSolEfficacy]
+        set solEfficacy [efficacy] of current-solution
+        set coping-change? true
+       ; print word "coping: " (anticipatedMitigation / worstWeatherIntensity)
+      ]
+      [
+        ;print word "cannot coping: " (anticipatedMitigation / worstWeatherIntensity)
+        set search-adaptation? true
+        search-adaptation
       ]
     ]
   ]
-end
 
-to-report  calculate-target-efficacy [org-solEfficacy org-weatherSeverity  org-impact  org-reductionRate]
-  let org-target-efficacy org-impact * org-reductionRate + org-solEfficacy
-  report org-target-efficacy
+
 end
 
 
@@ -731,11 +646,11 @@ to search-adaptation
 
   if targetSolution != nobody
   [set solution-ready? true
-    set targetSolCost [cost] of targetSolution]
+  set targetSolCost [cost] of targetSolution]
 
 end
 
-to check-implementation
+to check-capacity
   ask orgs with [not satisfied? and solution-ready? and not adaptation-change?][
     ifelse capacity < [cost] of targetSolution
     [
@@ -752,46 +667,45 @@ to check-implementation
 end
 
 
-to check-window
-  if openWindows? [
+to check-Opportunity ; opportunities came by whether orgs are waiting for them or not; but orgs with insufficient capacity will need to use for adaptation
+  if openOpt? [
     ask orgs [
-      ifelse not member? ticks windows
+      ifelse not member? ticks Opportunities
       [
         set capacity originalCapacity
-        set window-open? false
-
+        set opportunity-open? false
       ]
 
       [
-        set window-open? true
+        set opportunity-open? true
         boost-capacity
-        set totalWindowOpen totalWindowOpen + 1
+        set totalOptOpen totalOptOpen + 1
 
-         ifelse member? ticks disasterWindows
+         ifelse member? ticks disasterOpportunities
         [
-          set open-disasterWindow? true
-          set totalDisasterWindows totalDisasterWindows + 1
+          set open-disasterOpportunity? true
+          set totalDisasterOpportunities totalDisasterOpportunities + 1
         ]
-        [ set open-disasterWindow? false]
+        [ set open-disasterOpportunity? false]
 
-        if member? ticks orgWindows
-        [set totalOrgWindows totalOrgWindows + 1]
+        if member? ticks orgOpportunities
+        [set totalOrgOpportunities totalOrgOpportunities + 1]
       ]
     ]
   ]
 end
 
 
-to use-window
+to use-Opportunity
   ask orgs with [not adaptation-change?]
   [
-    if member? ticks windows
+    if member? ticks Opportunities
     [
 
          ifelse riskPerception <= riskTolerance
         [
           set lack-motivation? true
-          set totalWindowMissed totalWindowMissed + 1
+          set totalOpportunitiesMissed totalOpportunitiesMissed + 1
         ]
         [
           set lack-motivation? false
@@ -806,7 +720,7 @@ end
 
 to use-funding
 
-  ifelse member? ticks disasterWindows ; limitations about how to use fund from declaration
+  ifelse member? ticks disasterOpportunities ; limitations about how to use fund from declaration
   [if random-float 1 < disasterUti [adaptation-discretion]]
   [adaptation-discretion]
 end
@@ -842,26 +756,25 @@ to adaptation-discretion
       if not adaptation-change?
       [
         set adaptation-change? true
-        set totalNeededWidows totalNeededWidows  + 1
+        set totalNeededOpportunities totalNeededOpportunities  + 1
       ]
-      set utilizedWindow? true
+      set utilizedOpportunity? true
 
-      set totalUtilizedWindows totalUtilizedWindows + 1 ; note orgs can adapt more than once
-      ifelse member? ticks disasterWindows [
-        set totalUtilizedDisasterWindows totalUtilizedDisasterWindows + 1
-        set used-disasterWindow? true
+      set totalUtilizedOpportunities totalUtilizedOpportunities + 1 ; note orgs can adapt more than once
+      ifelse member? ticks disasterOpportunities [
+        set totalUtilizedDisasterOpportunities totalUtilizedDisasterOpportunities + 1
+        set used-disasterOpportunity? true
 
       ][
-        set used-disasterWindow? false
+        set used-disasterOpportunity? false
       ]
 
-      ifelse member? ticks orgWindows
-      [set used-orgWindow? true]
-      [set used-orgWindow? false]
+      ifelse member? ticks orgOpportunities
+      [set used-orgOpportunity? true]
+      [set used-orgOpportunity? false]
     ]
 
     [
-      set insufBoostTicks fput ticks insufBoostTicks
       set insufBoost? true
       set totalInsufBoost totalInsufBoost + 1
    ]
@@ -900,7 +813,6 @@ end
 
 
 to implement-adaptation
-    set adaptTicks fput ticks adaptTicks
     remove-links-between self current-solution
     set current-solution targetSolution
     set solEfficacy [efficacy] of targetSolution
@@ -948,29 +860,13 @@ to-report log-normal [mu sigma]
   report x
 end
 
-to-report save-BSoutput  ; save BS output from command line
-  let filename BS-output
-  file-open filename
 
-  ;headers
-  let text-out (sentence ",numWindows,meanRiskThreshold, scanningRange,badImpact,numWindows,impactReductionRate,maxCopingReduction,adaptationCost,capBoost,simTicks,minNeighbor,changeAspiration,EWProbDecay,b1,count orgs with [coping-change?],count orgs with [adaptation-change?],totalInsufBoost,totalDisasterWindows,totalwindowMissed,totalWindowOpen,totalNoSolution,totalUtilizedWindows,totalNeededWidows,sufficientCap,totalUtilizedDisasterWindows")
-  file-type text-out
-  file-print ""
-
-  set text-out (sentence ", "numWindows", "meanRiskThreshold","scanningRange","badImpact","numWindows","impactReductionRate","maxCopingReduction","adaptationCost","capBoost","simTicks","minNeighbor","EWProbDecay","b1","count orgs with [coping-change?]","count orgs with [adaptation-change?]", "totalInsufBoost","totalDisasterWindows","totalwindowMissed","totalWindowOpen","totalNoSolution","totalUtilizedWindows","totalNeededWidows","totalNeededWidows","sufficientCap","totalUtilizedDisasterWindows",")
-  file-type text-out
-  file-print ""
-
-
-  file-close
-  report "table output done"
-end
 
 to-report save-BSoutput1
   let filename BS-output
   file-open filename
   file-write meanRiskThreshold
-  file-write numWindows
+  file-write numOpt
   file-write (count orgs with [adaptation-change?])
   file-close
   report "use csv done"
@@ -978,17 +874,18 @@ end
 
 
 
-to write-variables
-  file-open "DissertationABM hard coded weather parameters.txt"
+to write-variables ; output variable value to hard code the threshold values for EW, disasters etcs.
+  file-open "DissertationABM hard coded weather parameters1.csv"
   foreach sort orgs [
     x ->
     ask x [
       file-write agencyid
+      file-write extremeWeatherProb
       file-write disasterProb
-      file-write passRate
       file-write extremeWeatherThreshold
       file-write disasterThreshold
-      file-write expectedBadWeatherSeverity
+      file-write worstWeatherIntensity
+;      file-write declarationRate
     ]
   ]
 
@@ -1090,7 +987,6 @@ true
 true
 "" ""
 PENS
-"originalTh" 1.0 0 -15040220 true "" "plot mean [originalRiskTolerance] of orgs"
 "currentTh" 1.0 0 -5298144 true "" "plot mean [riskTolerance] of orgs"
 
 SLIDER
@@ -1116,8 +1012,8 @@ SLIDER
 simulateMonths
 simulateMonths
 0
-3600
-0.0
+5000
+4808.0
 1
 1
 NIL
@@ -1158,9 +1054,8 @@ true
 false
 "" ""
 PENS
-"NE" 1.0 0 -15040220 true "" "plot  [riskPerception] of one-of orgs with-max [originalEfficacy]"
-"threshold" 1.0 0 -8053223 true "" "plot  [originalRiskTolerance] of one-of orgs with-max [originalEfficacy]"
-"asp" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs with-max [originalEfficacy]"
+"NE" 1.0 0 -15040220 true "" "plot  [riskPerception] of one-of orgs with-max [solEfficacy]"
+"threshold" 1.0 0 -8053223 true "" "plot  [riskTolerance] of one-of orgs with-max [solEfficacy]"
 
 PLOT
 1120
@@ -1179,8 +1074,7 @@ false
 "" ""
 PENS
 "default" 1.0 0 -14439633 true "" "plot sum [riskPerception] of orgs with-min [extremeweatherprob]"
-"percept" 1.0 0 -8053223 true "" "plot sum [originalRiskTolerance] of orgs with-min [extremeweatherprob]"
-"asp" 1.0 0 -14737633 true "" "plot sum [currentAspiration] of orgs with-min [extremeweatherprob]"
+"percept" 1.0 0 -8053223 true "" "plot sum [RiskTolerance] of orgs with-min [extremeweatherprob]"
 
 PLOT
 1120
@@ -1198,24 +1092,8 @@ true
 false
 "" ""
 PENS
-"riskPer" 1.0 0 -14439633 true "" "plot sum [riskPerception] of orgs with-min [originalEfficacy]"
-"Thresh" 1.0 0 -8053223 true "" "plot sum [originalRiskTolerance] of orgs with-min [originalEfficacy]"
-"pen-2" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs  with-min [originalEfficacy]"
-
-SLIDER
-5
-140
-155
-173
-badImpact
-badImpact
-0
-0.50
-0.08
-0.01
-1
-NIL
-HORIZONTAL
+"riskPer" 1.0 0 -14439633 true "" "plot  [riskPerception] of org 0\n"
+"Thresh" 1.0 0 -8053223 true "" "plot  [riskTolerance] of org 0"
 
 SLIDER
 160
@@ -1225,8 +1103,8 @@ SLIDER
 impactReductionRate
 impactReductionRate
 0
-0.4
-0.25
+1
+0.3
 0.01
 1
 NIL
@@ -1241,17 +1119,17 @@ meanRiskThreshold
 meanRiskThreshold
 0
 2
-0.4
+0.58
 0.01
 1
 NIL
 HORIZONTAL
 
 SLIDER
-5
-180
-155
-213
+0
+140
+150
+173
 maxCopingReduction
 maxCopingReduction
 0
@@ -1304,8 +1182,8 @@ SLIDER
 100
 155
 133
-numWindows
-numWindows
+numOpt
+numOpt
 0
 20
 10.0
@@ -1315,12 +1193,12 @@ NIL
 HORIZONTAL
 
 SWITCH
-935
-20
-1082
-53
-openWindows?
-openWindows?
+865
+10
+1012
+43
+openOpt?
+openOpt?
 0
 1
 -1000
@@ -1337,10 +1215,10 @@ totalInsufBoost
 11
 
 SLIDER
-5
-215
-155
-248
+0
+175
+150
+208
 capBoost
 capBoost
 0
@@ -1352,10 +1230,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-935
-60
-1087
-93
+865
+50
+1017
+83
 triggerNetwork?
 triggerNetwork?
 0
@@ -1374,10 +1252,10 @@ count orgs with [not-found?]
 11
 
 SWITCH
-935
-100
-1102
-133
+865
+90
+1032
+123
 randomRiskThresh?
 randomRiskThresh?
 0
@@ -1385,37 +1263,15 @@ randomRiskThresh?
 -1000
 
 SWITCH
-935
-140
-1045
-173
+865
+130
+975
+163
 othersInf?
 othersInf?
 1
 1
 -1000
-
-MONITOR
-870
-475
-927
-520
-#missed
-TotalWindowMissed
-0
-1
-11
-
-MONITOR
-605
-425
-662
-470
-#open
-totalWindowOpen
-0
-1
-11
 
 MONITOR
 535
@@ -1434,7 +1290,7 @@ MONITOR
 727
 470
 #declare
-totalDisasterWindows
+totalDisasterOpportunities
 0
 1
 11
@@ -1445,18 +1301,7 @@ MONITOR
 712
 520
 #used
-totalUtilizedWindows
-0
-1
-11
-
-MONITOR
-720
-475
-782
-520
-#Needed
-totalNeededWidows
+totalUtilizedOpportunities
 0
 1
 11
@@ -1478,16 +1323,16 @@ MONITOR
 867
 520
 usedDisaster
-totalUtilizedDisasterWindows
+totalUtilizedDisasterOpportunities
 0
 1
 11
 
 SLIDER
-5
-250
-155
-283
+0
+210
+150
+243
 minNeighbor
 minNeighbor
 0
@@ -1515,8 +1360,7 @@ true
 "" ""
 PENS
 "RiskPer" 1.0 0 -14439633 true "" "plot sum [riskPerception] of  orgs with-max [extremeWeatherProb]"
-"originThres" 1.0 0 -5298144 true "" "plot sum  [originalRiskTolerance] of orgs with-max [extremeWeatherProb]"
-"riskThresh" 1.0 0 -16777216 true "" "plot sum [currentAspiration] of orgs with-max [extremeWeatherProb]"
+"riskThresh" 1.0 0 -5298144 true "" "plot sum [riskTolerance] of orgs with-max [extremeWeatherProb]"
 
 SLIDER
 160
@@ -1529,51 +1373,6 @@ EWProbDecay
 0.05
 0.03
 0.001
-1
-NIL
-HORIZONTAL
-
-SLIDER
-5
-290
-97
-323
-b1
-b1
-0
-1
-0.3
-0.01
-1
-NIL
-HORIZONTAL
-
-SLIDER
-5
-325
-97
-358
-b2
-b2
-0
-1
-0.0
-0.01
-1
-NIL
-HORIZONTAL
-
-SLIDER
-5
-360
-97
-393
-b3
-b3
-0
-1
-0.0
-0.01
 1
 NIL
 HORIZONTAL
@@ -1608,17 +1407,6 @@ disasterUti
 NIL
 HORIZONTAL
 
-SWITCH
-935
-180
-1092
-213
-changeAspiration?
-changeAspiration?
-1
-1
--1000
-
 SLIDER
 160
 215
@@ -1635,10 +1423,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-935
-220
-1052
-253
+865
+170
+982
+203
 officeRole?
 officeRole?
 0
@@ -1646,12 +1434,12 @@ officeRole?
 -1000
 
 SWITCH
-935
-265
-1107
-298
-randomOrgWindows?
-randomOrgWindows?
+865
+215
+1037
+248
+randomOrgOpt?
+randomOrgOpt?
 0
 1
 -1000
@@ -1665,17 +1453,17 @@ increaseChance
 increaseChance
 0
 1
-0.06
+0.31
 0.01
 1
 NIL
 HORIZONTAL
 
 SWITCH
-935
-300
-1067
-333
+865
+250
+997
+283
 randomBoost?
 randomBoost?
 0
@@ -1702,84 +1490,84 @@ startingFund
 startingFund
 0
 100000
-7463.0
+38217.0
 1
 1
 NIL
 HORIZONTAL
 
 SWITCH
-940
-340
-1062
-373
+870
+290
+992
+323
 limitedFund?
 limitedFund?
 1
 1
 -1000
 
-MONITOR
-270
-455
-342
-500
-#orgWins
-totalOrgWindows
-17
-1
-11
-
 SLIDER
-0
-410
-120
-443
+-5
+250
+115
+283
 reduceWindows
 reduceWindows
 0
 10
-9.0
+0.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-5
-460
-135
-493
+-5
+290
+125
+323
 randomChance
 randomChance
 0
 0.001
-4.0E-4
+0.0
 0.00001
 1
 NIL
 HORIZONTAL
 
 CHOOSER
-950
-450
-1088
-495
-orgWindowGen
-orgWindowGen
+870
+380
+1008
+425
+orgOptGen
+orgOptGen
 "allRandom" "diffused" "concentrated" "controlNum" "twoWindows" "oneWindow"
 0
 
 SWITCH
-945
-385
-1067
-418
+875
+335
+997
+368
 enoughCap?
 enoughCap?
-0
+1
 1
 -1000
+
+MONITOR
+245
+475
+302
+520
+riskPer
+mean [riskperception] of orgs
+2
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -2390,32 +2178,20 @@ NetLogo 6.0.2
     <exitCondition>ticks &gt;= 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
-    <metric>totalInsufBoost</metric>
-    <metric>totalDisasterWindows</metric>
-    <metric>totalwindowMissed</metric>
-    <metric>totalWindowOpen</metric>
-    <metric>totalNoSolution</metric>
-    <metric>totalUtilizedWindows</metric>
-    <metric>totalNeededWidows</metric>
-    <metric>sufficientCap</metric>
-    <metric>totalUtilizedDisasterWindows</metric>
-    <metric>totalOrgWindows</metric>
+    <metric>fundAvailable</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.3"/>
       <value value="0.4"/>
       <value value="0.5"/>
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="badImpact">
-      <value value="0.08"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="numWindows">
+    <enumeratedValueSet variable="numOpt">
       <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
-      <value value="0.25"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="maxCopingReduction">
       <value value="0.4"/>
@@ -2435,20 +2211,14 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="memory">
       <value value="48"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="b1">
-      <value value="0.3"/>
-    </enumeratedValueSet>
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="openWindows?">
+    <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="changeAspiration?">
-      <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="triggerNetwork?">
       <value value="true"/>
@@ -2471,7 +2241,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="orgWindowGen">
       <value value="&quot;allRandom&quot;"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="enoughCap">
+    <enumeratedValueSet variable="enoughCap?">
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
@@ -4008,6 +3778,95 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="enoughCap?">
       <value value="false"/>
       <value value="true"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="noDecay" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
+    <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
+    <metric>totalInsufBoost</metric>
+    <metric>totalDisasterWindows</metric>
+    <metric>totalwindowMissed</metric>
+    <metric>totalWindowOpen</metric>
+    <metric>totalNoSolution</metric>
+    <metric>totalUtilizedWindows</metric>
+    <metric>totalNeededWidows</metric>
+    <metric>sufficientCap</metric>
+    <metric>totalUtilizedDisasterWindows</metric>
+    <metric>totalOrgWindows</metric>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="badImpact">
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="numWindows">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="memory">
+      <value value="48"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b1">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="disasterUti">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="openWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="changeAspiration?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="triggerNetwork?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomRiskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomOrgWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="orgWindowGen">
+      <value value="&quot;allRandom&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap?">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
