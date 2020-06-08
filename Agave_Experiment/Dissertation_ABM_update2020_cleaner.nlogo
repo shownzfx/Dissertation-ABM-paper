@@ -240,12 +240,12 @@ to setup-orgOpportunities
   if orgOptGen = "concentrated"
   [
     ask orgs [
-       let n random 800
+       let n random 900
        let x 0
-       while [ x <= 270][
+       while [ x <= 90][
         let OpportunityTick n +  x + random 10
         set orgOpts remove-duplicates (sentence orgOpts OpportunityTick)
-        set x x + 20
+        set x x + 10
         ]
      ]
   ]
@@ -1312,7 +1312,7 @@ SWITCH
 208
 randomOrgOpt?
 randomOrgOpt?
-1
+0
 1
 -1000
 
@@ -1417,7 +1417,7 @@ CHOOSER
 orgOptGen
 orgOptGen
 "allRandom" "diffused" "concentrated" "controlNum" "twoWindows" "oneWindow"
-0
+2
 
 SWITCH
 875
