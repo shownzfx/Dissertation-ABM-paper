@@ -16,7 +16,7 @@
 bash /home/fzhang59/NetLogo\ 6.0.2/netlogo-headless.sh \
 --model Dissertation_ABM_update2020_cleaner.nlogo \
 --experiment decayAndWindow1 \
---table decayAndWindow2100Runs1.csv \
+--table decayAndWindow700Runs_062020.csv \
 --threads 28
 
 

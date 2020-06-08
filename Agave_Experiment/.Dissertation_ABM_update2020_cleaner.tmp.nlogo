@@ -202,7 +202,7 @@ to setup-orgOpportunities
   if orgOptGen = "allRandom"
   [
      ask orgs [
-       repeat random numOpt [
+       repeat random numOpts [
          let n random 1000 ; 1000 ticks
          set orgOpts sentence n orgOpts
          set Opportunities remove-duplicates orgOpts
@@ -213,7 +213,7 @@ to setup-orgOpportunities
     if orgOptGen = "controlNum"
   [
      ask orgs [
-       repeat numOpt[
+       repeat numOpts[
          let n random 1000 ; 1000 ticks
          set orgOpts sentence n orgOpts
          set Opportunities remove-duplicates orgOpts
@@ -512,7 +512,7 @@ end
 
 to-report update-Opportunities
   let udpatedOpportunities [] ;
-  repeat random numOpt [
+  repeat random numOpts [
     let updatedOpportunity random (simTicks + ticks)
     set udpatedOpportunities remove-duplicates (sentence updatedOpportunity Opportunities)
   ]
@@ -845,7 +845,7 @@ to-report save-BSoutput1
   let filename BS-output
   file-open filename
   file-write meanRiskThreshold
-  file-write numOpt
+  file-write numOpts
   file-write (count orgs with [adaptation-change?])
   file-close
   report "use csv done"
@@ -1061,7 +1061,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 2
-0.4
+0.62
 0.01
 1
 NIL
@@ -1113,7 +1113,7 @@ numOpts
 numOpts
 0
 20
-6.0
+0.0
 1
 1
 NIL
@@ -1243,7 +1243,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.03
+0.015
 0.001
 1
 NIL
@@ -1362,7 +1362,7 @@ startingFund
 startingFund
 0
 100000
-38217.0
+12606.0
 1
 1
 NIL
@@ -1417,7 +1417,7 @@ CHOOSER
 orgOptGen
 orgOptGen
 "allRandom" "diffused" "concentrated" "controlNum" "twoWindows" "oneWindow"
-0
+2
 
 SWITCH
 875
@@ -1870,7 +1870,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="numOpt">
+    <enumeratedValueSet variable="numOpts">
       <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
@@ -2394,34 +2394,35 @@ NetLogo 6.0.2
   <experiment name="decayAndWindow1" repetitions="50" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt;= 1000</exitCondition>
+    <exitCondition>ticks = 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
+    <metric>fundAvailable</metric>
+    <metric>totalOptOpen</metric>
+    <metric>totalLackMotivation</metric>
     <metric>totalInsufBoost</metric>
-    <metric>totalDisasterWindows</metric>
-    <metric>totalwindowMissed</metric>
-    <metric>totalWindowOpen</metric>
     <metric>totalNoSolution</metric>
-    <metric>totalUtilizedWindows</metric>
-    <metric>totalNeededWidows</metric>
+    <metric>totalAlreadyAdapted</metric>
+    <metric>totalNonEligibleDisasterOpt</metric>
+    <metric>totalDisasterOpts</metric>
+    <metric>totalUtilizedDisasterOpts</metric>
+    <metric>totalUtilizedOpts</metric>
+    <metric>totalNeededOpts</metric>
     <metric>sufficientCap</metric>
-    <metric>totalUtilizedDisasterWindows</metric>
-    <metric>totalOrgWindows</metric>
+    <metric>totalUtilized</metric>
+    <metric>totalOrgOpts</metric>
+    <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.4"/>
+      <value value="0.62"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="badImpact">
-      <value value="0.08"/>
+    <enumeratedValueSet variable="numOpts">
+      <value value="10"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="2" last="10"/>
     <enumeratedValueSet variable="impactReductionRate">
-      <value value="0.25"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="maxCopingReduction">
-      <value value="0.4"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
       <value value="4"/>
@@ -2438,18 +2439,15 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="memory">
       <value value="48"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="b1">
-      <value value="0.3"/>
-    </enumeratedValueSet>
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0.012" step="0.003" last="0.03"/>
-    <enumeratedValueSet variable="openWindows?">
-      <value value="true"/>
+    <enumeratedValueSet variable="startingFund">
+      <value value="12606"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="changeAspiration?">
-      <value value="false"/>
+    <enumeratedValueSet variable="openOpt?">
+      <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="triggerNetwork?">
       <value value="true"/>
@@ -2460,7 +2458,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="randomRiskThresh?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="randomOrgWindows?">
+    <enumeratedValueSet variable="randomOrgOpt?">
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="limitedFund?">
@@ -2469,10 +2467,11 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="orgWindowGen">
-      <value value="&quot;allRandom&quot;"/>
+    <enumeratedValueSet variable="orgOptGen">
+      <value value="&quot;concentrated&quot;"/>
+      <value value="&quot;diffused&quot;"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="enoughCap">
+    <enumeratedValueSet variable="enoughCap?">
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
@@ -3491,7 +3490,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numOpt" first="0" step="1" last="30"/>
+    <steppedValueSet variable="numOpts" first="0" step="1" last="30"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.3"/>
     </enumeratedValueSet>
