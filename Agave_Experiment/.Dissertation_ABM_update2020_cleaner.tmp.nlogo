@@ -122,7 +122,7 @@ end
 
 
 to import-orgs
-  file-open "Transit agencies ABM clean1 noHeader_062020.csv"
+  file-open "Transit agencies ABM clean noHeader_062020.csv"
   while [not file-at-end?]
   [
     let row csv:from-row file-read-line
@@ -1061,7 +1061,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 2
-0.62
+0.6
 0.01
 1
 NIL
@@ -1113,7 +1113,7 @@ numOpts
 numOpts
 0
 20
-10.0
+0.0
 1
 1
 NIL
@@ -1243,7 +1243,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.012
+0.03
 0.001
 1
 NIL
@@ -1417,7 +1417,7 @@ CHOOSER
 orgOptGen
 orgOptGen
 "allRandom" "diffused" "concentrated" "controlNum" "twoWindows" "oneWindow"
-2
+0
 
 SWITCH
 875
@@ -2413,7 +2413,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.62"/>
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>

@@ -122,7 +122,7 @@ end
 
 
 to import-orgs
-  file-open "Transit agencies ABM clean1 noHeader_062020.csv"
+  file-open "Transit agencies ABM clean noHeader_062020.csv"
   while [not file-at-end?]
   [
     let row csv:from-row file-read-line
@@ -2413,7 +2413,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.62"/>
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
