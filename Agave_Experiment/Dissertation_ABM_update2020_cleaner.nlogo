@@ -1851,18 +1851,19 @@ NetLogo 6.0.2
     <metric>totalFunding</metric>
     <metric>fundAvailable</metric>
     <metric>totalOptOpen</metric>
+    <metric>totalLackMotivation</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalNoSolution</metric>
+    <metric>totalAlreadyAdapted</metric>
+    <metric>totalNonEligibleDisasterOpt</metric>
     <metric>totalDisasterOpts</metric>
     <metric>totalUtilizedDisasterOpts</metric>
     <metric>totalUtilizedOpts</metric>
     <metric>totalNeededOpts</metric>
     <metric>sufficientCap</metric>
     <metric>totalUtilized</metric>
-    <metric>totalAlreadyAdapted</metric>
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
-    <metric>totalNonEligibleDisasterOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
       <value value="0.62"/>
     </enumeratedValueSet>
