@@ -10,10 +10,11 @@ undirected-link-breed [org-sameReg-links org-sameReg-link]
 undirected-link-breed [org-diffReg-links org-diffReg-link]
 undirected-link-breed [FTAoffice-org-links FTAoffice-org-link]
 
-globals [regionDiv totalOpportunitiesMissed
-         totalOptOpen totalInsufBoost totalNoSolution totalDisasterOpportunities totalUtilizedDisasterOpportunities
-          totalUtilizedOpportunities totalNeededOpportunities sufficientCap totalUtilized  logFile
-         BS-output totalFunding fundAvailable totalOrgOpportunities]
+globals [regionDiv totalLackMotivation
+         totalOptOpen totalInsufBoost totalNoSolution totalDisasterOpts totalUtilizedDisasterOpts
+          totalUtilizedOpts totalNeededOpts sufficientCap totalUtilized totalAlreadyAdapted
+          totalOrgOpts totalUtilizedOrgOpt totalNonEligibleDisasterOpt logFile
+         BS-output totalFunding fundAvailable]
 
 patches-own [patchRegion]
 solutions-own [efficacy cost adaptation? ]; solutions include both non-adaptation and adaptation measures
@@ -45,7 +46,7 @@ orgs-own [
   knownSolutions
   targetSolCost
   search-adaptation?
-  missedOpportunities
+  missedOpts
   utilizedOpportunity?
   insufBoost?
   not-found?
@@ -65,8 +66,8 @@ orgs-own [
   opportunities
   opportunity-open?
   used-disasterOpt?
-  orgOpportunities
-  disasterOpportunities
+  orgOpts
+  disasterOpts
   current-solution
   targetSolution
   targetSolCost
@@ -77,9 +78,6 @@ orgs-own [
   solution-ready?
   previousImpact
   open-orgOpportunity?
-  used-orgOpportunity?
-  used-disasterOpportunity?
-  open-disasterOpportunity?
   lack-motivation?
   regionEWProbMean
   regionDisaterProbMean
@@ -94,20 +92,20 @@ to setup
 
   set-default-shape solutions "box"
   set fundAvailable startingFund
-  set totalOpportunitiesMissed 0
+  set totalLackMotivation 0
   set totalInsufBoost 0
   set totalOptOpen 0
   set totalNoSolution 0
-  set totalDisasterOpportunities 0
-  set totalUtilizedOpportunities 0
-  set totalNeededOpportunities 0
-  set totalUtilizedDisasterOpportunities 0
+  set totalDisasterOpts 0
+  set totalUtilizedOpts 0
+  set totalNeededOpts 0
+  set totalUtilizedDisasterOpts 0
   set sufficientCap 0
   set totalFunding 0
   import-orgs
   setup-orgs
 
-  if randomOrgOpt?  ; whether to set up orgOpportunities at the model setup, otherwise Opportunities need to be generated based on EW
+  if randomOrgOpt?  ; whether to set up orgOpts at the model setup, otherwise Opportunities need to be generated based on EW
   [setup-orgOpportunities]
   distribute-orgs
   setup-regionalRiskThreshold
@@ -165,10 +163,10 @@ to setup-orgs
     set copingLimit 0
     set anticipatedMitigation 0
     set Opportunities []
-    set orgOpportunities []
-    set disasterOpportunities []
+    set orgOpts []
+    set disasterOpts []
     set insufBoost? false
-    set missedOpportunities []
+    set missedOpts []
     set opportunity-open? false
     set lack-motivation? false
     set knownSolFromOffice []
@@ -187,7 +185,6 @@ to setup-orgs
     set targetSolution nobody
     set pastWeatherIntensity []
     set open-orgOpportunity? false
-    set  open-disasterOpportunity?  false
     set filterEW [] ;
 
     set riskPerception (worstWeatherIntensity -  solEfficacy) * expectedEWprob
@@ -207,8 +204,8 @@ to setup-orgOpportunities
      ask orgs [
        repeat random numOpt [
          let n random 1000 ; 1000 ticks
-         set orgOpportunities sentence n orgOpportunities
-         set Opportunities remove-duplicates orgOpportunities
+         set orgOpts sentence n orgOpts
+         set Opportunities remove-duplicates orgOpts
        ]
      ]
   ]
@@ -218,8 +215,8 @@ to setup-orgOpportunities
      ask orgs [
        repeat numOpt[
          let n random 1000 ; 1000 ticks
-         set orgOpportunities sentence n orgOpportunities
-         set Opportunities remove-duplicates orgOpportunities
+         set orgOpts sentence n orgOpts
+         set Opportunities remove-duplicates orgOpts
        ]
      ]
   ]
@@ -232,8 +229,8 @@ to setup-orgOpportunities
     while [n <= 1000] [
        let OpportunityTick random  100 + n
        if OpportunityTick <= 1000
-       [set orgOpportunities remove-duplicates (sentence orgOpportunities OpportunityTick)]
-       set Opportunities remove-duplicates orgOpportunities
+       [set orgOpts remove-duplicates (sentence orgOpts OpportunityTick)]
+       set Opportunities remove-duplicates orgOpts
        set n n + 100
     ]
    ]
@@ -247,7 +244,7 @@ to setup-orgOpportunities
        let x 0
        while [ x <= 270][
         let OpportunityTick n +  x + random 10
-        set orgOpportunities remove-duplicates (sentence orgOpportunities OpportunityTick)
+        set orgOpts remove-duplicates (sentence orgOpts OpportunityTick)
         set x x + 30
         ]
      ]
@@ -257,9 +254,9 @@ to setup-orgOpportunities
   [
      ask orgs [
       let n random 100
-      set orgOpportunities sentence n orgOpportunities
+      set orgOpts sentence n orgOpts
       let m random 100 + 900
-      set orgOpportunities sentence m orgOpportunities
+      set orgOpts sentence m orgOpts
     ]
   ]
 
@@ -267,7 +264,7 @@ to setup-orgOpportunities
   [
      ask orgs [
       let n random 1000
-      set orgOpportunities sentence n orgOpportunities
+      set orgOpts sentence n orgOpts
     ]
   ]
 
@@ -491,7 +488,6 @@ to go
   search-solution
   check-capacity
   check-Opportunity
-  use-Opportunity
   FTAcheck-adaptation ; this is the FTAoffice procedure;
 
   ask orgs [
@@ -515,7 +511,7 @@ end
 
 
 to-report update-Opportunities
-  let udpatedOpportunities [] ;spelling
+  let udpatedOpportunities [] ;
   repeat random numOpt [
     let updatedOpportunity random (simTicks + ticks)
     set udpatedOpportunities remove-duplicates (sentence updatedOpportunity Opportunities)
@@ -573,7 +569,7 @@ to generate-orgOpportunities
 end
 
 to open-orgOpportunity
-  set orgOpportunities sentence ticks orgOpportunities
+  set orgOpts sentence ticks orgOpts
   set open-orgOpportunity? true
 end
 
@@ -581,10 +577,10 @@ end
 to Opportunities-byDeclaration
   ask orgs [
       ifelse declared? [
-      set disasterOpportunities fput ticks disasterOpportunities
-      set Opportunities remove-duplicates (sentence disasterOpportunities orgOpportunities)
+      set disasterOpts fput ticks disasterOpts
+      set Opportunities remove-duplicates (sentence disasterOpts orgOpts)
     ]
-    [set Opportunities orgOpportunities]
+    [set Opportunities orgOpts]
   ]
 end
 
@@ -619,10 +615,8 @@ to search-solution
         ask current-solution [set efficacy targetSolEfficacy]
         set solEfficacy [efficacy] of current-solution
         set coping-change? true
-       ; print word "coping: " (anticipatedMitigation / worstWeatherIntensity)
       ]
       [
-        ;print word "cannot coping: " (anticipatedMitigation / worstWeatherIntensity)
         set search-adaptation? true
         search-adaptation
       ]
@@ -661,7 +655,7 @@ to check-capacity
 end
 
 
-to check-Opportunity ; opportunities came by whether orgs are waiting for them or not; but orgs with insufficient capacity will need to use for adaptation
+to check-Opportunity ; opportunities came by whether orgs need them for adaptation or not; but orgs with insufficient capacity will need to use for adaptation
   if openOpt? [
     ask orgs [
       ifelse not member? ticks Opportunities
@@ -672,51 +666,49 @@ to check-Opportunity ; opportunities came by whether orgs are waiting for them o
 
       [
         set opportunity-open? true
-        boost-capacity
+        boost-capacity ; extra capacity is added whether orgs are planning on adaptation or not
         set totalOptOpen totalOptOpen + 1
+        access-opportunity
 
-         ifelse member? ticks disasterOpportunities
-        [
-          set open-disasterOpportunity? true
-          set totalDisasterOpportunities totalDisasterOpportunities + 1
-        ]
-        [ set open-disasterOpportunity? false]
+        if member? ticks disasterOpts
+        [set totalDisasterOpts totalDisasterOpts + 1 ]
 
-        if member? ticks orgOpportunities
-        [set totalOrgOpportunities totalOrgOpportunities + 1]
+        if member? ticks orgOpts
+        [set totalOrgOpts totalOrgOpts + 1]
       ]
+
     ]
   ]
 end
 
 
-to use-Opportunity
-  ask orgs with [not adaptation-change?]
-  [
-    if member? ticks Opportunities
-    [
-
-         ifelse riskPerception <= riskTolerance
-        [
-          set lack-motivation? true
-          set totalOpportunitiesMissed totalOpportunitiesMissed + 1
-        ]
-        [
-          set lack-motivation? false
-          ifelse postponed?
-          [use-funding]
-          [set totalNoSolution totalNoSolution + 1 ]
-        ]
+to access-opportunity
+    ifelse (not adaptation-change?) [
+       ifelse riskPerception <= riskTolerance
+      [
+        set lack-motivation? true
+        set totalLackMotivation totalLackMotivation + 1
+      ]
+      [
+        set lack-motivation? false
+        ifelse postponed?
+        [use-funding]
+        [set totalNoSolution totalNoSolution + 1 ]
       ]
     ]
+    [set totalAlreadyAdapted totalAlreadyAdapted + 1 ]
 end
 
 
 to use-funding
 
-  ifelse member? ticks disasterOpportunities ; limitations about how to use fund from declaration
-  [if random-float 1 < disasterUti [adaptation-discretion]]
-  [adaptation-discretion]
+  ifelse member? ticks disasterOpts ; limitations about how to use fund from declaration
+  [
+    ifelse random-float 1 < disasterUti
+    [use-for-adaptation]
+    [set totalNonEligibleDisasterOpt totalNonEligibleDisasterOpt + 1]
+  ]
+  [use-for-adaptation]
 end
 
 to boost-capacity
@@ -741,33 +733,26 @@ to boost-capacity
 end
 
 
-to adaptation-discretion
+to use-for-adaptation
 
    ifelse capacity >= [cost] of targetSolution
      [
       set insufBoost? false
       implement-adaptation
-      if not adaptation-change?
-      [
-        set adaptation-change? true
-        set totalNeededOpportunities totalNeededOpportunities  + 1
-      ]
+
+      set adaptation-change? true
+      set totalNeededOpts totalNeededOpts  + 1
       set utilizedOpportunity? true
 
-      set totalUtilizedOpportunities totalUtilizedOpportunities + 1 ; note orgs can adapt more than once
-      ifelse member? ticks disasterOpportunities [
-        set totalUtilizedDisasterOpportunities totalUtilizedDisasterOpportunities + 1
-        set used-disasterOpportunity? true
+      set totalUtilizedOpts totalUtilizedOpts + 1 ; note orgs can adapt more than once
 
-      ][
-        set used-disasterOpportunity? false
-      ]
+      if member? ticks disasterOpts
+      [set totalUtilizedDisasterOpts totalUtilizedDisasterOpts + 1]
 
-      ifelse member? ticks orgOpportunities
-      [set used-orgOpportunity? true]
-      [set used-orgOpportunity? false]
+
+      if member? ticks orgOpts
+      [set totalUtilizedOrgOpt totalUtilizedOrgOpt + 1]
     ]
-
     [
       set insufBoost? true
       set totalInsufBoost totalInsufBoost + 1
@@ -965,24 +950,6 @@ NIL
 NIL
 1
 
-PLOT
-1120
-10
-1320
-160
-riskThreshold
-Time
-riskPerception
-1.0
-100.0
-0.6
-0.8
-true
-true
-"" ""
-PENS
-"currentTh" 1.0 0 -5298144 true "" "plot mean [riskTolerance] of orgs"
-
 SLIDER
 165
 60
@@ -1014,9 +981,9 @@ NIL
 HORIZONTAL
 
 PLOT
-1328
+1115
 10
-1528
+1315
 160
 #Adopters
 NIL
@@ -1031,25 +998,6 @@ true
 PENS
 "adapted" 1.0 0 -14439633 true "" "plot count orgs with [adaptation-change?]"
 "coping" 1.0 0 -5298144 true "" "plot count orgs with [coping-change?]"
-
-PLOT
-1325
-315
-1525
-465
-maxOriginalEfficacy
-NIL
-NIL
-0.0
-10.0
-0.0
-0.3
-true
-false
-"" ""
-PENS
-"NE" 1.0 0 -15040220 true "" "plot  [riskPerception] of one-of orgs with-max [solEfficacy]"
-"threshold" 1.0 0 -8053223 true "" "plot  [riskTolerance] of one-of orgs with-max [solEfficacy]"
 
 PLOT
 1120
@@ -1135,10 +1083,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-415
-430
-472
-475
+405
+425
+462
+470
 adapted
 count orgs with [adaptation-change?]
 0
@@ -1146,10 +1094,10 @@ count orgs with [adaptation-change?]
 11
 
 MONITOR
-475
-475
-537
-520
+465
+470
+527
+515
 postpone
 count orgs with [postponed?]
 0
@@ -1165,7 +1113,7 @@ numOpt
 numOpt
 0
 20
-10.0
+6.0
 1
 1
 NIL
@@ -1183,10 +1131,10 @@ openOpt?
 -1000
 
 MONITOR
-535
-425
-597
-470
+565
+420
+627
+465
 insuBoost
 totalInsufBoost
 0
@@ -1219,17 +1167,6 @@ triggerNetwork?
 1
 -1000
 
-MONITOR
-475
-430
-537
-475
-notFound
-count orgs with [not-found?]
-0
-1
-11
-
 SWITCH
 865
 90
@@ -1242,56 +1179,23 @@ randomRiskThresh?
 -1000
 
 MONITOR
-535
-475
-592
-520
-#noSol
-totalNoSolution
-0
-1
-11
-
-MONITOR
-665
-425
-727
+570
 470
-#declare
-totalDisasterOpportunities
-0
-1
-11
-
-MONITOR
-655
-475
-712
-520
+627
+515
 #used
-totalUtilizedOpportunities
+totalUtilizedOpts
 0
 1
 11
 
 MONITOR
-730
+465
 425
-785
+520
 470
 notNeed
 sufficientCap
-0
-1
-11
-
-MONITOR
-785
-475
-867
-520
-usedDisaster
-totalUtilizedDisasterOpportunities
 0
 1
 11
@@ -1392,9 +1296,9 @@ HORIZONTAL
 
 SWITCH
 865
-170
+130
 982
-203
+163
 officeRole?
 officeRole?
 0
@@ -1403,9 +1307,9 @@ officeRole?
 
 SWITCH
 865
-215
+175
 1037
-248
+208
 randomOrgOpt?
 randomOrgOpt?
 0
@@ -1429,9 +1333,9 @@ HORIZONTAL
 
 SWITCH
 865
-250
+210
 997
-283
+243
 randomBoost?
 randomBoost?
 0
@@ -1439,10 +1343,10 @@ randomBoost?
 -1000
 
 MONITOR
-410
-475
-467
-520
+400
+470
+457
+515
 fundAv
 fundAvailable
 1
@@ -1466,9 +1370,9 @@ HORIZONTAL
 
 SWITCH
 870
-290
+250
 992
-323
+283
 limitedFund?
 limitedFund?
 1
@@ -1507,9 +1411,9 @@ HORIZONTAL
 
 CHOOSER
 870
-380
+340
 1008
-425
+385
 orgOptGen
 orgOptGen
 "allRandom" "diffused" "concentrated" "controlNum" "twoWindows" "oneWindow"
@@ -1517,9 +1421,9 @@ orgOptGen
 
 SWITCH
 875
-335
+295
 997
-368
+328
 enoughCap?
 enoughCap?
 1
@@ -1527,13 +1431,68 @@ enoughCap?
 -1000
 
 MONITOR
-245
-475
-302
-520
+325
+440
+382
+485
 riskPer
 mean [riskperception] of orgs
 2
+1
+11
+
+MONITOR
+630
+420
+687
+465
+#opt
+totalOptOpen
+0
+1
+11
+
+MONITOR
+640
+470
+737
+515
+#lackMotivation
+totalLackMotivation
+0
+1
+11
+
+MONITOR
+760
+430
+820
+475
+#noSol
+totalNoSolution
+0
+1
+11
+
+MONITOR
+760
+480
+827
+525
+#adapted
+totalAlreadyAdapted
+17
+1
+11
+
+MONITOR
+830
+430
+905
+475
+#nonEligDis
+totalNonEligibleDisasterOpt
+17
 1
 11
 
@@ -1884,283 +1843,28 @@ NetLogo 6.0.2
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="numWindows" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
-    <setup>setup</setup>
-    <go>go</go>
-    <exitCondition>ticks &gt;= 1000</exitCondition>
-    <metric>count orgs with [adaptation-change?]</metric>
-    <metric>totalFunding</metric>
-    <metric>totalInsufBoost</metric>
-    <metric>totalDisasterWindows</metric>
-    <metric>totalwindowMissed</metric>
-    <metric>totalWindowOpen</metric>
-    <metric>totalNoSolution</metric>
-    <metric>totalUtilizedWindows</metric>
-    <metric>totalNeededWidows</metric>
-    <metric>sufficientCap</metric>
-    <metric>totalUtilizedDisasterWindows</metric>
-    <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="scanningRange">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="badImpact">
-      <value value="0.08"/>
-    </enumeratedValueSet>
-    <steppedValueSet variable="numWindows" first="0" step="1" last="40"/>
-    <enumeratedValueSet variable="impactReductionRate">
-      <value value="0.25"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="maxCopingReduction">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="capBoost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="simTicks">
-      <value value="1000"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="minNeighbor">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="memory">
-      <value value="48"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="b1">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="disasterUti">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="EWProbDecay">
-      <value value="0.03"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="open-windows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="change-aspiration?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="trigger-network?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-riskThresh?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-orgWindows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="limitedFund?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomBoost?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="limitedFund?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="enoughCap">
-      <value value="false"/>
-    </enumeratedValueSet>
-  </experiment>
-  <experiment name="zeroTolerance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
-    <setup>setup</setup>
-    <go>go</go>
-    <exitCondition>ticks &gt;= 1000</exitCondition>
-    <metric>count orgs with [adaptation-change?]</metric>
-    <metric>totalFunding</metric>
-    <metric>totalInsufBoost</metric>
-    <metric>totalDisasterWindows</metric>
-    <metric>totalwindowMissed</metric>
-    <metric>totalWindowOpen</metric>
-    <metric>totalNoSolution</metric>
-    <metric>totalUtilizedWindows</metric>
-    <metric>totalNeededWidows</metric>
-    <metric>sufficientCap</metric>
-    <metric>totalUtilizedDisasterWindows</metric>
-    <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="scanningRange">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="badImpact">
-      <value value="0.08"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="numWindows">
-      <value value="10"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="impactReductionRate">
-      <value value="0.25"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="maxCopingReduction">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="capBoost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="simTicks">
-      <value value="1000"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="minNeighbor">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="memory">
-      <value value="48"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="b1">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="disasterUti">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="EWProbDecay">
-      <value value="0.03"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="open-windows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="change-aspiration?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="trigger-network?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-riskThresh?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-orgWindows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="limitedFund?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomBoost?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="enoughCap">
-      <value value="false"/>
-    </enumeratedValueSet>
-  </experiment>
-  <experiment name="noWindow" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
-    <setup>setup</setup>
-    <go>go</go>
-    <exitCondition>ticks &gt;= 1000</exitCondition>
-    <metric>count orgs with [adaptation-change?]</metric>
-    <metric>totalFunding</metric>
-    <metric>totalInsufBoost</metric>
-    <metric>totalDisasterWindows</metric>
-    <metric>totalwindowMissed</metric>
-    <metric>totalWindowOpen</metric>
-    <metric>totalNoSolution</metric>
-    <metric>totalUtilizedWindows</metric>
-    <metric>totalNeededWidows</metric>
-    <metric>sufficientCap</metric>
-    <metric>totalUtilizedDisasterWindows</metric>
-    <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="scanningRange">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="badImpact">
-      <value value="0.08"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="numWindows">
-      <value value="10"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="impactReductionRate">
-      <value value="0.25"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="maxCopingReduction">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="capBoost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="simTicks">
-      <value value="1000"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="minNeighbor">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="memory">
-      <value value="48"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="b1">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="disasterUti">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="EWProbDecay">
-      <value value="0.03"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="open-windows?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="change-aspiration?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="trigger-network?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-riskThresh?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-orgWindows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="limitedFund?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomBoost?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="enoughCap">
-      <value value="false"/>
-    </enumeratedValueSet>
-  </experiment>
   <experiment name="baseline" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt;= 1000</exitCondition>
+    <exitCondition>ticks = 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
     <metric>fundAvailable</metric>
-    <metric>totalOpportunitiesMissed</metric>
     <metric>totalOptOpen</metric>
     <metric>totalInsufBoost</metric>
     <metric>totalNoSolution</metric>
-    <metric>totalDisasterOpportunities</metric>
-    <metric>totalUtilizedDisasterOpportunities</metric>
-    <metric>totalUtilizedOpportunities</metric>
-    <metric>totalNeededOpportunities</metric>
+    <metric>totalDisasterOpts</metric>
+    <metric>totalUtilizedDisasterOpts</metric>
+    <metric>totalUtilizedOpts</metric>
+    <metric>totalNeededOpts</metric>
     <metric>sufficientCap</metric>
     <metric>totalUtilized</metric>
+    <metric>totalAlreadyAdapted</metric>
+    <metric>totalOrgOpts</metric>
+    <metric>totalUtilizedOrgOpt</metric>
+    <metric>totalNonEligibleDisasterOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.4"/>
-      <value value="0.5"/>
-      <value value="0.6"/>
+      <value value="0.62"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2191,6 +1895,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="startingFund">
+      <value value="12606"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
@@ -2585,184 +2292,6 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="enoughCap">
-      <value value="false"/>
-    </enumeratedValueSet>
-  </experiment>
-  <experiment name="otherInf" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
-    <setup>setup</setup>
-    <go>go</go>
-    <exitCondition>ticks &gt;= 1000</exitCondition>
-    <metric>count orgs with [adaptation-change?]</metric>
-    <metric>totalFunding</metric>
-    <metric>totalInsufBoost</metric>
-    <metric>totalDisasterWindows</metric>
-    <metric>totalwindowMissed</metric>
-    <metric>totalWindowOpen</metric>
-    <metric>totalNoSolution</metric>
-    <metric>totalUtilizedWindows</metric>
-    <metric>totalNeededWidows</metric>
-    <metric>sufficientCap</metric>
-    <metric>totalUtilizedDisasterWindows</metric>
-    <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="scanningRange">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="badImpact">
-      <value value="0.08"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="numWindows">
-      <value value="10"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="impactReductionRate">
-      <value value="0.25"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="maxCopingReduction">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="capBoost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="simTicks">
-      <value value="1000"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="minNeighbor">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="memory">
-      <value value="48"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="b1">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="disasterUti">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="EWProbDecay">
-      <value value="0.03"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="startingFund">
-      <value value="5321"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="open-windows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="change-aspiration?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="trigger-network?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-riskThresh?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-orgWindows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="limitedFund?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomBoost?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="othersInf?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="enoughCap">
-      <value value="false"/>
-    </enumeratedValueSet>
-  </experiment>
-  <experiment name="officeRole" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
-    <setup>setup</setup>
-    <go>go</go>
-    <exitCondition>ticks &gt;= 1000</exitCondition>
-    <metric>count orgs with [adaptation-change?]</metric>
-    <metric>totalFunding</metric>
-    <metric>totalInsufBoost</metric>
-    <metric>totalDisasterWindows</metric>
-    <metric>totalwindowMissed</metric>
-    <metric>totalWindowOpen</metric>
-    <metric>totalNoSolution</metric>
-    <metric>totalUtilizedWindows</metric>
-    <metric>totalNeededWidows</metric>
-    <metric>sufficientCap</metric>
-    <metric>totalUtilizedDisasterWindows</metric>
-    <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="scanningRange">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="badImpact">
-      <value value="0.08"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="numWindows">
-      <value value="10"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="impactReductionRate">
-      <value value="0.25"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="maxCopingReduction">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="capBoost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="simTicks">
-      <value value="1000"/>
-    </enumeratedValueSet>
-    <steppedValueSet variable="minNeighbor" first="0" step="1" last="10"/>
-    <enumeratedValueSet variable="memory">
-      <value value="48"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="b1">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="disasterUti">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="EWProbDecay">
-      <value value="0.03"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="open-windows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="change-aspiration?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="trigger-network?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole?">
-      <value value="true"/>
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-riskThresh?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="random-orgWindows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="limitedFund?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomBoost?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="othersInf?">
-      <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="enoughCap">
       <value value="false"/>
@@ -3842,6 +3371,173 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="enoughCap?">
       <value value="false"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="otherInf" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>ticks &gt;= 1000</exitCondition>
+    <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
+    <metric>totalInsufBoost</metric>
+    <metric>totalDisasterWindows</metric>
+    <metric>totalwindowMissed</metric>
+    <metric>totalWindowOpen</metric>
+    <metric>totalNoSolution</metric>
+    <metric>totalUtilizedWindows</metric>
+    <metric>totalNeededWidows</metric>
+    <metric>sufficientCap</metric>
+    <metric>totalUtilizedDisasterWindows</metric>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="badImpact">
+      <value value="0.08"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="numWindows">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="maxCopingReduction">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="memory">
+      <value value="48"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b1">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="disasterUti">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.03"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="startingFund">
+      <value value="5321"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="open-windows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="change-aspiration?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="trigger-network?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-riskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="random-orgWindows?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="othersInf?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap">
+      <value value="false"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="numOpts" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>ticks = 1000</exitCondition>
+    <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
+    <metric>fundAvailable</metric>
+    <metric>totalOptOpen</metric>
+    <metric>totalInsufBoost</metric>
+    <metric>totalNoSolution</metric>
+    <metric>totalDisasterOpts</metric>
+    <metric>totalUtilizedDisasterOpts</metric>
+    <metric>totalUtilizedOpts</metric>
+    <metric>totalNeededOpts</metric>
+    <metric>sufficientCap</metric>
+    <metric>totalUtilized</metric>
+    <metric>totalAlreadyAdapted</metric>
+    <metric>totalOrgOpts</metric>
+    <metric>totalUtilizedOrgOpt</metric>
+    <metric>totalNonEligibleDisasterOpt</metric>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="numOpt" first="0" step="1" last="30"/>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="memory">
+      <value value="48"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="disasterUti">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.03"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="openOpt?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="triggerNetwork?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomRiskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomOrgOpt?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="orgOptGen">
+      <value value="&quot;allRandom&quot;"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
