@@ -202,7 +202,7 @@ to setup-orgOpportunities
   if orgOptGen = "allRandom"
   [
      ask orgs [
-       repeat random numOpt [
+       repeat random numOpts [
          let n random 1000 ; 1000 ticks
          set orgOpts sentence n orgOpts
          set Opportunities remove-duplicates orgOpts
@@ -213,7 +213,7 @@ to setup-orgOpportunities
     if orgOptGen = "controlNum"
   [
      ask orgs [
-       repeat numOpt[
+       repeat numOpts[
          let n random 1000 ; 1000 ticks
          set orgOpts sentence n orgOpts
          set Opportunities remove-duplicates orgOpts
@@ -512,7 +512,7 @@ end
 
 to-report update-Opportunities
   let udpatedOpportunities [] ;
-  repeat random numOpt [
+  repeat random numOpts [
     let updatedOpportunity random (simTicks + ticks)
     set udpatedOpportunities remove-duplicates (sentence updatedOpportunity Opportunities)
   ]
@@ -845,7 +845,7 @@ to-report save-BSoutput1
   let filename BS-output
   file-open filename
   file-write meanRiskThreshold
-  file-write numOpt
+  file-write numOpts
   file-write (count orgs with [adaptation-change?])
   file-close
   report "use csv done"
@@ -1109,8 +1109,8 @@ SLIDER
 100
 155
 133
-numOpt
-numOpt
+numOpts
+numOpts
 0
 20
 6.0
@@ -1870,7 +1870,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="numOpt">
+    <enumeratedValueSet variable="numOpts">
       <value value="10"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
@@ -3486,12 +3486,12 @@ NetLogo 6.0.2
     <metric>totalUtilizedOrgOpt</metric>
     <metric>totalNonEligibleDisasterOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.4"/>
+      <value value="0.62"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numOpt" first="0" step="1" last="30"/>
+    <steppedValueSet variable="numOpts" first="0" step="1" last="30"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.3"/>
     </enumeratedValueSet>
