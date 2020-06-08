@@ -240,12 +240,12 @@ to setup-orgOpportunities
   if orgOptGen = "concentrated"
   [
     ask orgs [
-       let n random 700
+       let n random 800
        let x 0
        while [ x <= 270][
         let OpportunityTick n +  x + random 10
         set orgOpts remove-duplicates (sentence orgOpts OpportunityTick)
-        set x x + 30
+        set x x + 20
         ]
      ]
   ]

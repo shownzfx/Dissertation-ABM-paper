@@ -245,7 +245,7 @@ to setup-orgOpportunities
        while [ x <= 270][
         let OpportunityTick n +  x + random 10
         set orgOpts remove-duplicates (sentence orgOpts OpportunityTick)
-        set x x + 30
+        set x x +
         ]
      ]
   ]
@@ -559,7 +559,7 @@ to generate-orgOpportunities
   ask orgs [
     set filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)] pastWeatherIntensity) ; find weahter intensity bigger than EW
     ifelse member? true filterEW
-      [ifelse random-float 1 < rando ;prob of opportunities after events
+      [ifelse random-float 1 < randomChance ;prob of opportunities after events
          [open-orgOpportunity]
          [set open-orgOpportunity? false]]
       [ifelse random-float 1 < randomChance  ; prob of opportunities far away from events
@@ -1113,7 +1113,7 @@ numOpts
 numOpts
 0
 20
-0.0
+10.0
 1
 1
 NIL
@@ -1312,7 +1312,7 @@ SWITCH
 208
 randomOrgOpt?
 randomOrgOpt?
-0
+1
 1
 -1000
 
@@ -1325,7 +1325,7 @@ increaseChance
 increaseChance
 0
 1
-0.31
+0.0
 0.01
 1
 NIL
@@ -1375,7 +1375,7 @@ SWITCH
 283
 limitedFund?
 limitedFund?
-1
+0
 1
 -1000
 
@@ -3512,7 +3512,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="startingFund">
       <value value="12606"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0" step="0.005" last="0.1"/>
+    <steppedValueSet variable="increaseChance" first="0" step="0.001" last="0.01"/>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
     </enumeratedValueSet>
