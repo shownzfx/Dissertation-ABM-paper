@@ -111,7 +111,7 @@ to setup
   setup-regionalRiskThreshold
   setup-FTARegion
   setup-solutions
- ;record-weather-norm  ; only use it when not using hard coded threshold values for weather intensity
+ record-weather-norm  ; only use it when not using hard coded threshold values for weather intensity
   setup-network
 
 
@@ -122,7 +122,7 @@ end
 
 
 to import-orgs
-  file-open "Transit agencies ABM clean noHeader_062020.csv"
+  file-open "Transit agencies ABM clean1 noHeader_062020.csv"
   while [not file-at-end?]
   [
     let row csv:from-row file-read-line
@@ -422,7 +422,7 @@ end
 to set-weatherIntensityMean-byRegion ; four log-normal distribution, four cutoffs for EW, four cutoffs for disasters
   let regionIntensityMeanList sentence (sentence (5 + 0.5) (5 ))  (sentence (5 + 1) (5 - 0.5)) ; northest midwest south west
   let regionEWProbMeanlist sentence (sentence (0.120) (0.107 ))  (sentence (0.125) (0.080))
-  let regionDisasterProbMeanList sentence (sentence (0.045) (0.035 ))  (sentence (0.050) (0.025))
+  let regionDisasterProbMeanList sentence (sentence (0.06) (0.05 ))  (sentence (0.065) (0.045))
 
  (foreach ["northeast" "midwest" "south" "west"]  regionIntensityMeanList regionEWProbMeanlist  regionDisasterProbMeanList
     [
@@ -1864,9 +1864,7 @@ NetLogo 6.0.2
     <metric>totalUtilized</metric>
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
-    <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.62"/>
-    </enumeratedValueSet>
+    <steppedValueSet variable="meanRiskThreshold" first="0.5" step="0.05" last="0.7"/>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
@@ -3490,7 +3488,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numOpts" first="0" step="2" last="20"/>
+    <steppedValueSet variable="numOpts" first="0" step="2" last="30"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.3"/>
     </enumeratedValueSet>
