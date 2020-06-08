@@ -111,7 +111,7 @@ to setup
   setup-regionalRiskThreshold
   setup-FTARegion
   setup-solutions
- record-weather-norm  ; only use it when not using hard coded threshold values for weather intensity
+; record-weather-norm  ; only use it when not using hard coded threshold values for weather intensity
   setup-network
 
 
@@ -1061,7 +1061,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 2
-0.62
+0.6
 0.01
 1
 NIL
@@ -1113,7 +1113,7 @@ numOpts
 numOpts
 0
 20
-10.0
+0.0
 1
 1
 NIL
@@ -1243,7 +1243,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.012
+0.03
 0.001
 1
 NIL
@@ -1417,7 +1417,7 @@ CHOOSER
 orgOptGen
 orgOptGen
 "allRandom" "diffused" "concentrated" "controlNum" "twoWindows" "oneWindow"
-2
+0
 
 SWITCH
 875
