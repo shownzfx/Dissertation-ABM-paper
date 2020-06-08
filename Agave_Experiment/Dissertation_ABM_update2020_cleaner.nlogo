@@ -1113,7 +1113,7 @@ numOpts
 numOpts
 0
 20
-0.0
+10.0
 1
 1
 NIL
@@ -1243,7 +1243,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.015
+0.012
 0.001
 1
 NIL
@@ -2418,7 +2418,9 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numOpts" first="0" step="2" last="10"/>
+    <enumeratedValueSet variable="numOpts">
+      <value value="10"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.3"/>
     </enumeratedValueSet>
@@ -3488,7 +3490,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="numOpts" first="0" step="1" last="30"/>
+    <steppedValueSet variable="numOpts" first="0" step="2" last="30"/>
     <enumeratedValueSet variable="impactReductionRate">
       <value value="0.3"/>
     </enumeratedValueSet>
@@ -3497,6 +3499,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
@@ -3509,6 +3514,9 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="EWProbDecay">
       <value value="0.03"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="startingFund">
+      <value value="12606"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
