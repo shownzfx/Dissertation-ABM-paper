@@ -559,7 +559,7 @@ to generate-orgOpportunities
   ask orgs [
     set filterEW (map [i -> (item 1 i >= extremeWeatherThreshold)] pastWeatherIntensity) ; find weahter intensity bigger than EW
     ifelse member? true filterEW
-      [ifelse random-float 1 < increaseChance ;prob of opportunities after events
+      [ifelse random-float 1 < rando ;prob of opportunities after events
          [open-orgOpportunity]
          [set open-orgOpportunity? false]]
       [ifelse random-float 1 < randomChance  ; prob of opportunities far away from events
@@ -1142,10 +1142,10 @@ totalInsufBoost
 11
 
 SLIDER
-0
-175
-150
-208
+5
+140
+155
+173
 capBoost
 capBoost
 0
@@ -1201,10 +1201,10 @@ sufficientCap
 11
 
 SLIDER
-0
-210
-150
-243
+5
+175
+155
+208
 minNeighbor
 minNeighbor
 0
@@ -1380,10 +1380,10 @@ limitedFund?
 -1000
 
 SLIDER
--5
-250
-115
-283
+0
+215
+120
+248
 reduceWindows
 reduceWindows
 0
@@ -1395,10 +1395,10 @@ NIL
 HORIZONTAL
 
 SLIDER
--5
-290
-125
-323
+0
+255
+130
+288
 randomChance
 randomChance
 0
@@ -3453,6 +3453,89 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="orgOptGen">
       <value value="&quot;allRandom&quot;"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="randomChance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>ticks = 1000</exitCondition>
+    <metric>count orgs with [adaptation-change?]</metric>
+    <metric>totalFunding</metric>
+    <metric>fundAvailable</metric>
+    <metric>totalOptOpen</metric>
+    <metric>totalLackMotivation</metric>
+    <metric>totalInsufBoost</metric>
+    <metric>totalNoSolution</metric>
+    <metric>totalAlreadyAdapted</metric>
+    <metric>totalNonEligibleDisasterOpt</metric>
+    <metric>totalDisasterOpts</metric>
+    <metric>totalUtilizedDisasterOpts</metric>
+    <metric>totalUtilizedOpts</metric>
+    <metric>totalNeededOpts</metric>
+    <metric>sufficientCap</metric>
+    <metric>totalUtilized</metric>
+    <metric>totalOrgOpts</metric>
+    <metric>totalUtilizedOrgOpt</metric>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="scanningRange">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="numOpts">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="impactReductionRate">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="adaptationCost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="capBoost">
+      <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simTicks">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="minNeighbor">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="memory">
+      <value value="48"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="disasterUti">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="EWProbDecay">
+      <value value="0.03"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="startingFund">
+      <value value="12606"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="increaseChance" first="0" step="0.005" last="0.1"/>
+    <enumeratedValueSet variable="openOpt?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="triggerNetwork?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomRiskThresh?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="officeRole?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomOrgOpt?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomBoost?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="limitedFund?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="enoughCap?">
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
