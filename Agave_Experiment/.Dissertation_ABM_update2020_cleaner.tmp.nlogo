@@ -111,7 +111,7 @@ to setup
   setup-regionalRiskThreshold
   setup-FTARegion
   setup-solutions
- record-weather-norm  ; only use it when not using hard coded threshold values for weather intensity
+; record-weather-norm  ; only use it when not using hard coded threshold values for weather intensity
   setup-network
 
 
