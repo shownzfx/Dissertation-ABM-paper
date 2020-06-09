@@ -2442,7 +2442,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="disasterUti">
       <value value="0.3"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="EWProbDecay" first="0.012" step="0.003" last="0.03"/>
+    <steppedValueSet variable="EWProbDecay" first="0" step="0.003" last="0.03"/>
     <enumeratedValueSet variable="startingFund">
       <value value="12606"/>
     </enumeratedValueSet>
