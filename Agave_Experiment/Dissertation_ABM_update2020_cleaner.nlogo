@@ -2298,104 +2298,6 @@ NetLogo 6.0.2
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="increaseChance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
-    <setup>setup</setup>
-    <go>go</go>
-    <exitCondition>ticks = 1000</exitCondition>
-    <metric>count orgs with [adaptation-change?]</metric>
-    <metric>totalFunding</metric>
-    <metric>fundAvailable</metric>
-    <metric>totalOptOpen</metric>
-    <metric>totalLackMotivation</metric>
-    <metric>totalInsufBoost</metric>
-    <metric>totalNoSolution</metric>
-    <metric>totalAlreadyAdapted</metric>
-    <metric>totalNonEligibleDisasterOpt</metric>
-    <metric>totalDisasterOpts</metric>
-    <metric>totalUtilizedDisasterOpts</metric>
-    <metric>totalUtilizedOpts</metric>
-    <metric>totalNeededOpts</metric>
-    <metric>sufficientCap</metric>
-    <metric>totalUtilized</metric>
-    <metric>totalOrgOpts</metric>
-    <metric>totalUtilizedOrgOpt</metric>
-    <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="scanningRange">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="badImpact">
-      <value value="0.08"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="numWindows">
-      <value value="10"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="impactReductionRate">
-      <value value="0.25"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="maxCopingReduction">
-      <value value="0.4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="capBoost">
-      <value value="4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="simTicks">
-      <value value="1000"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="minNeighbor">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0" step="0.005" last="0.1"/>
-    <enumeratedValueSet variable="memory">
-      <value value="48"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="b1">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="disasterUti">
-      <value value="0.3"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="EWProbDecay">
-      <value value="0.03"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomChance">
-      <value value="4.0E-4"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="startingFund">
-      <value value="7463"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="openWindows?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="changeAspiration?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="triggerNetwork?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="officeRole?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomRiskThresh?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomOrgWindows?">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="limitedFund?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="randomBoost?">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="enoughCap">
-      <value value="false"/>
-    </enumeratedValueSet>
-  </experiment>
   <experiment name="decayAndWindow" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
@@ -2483,7 +2385,7 @@ NetLogo 6.0.2
   <experiment name="increaseChance" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt;= 1000</exitCondition>
+    <exitCondition>ticks = 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
     <metric>fundAvailable</metric>
@@ -2525,7 +2427,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0" step="0.01" last="0.1"/>
+    <steppedValueSet variable="increaseChance" first="0" step="0.005" last="0.1"/>
     <enumeratedValueSet variable="memory">
       <value value="48"/>
     </enumeratedValueSet>
