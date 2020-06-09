@@ -3359,7 +3359,7 @@ NetLogo 6.0.2
   <experiment name="increaseChanceBase" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <exitCondition>ticks &gt;= 1000</exitCondition>
+    <exitCondition>ticks = 1000</exitCondition>
     <metric>count orgs with [adaptation-change?]</metric>
     <metric>totalFunding</metric>
     <metric>fundAvailable</metric>
@@ -3419,11 +3419,8 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="startingFund">
       <value value="10711"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="openWindows?">
+    <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="changeAspiration?">
-      <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="triggerNetwork?">
       <value value="true"/>
@@ -3434,7 +3431,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="randomRiskThresh?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="randomOrgOpts?">
+    <enumeratedValueSet variable="randomOrgOpt?">
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="limitedFund?">
@@ -3443,7 +3440,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="randomBoost?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="enoughCap">
+    <enumeratedValueSet variable="enoughCap?">
       <value value="false"/>
     </enumeratedValueSet>
   </experiment>
