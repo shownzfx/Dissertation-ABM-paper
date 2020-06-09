@@ -1312,7 +1312,7 @@ SWITCH
 208
 randomOrgOpt?
 randomOrgOpt?
-0
+1
 1
 -1000
 
@@ -3427,7 +3427,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="startingFund">
       <value value="12606"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="randomChance" first="0" step="0.001" last="0.01"/>
+    <steppedValueSet variable="randomChance" first="0" step="1.0E-4" last="0.001"/>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
     </enumeratedValueSet>
