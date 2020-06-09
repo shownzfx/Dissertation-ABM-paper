@@ -3428,7 +3428,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="startingFund">
       <value value="12606"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0" step="0.001" last="0.01"/>
+    <steppedValueSet variable="randomChance" first="0" step="0.001" last="0.01"/>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
     </enumeratedValueSet>
