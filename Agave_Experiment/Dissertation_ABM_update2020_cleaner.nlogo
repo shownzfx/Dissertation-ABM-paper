@@ -240,12 +240,12 @@ to setup-orgOpportunities
   if orgOptGen = "concentrated"
   [
     ask orgs [
-       let n random 900
+       let n random 800
        let x 0
-       while [ x <= 90][
+       while [ x <= 180][
         let OpportunityTick n +  x + random 10
         set orgOpts remove-duplicates (sentence orgOpts OpportunityTick)
-        set x x + 10
+        set x x + 20
         ]
      ]
   ]
@@ -2469,7 +2469,6 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="orgOptGen">
       <value value="&quot;concentrated&quot;"/>
-      <value value="&quot;allRandom&quot;"/>
       <value value="&quot;diffused&quot;"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="enoughCap?">

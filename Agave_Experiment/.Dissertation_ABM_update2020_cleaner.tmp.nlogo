@@ -242,10 +242,10 @@ to setup-orgOpportunities
     ask orgs [
        let n random 900
        let x 0
-       while [ x <= 90][
-        let OpportunityTick n +  x + random 10
+       while [ x <= 180][
+        let OpportunityTick n +  x + random 1
         set orgOpts remove-duplicates (sentence orgOpts OpportunityTick)
-        set x x + 10
+        set x x + 20
         ]
      ]
   ]
