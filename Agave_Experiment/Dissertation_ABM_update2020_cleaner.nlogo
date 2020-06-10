@@ -1325,7 +1325,7 @@ increaseChance
 increaseChance
 0
 1
-0.0
+0.075
 0.01
 1
 NIL
