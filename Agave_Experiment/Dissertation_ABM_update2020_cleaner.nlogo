@@ -2440,7 +2440,7 @@ NetLogo 6.0.2
       <value value="3.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="10711"/>
+      <value value="10659"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
@@ -3321,7 +3321,7 @@ NetLogo 6.0.2
       <value value="3.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="10711"/>
+      <value value="10659"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
