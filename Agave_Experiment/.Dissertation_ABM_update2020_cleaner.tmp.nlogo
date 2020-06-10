@@ -1325,7 +1325,7 @@ increaseChance
 increaseChance
 0
 1
-0.075
+3.0E-4
 0.01
 1
 NIL
@@ -2427,7 +2427,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="minNeighbor">
       <value value="1"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="increaseChance" first="0" step="0.005" last="0.1"/>
+    <steppedValueSet variable="increaseChance" first="0" step="0.001" last="0.01"/>
     <enumeratedValueSet variable="memory">
       <value value="48"/>
     </enumeratedValueSet>
@@ -3304,6 +3304,9 @@ NetLogo 6.0.2
       <value value="1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="increaseChance">
+      <value value="3.0E-4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="randomChance">
       <value value="3.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="memory">
