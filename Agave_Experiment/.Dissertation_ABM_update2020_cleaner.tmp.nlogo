@@ -3229,7 +3229,7 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="12606"/>
+      <value value="10659"/>
     </enumeratedValueSet>
     <steppedValueSet variable="randomChance" first="0" step="1.0E-4" last="0.001"/>
     <enumeratedValueSet variable="openOpt?">
@@ -3321,7 +3321,7 @@ NetLogo 6.0.2
       <value value="3.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="10711"/>
+      <value value="10659"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
