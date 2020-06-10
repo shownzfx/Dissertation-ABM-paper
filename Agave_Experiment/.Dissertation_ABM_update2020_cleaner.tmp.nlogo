@@ -1863,7 +1863,9 @@ NetLogo 6.0.2
     <metric>totalUtilized</metric>
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
-    <steppedValueSet variable="meanRiskThreshold" first="0.51" step="0.01" last="0.59"/>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.52"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
@@ -2317,7 +2319,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.6"/>
+      <value value="0.52"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -3111,7 +3113,7 @@ NetLogo 6.0.2
     <metric>totalUtilizedOrgOpt</metric>
     <metric>totalNonEligibleDisasterOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.6"/>
+      <value value="0.52"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -3194,7 +3196,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.6"/>
+      <value value="0.52"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
