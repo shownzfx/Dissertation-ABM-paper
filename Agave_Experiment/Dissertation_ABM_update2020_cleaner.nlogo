@@ -3279,7 +3279,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.6"/>
+      <value value="0.52"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
