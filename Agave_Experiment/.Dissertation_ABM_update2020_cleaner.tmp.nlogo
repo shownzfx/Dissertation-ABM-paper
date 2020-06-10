@@ -537,7 +537,6 @@ to check-weather
       ]
       [
         set expectedEWProb expectedEWProb * (1 + 0.25 + random-float 0.05)  ;for disaster
-        set expectedEWProb expectedEWProb + 0.03
         set disaster? true
         if random-float 1 < declarationRate [set declared? true]
       ]
@@ -546,7 +545,7 @@ to check-weather
 
 
   if not extremeWeather?
-  [ set expectedEWProb expectedEWProb * (1 - (EWProbDecay ))] ; extremeweatherevent did not happen, then expectedprob decrease
+  [ set expectedEWProb expectedEWProb * (1 -  EWProbDecay )] ; extremeweatherevent did not happen, then expectedprob decrease
 
 
      if expectedEWProb >= 0.25 [set expectedEWProb  0.25] ; upper limit of expected prob
@@ -1046,7 +1045,7 @@ impactReductionRate
 impactReductionRate
 0
 1
-0.3
+0.2
 0.01
 1
 NIL
@@ -1061,7 +1060,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 2
-0.6
+0.51
 0.01
 1
 NIL
@@ -1865,6 +1864,8 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.4"/>
+      <value value="0.5"/>
       <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
