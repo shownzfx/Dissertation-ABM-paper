@@ -3304,7 +3304,7 @@ NetLogo 6.0.2
       <value value="1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="increaseChance">
-      <value value="0.003"/>
+      <value value="3.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="memory">
       <value value="48"/>
