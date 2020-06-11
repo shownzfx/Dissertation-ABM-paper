@@ -2953,7 +2953,7 @@ NetLogo 6.0.2
       <value value="&quot;allRandom&quot;"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="noDecay" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="zeroDecay" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks = 1000</exitCondition>

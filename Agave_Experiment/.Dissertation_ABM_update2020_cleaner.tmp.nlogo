@@ -1242,7 +1242,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.03
+0.0
 0.001
 1
 NIL
@@ -1257,7 +1257,7 @@ memory
 memory
 0
 96
-48.0
+2.0
 1
 1
 NIL
@@ -1324,7 +1324,7 @@ increaseChance
 increaseChance
 0
 1
-3.0E-4
+0.01
 0.01
 1
 NIL
@@ -2504,7 +2504,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="startingFund">
       <value value="10659"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="openOpts?">
+    <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="triggerNetwork?">
@@ -2516,7 +2516,7 @@ NetLogo 6.0.2
     <enumeratedValueSet variable="randomRiskThresh?">
       <value value="true"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="randomOrgOpts?">
+    <enumeratedValueSet variable="randomOrgOpt?">
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="limitedFund?">
@@ -2953,7 +2953,7 @@ NetLogo 6.0.2
       <value value="&quot;allRandom&quot;"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="noDecay" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+  <experiment name="zeroDecay" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <exitCondition>ticks = 1000</exitCondition>
