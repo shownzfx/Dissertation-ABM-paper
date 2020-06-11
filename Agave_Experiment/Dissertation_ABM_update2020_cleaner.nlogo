@@ -1242,7 +1242,7 @@ EWProbDecay
 EWProbDecay
 0
 0.05
-0.0
+0.03
 0.001
 1
 NIL
@@ -1257,7 +1257,7 @@ memory
 memory
 0
 96
-2.0
+48.0
 1
 1
 NIL
@@ -1324,7 +1324,7 @@ increaseChance
 increaseChance
 0
 1
-0.01
+2.0E-4
 0.01
 1
 NIL
@@ -1416,7 +1416,7 @@ CHOOSER
 orgOptGen
 orgOptGen
 "allRandom" "diffused" "concentrated" "controlNum" "twoWindows" "oneWindow"
-2
+0
 
 SWITCH
 875
@@ -2740,7 +2740,7 @@ NetLogo 6.0.2
       <value value="1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="increaseChance">
-      <value value="3.0E-4"/>
+      <value value="2.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="memory">
       <value value="48"/>

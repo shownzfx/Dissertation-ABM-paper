@@ -15,8 +15,8 @@
 
 bash /home/fzhang59/NetLogo\ 6.0.2/netlogo-headless.sh \
 --model Dissertation_ABM_update2020_cleaner.nlogo \
---experiment increaseChance2 \
---table increaseChance1000Runs_062020.csv \
+--experiment increaseChance \
+--table increaseChance1100Runs_062020.csv \
 --threads 28
 
 
