@@ -360,7 +360,7 @@ to setup-solutions ; every turtle begins with a solution
       [
          set color green
          set adaptation? false  ; the default solutions are routine ones, not adaptation-based
-         set efficacy 0.5 + random-float 0.5; for coping solutions
+         set efficacy 0.05 + random-float 0.95; for coping solutions
          set size efficacy / 2.5
          set adaptation? false
          let my-org orgs-here
@@ -2437,7 +2437,7 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomChance">
-      <value value="3.0E-4"/>
+      <value value="2.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
       <value value="10659"/>
@@ -3318,7 +3318,7 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="randomChance">
-      <value value="3.0E-4"/>
+      <value value="2.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
       <value value="10659"/>
