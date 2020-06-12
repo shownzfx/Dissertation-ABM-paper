@@ -1863,10 +1863,7 @@ NetLogo 6.0.2
     <metric>totalUtilized</metric>
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
-    <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.5"/>
-      <value value="0.6"/>
-    </enumeratedValueSet>
+    <steppedValueSet variable="meanRiskThreshold" first="0.3" step="0.05" last="0.5"/>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
@@ -1877,10 +1874,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
       <value value="5"/>
-      <value value="6"/>
-      <value value="7"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
