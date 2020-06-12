@@ -3060,7 +3060,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.52"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -3072,7 +3072,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
+      <value value="5.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
@@ -3093,7 +3093,7 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="10659"/>
+      <value value="10652"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
