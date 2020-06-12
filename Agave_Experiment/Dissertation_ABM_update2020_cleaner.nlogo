@@ -379,7 +379,7 @@ to setup-solutions ; every turtle begins with a solution
     sprout-solutions 1 [
       set color green ; adaptation are set blue
       set efficacy 2 + random-float 2 ;weatherIntensity ranges from approximately  2 to 5
-      set cost random-float adaptationCost + 3
+      set cost random-float adaptationCost + 3.5
       set size efficacy / 2.5
       set adaptation? true
     ]
@@ -1875,6 +1875,8 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
       <value value="5"/>
+      <value value="5.5"/>
+      <value value="6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
