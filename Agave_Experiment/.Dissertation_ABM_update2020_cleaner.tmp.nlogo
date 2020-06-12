@@ -1075,7 +1075,7 @@ adaptationCost
 adaptationCost
 0
 10
-4.0
+5.0
 0.1
 1
 NIL
@@ -1864,7 +1864,9 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.52"/>
+      <value value="0.4"/>
+      <value value="0.5"/>
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -1876,7 +1878,8 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
+      <value value="5"/>
+      <value value="6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
