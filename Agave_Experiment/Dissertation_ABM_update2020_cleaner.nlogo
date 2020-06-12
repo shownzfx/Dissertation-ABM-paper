@@ -1863,7 +1863,9 @@ NetLogo 6.0.2
     <metric>totalUtilized</metric>
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
-    <steppedValueSet variable="meanRiskThreshold" first="0.3" step="0.05" last="0.5"/>
+    <enumeratedValueSet variable="meanRiskThreshold">
+      <value value="0.3"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
     </enumeratedValueSet>
@@ -1874,9 +1876,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="5"/>
       <value value="5.5"/>
-      <value value="6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
@@ -1897,7 +1897,7 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="10659"/>
+      <value value="10652"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
@@ -2133,7 +2133,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.52"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2145,7 +2145,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
+      <value value="5.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
@@ -2164,7 +2164,7 @@ NetLogo 6.0.2
     </enumeratedValueSet>
     <steppedValueSet variable="EWProbDecay" first="0" step="0.003" last="0.03"/>
     <enumeratedValueSet variable="startingFund">
-      <value value="10659"/>
+      <value value="10652"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
@@ -2217,7 +2217,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.52"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2229,7 +2229,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
+      <value value="5.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
@@ -2254,7 +2254,7 @@ NetLogo 6.0.2
       <value value="2.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="10659"/>
+      <value value="10652"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
@@ -2550,7 +2550,7 @@ NetLogo 6.0.2
     <metric>totalUtilizedOrgOpt</metric>
     <metric>totalNonEligibleDisasterOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.52"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2560,7 +2560,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
+      <value value="5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
@@ -2581,7 +2581,7 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="10659"/>
+      <value value="10652"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
@@ -2633,7 +2633,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.52"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2645,7 +2645,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
+      <value value="5.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
@@ -2666,7 +2666,7 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="10659"/>
+      <value value="10652"/>
     </enumeratedValueSet>
     <steppedValueSet variable="randomChance" first="0" step="1.0E-4" last="0.001"/>
     <enumeratedValueSet variable="openOpt?">
@@ -2890,7 +2890,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.52"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2902,7 +2902,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
+      <value value="5.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
@@ -2923,7 +2923,7 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="10659"/>
+      <value value="10652"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
@@ -2975,7 +2975,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.52"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2987,7 +2987,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
+      <value value="5.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
@@ -3008,7 +3008,7 @@ NetLogo 6.0.2
       <value value="0"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="10659"/>
+      <value value="10652"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
@@ -3060,7 +3060,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.52"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -3072,7 +3072,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
+      <value value="5.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
@@ -3093,7 +3093,7 @@ NetLogo 6.0.2
       <value value="0.03"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="10659"/>
+      <value value="10652"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
