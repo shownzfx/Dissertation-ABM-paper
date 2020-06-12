@@ -379,7 +379,7 @@ to setup-solutions ; every turtle begins with a solution
     sprout-solutions 1 [
       set color green ; adaptation are set blue
       set efficacy 2 + random-float 2 ;weatherIntensity ranges from approximately  2 to 5
-      set cost random-float adaptationCost + 3.
+      set cost random-float adaptationCost + 3.5
       set size efficacy / 2.5
       set adaptation? true
     ]
@@ -1865,6 +1865,8 @@ NetLogo 6.0.2
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
       <value value="0.3"/>
+      <value value="0.4"/>
+      <value value="0.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -1876,6 +1878,8 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
+      <value value="4"/>
+      <value value="5"/>
       <value value="5.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
@@ -2716,7 +2720,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.52"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2728,7 +2732,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
+      <value value="5.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
@@ -2755,7 +2759,7 @@ NetLogo 6.0.2
       <value value="2.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="10659"/>
+      <value value="10652"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
@@ -2804,7 +2808,7 @@ NetLogo 6.0.2
     <metric>totalOrgOpts</metric>
     <metric>totalUtilizedOrgOpt</metric>
     <enumeratedValueSet variable="meanRiskThreshold">
-      <value value="0.52"/>
+      <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="scanningRange">
       <value value="4"/>
@@ -2816,7 +2820,7 @@ NetLogo 6.0.2
       <value value="0.3"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="adaptationCost">
-      <value value="4"/>
+      <value value="5.5"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="capBoost">
       <value value="4"/>
@@ -2841,7 +2845,7 @@ NetLogo 6.0.2
       <value value="2.0E-4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="startingFund">
-      <value value="10659"/>
+      <value value="10652"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="openOpt?">
       <value value="true"/>
