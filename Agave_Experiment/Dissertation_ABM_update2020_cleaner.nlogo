@@ -494,6 +494,7 @@ to go
     set extremeWeather? false
     set disaster? false
     set declared? false
+    set capacity originalCapacity
     if worstWeatherIntensity < riskPerception [
       print "warning: expected weather severity smaller than expected impact"
     ]
@@ -659,7 +660,7 @@ to check-Opportunity ; opportunities came by whether orgs need them for adaptati
     ask orgs [
       ifelse not member? ticks Opportunities
       [
-        set capacity originalCapacity
+
         set opportunity-open? false
       ]
 
@@ -1060,7 +1061,7 @@ meanRiskThreshold
 meanRiskThreshold
 0
 2
-0.52
+0.3
 0.01
 1
 NIL
